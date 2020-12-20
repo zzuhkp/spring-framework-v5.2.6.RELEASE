@@ -27,6 +27,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
 /**
+ * CandidateComponentsMetadata 收集器
+ * <p>
  * Used by {@link CandidateComponentsIndexer} to collect {@link CandidateComponentsMetadata}.
  *
  * @author Stephane Nicoll
@@ -34,21 +36,32 @@ import javax.lang.model.element.TypeElement;
  */
 class MetadataCollector {
 
+	/**
+	 * 本轮处理的元数据
+	 */
 	private final List<ItemMetadata> metadataItems = new ArrayList<>();
 
 	private final ProcessingEnvironment processingEnvironment;
 
+	/**
+	 * 上次生成的元数据
+	 */
 	private final CandidateComponentsMetadata previousMetadata;
 
 	private final TypeHelper typeHelper;
 
+	/**
+	 * 注解处理器处理的所有类型
+	 */
 	private final Set<String> processedSourceTypes = new HashSet<>();
 
 
 	/**
 	 * Create a new {@code MetadataProcessor} instance.
+	 *
 	 * @param processingEnvironment the processing environment of the build
-	 * @param previousMetadata any previous metadata or {@code null}
+	 * @param previousMetadata      之前生成的元数据
+	 *                              any previous metadata or {@code null}
 	 */
 	public MetadataCollector(ProcessingEnvironment processingEnvironment,
 			CandidateComponentsMetadata previousMetadata) {
@@ -91,17 +104,35 @@ class MetadataCollector {
 		return metadata;
 	}
 
+	/**
+	 * 元数据是否应该被合并
+	 *
+	 * @param itemMetadata
+	 * @return 之前的类型在当前处理未被删除并且当前未处理之前的类型则应该被合并
+	 */
 	private boolean shouldBeMerged(ItemMetadata itemMetadata) {
 		String sourceType = itemMetadata.getType();
 		return (sourceType != null && !deletedInCurrentBuild(sourceType)
 				&& !processedInCurrentBuild(sourceType));
 	}
 
+	/**
+	 * 之前的类型在这次注解处理器处理时是否已经被删除
+	 *
+	 * @param sourceType 上次注解处理器处理的类型
+	 * @return
+	 */
 	private boolean deletedInCurrentBuild(String sourceType) {
 		return this.processingEnvironment.getElementUtils()
 				.getTypeElement(sourceType) == null;
 	}
 
+	/**
+	 * 本次注解处理器处理的类型中是否包含给定的类型
+	 *
+	 * @param sourceType
+	 * @return
+	 */
 	private boolean processedInCurrentBuild(String sourceType) {
 		return this.processedSourceTypes.contains(sourceType);
 	}

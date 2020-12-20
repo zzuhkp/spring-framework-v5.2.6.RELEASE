@@ -240,7 +240,7 @@ public class ReloadableResourceBundleMessageSource extends AbstractResourceBased
 
 		Properties mergedProps = newProperties();
 		long latestTimestamp = -1;
-		String[] basenames = StringUtils.toStringArray(getBasenameSet());
+		String[] basenames = StringUtils.toStringArray(getBasenameSet()); 
 		for (int i = basenames.length - 1; i >= 0; i--) {
 			List<String> filenames = calculateAllFilenames(basenames[i], locale);
 			for (int j = filenames.size() - 1; j >= 0; j--) {

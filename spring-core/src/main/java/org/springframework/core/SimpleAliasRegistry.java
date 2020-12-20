@@ -49,6 +49,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 
 	/**
 	 * 别名 -> 规范化的名称
+	 *
 	 * Map from alias to canonical name.
 	 */
 	private final Map<String, String> aliasMap = new ConcurrentHashMap<>(16);
@@ -94,6 +95,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 
 	/**
 	 * 是否别名允许覆盖，即注册过别名后是否允许重复注册
+	 *
 	 * Determine whether alias overriding is allowed.
 	 * <p>Default is {@code true}.
 	 */

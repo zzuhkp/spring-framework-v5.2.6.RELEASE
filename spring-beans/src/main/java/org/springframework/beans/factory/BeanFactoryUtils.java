@@ -75,7 +75,8 @@ public abstract class BeanFactoryUtils {
 	}
 
 	/**
-	 * 返回删除name前缀&的值
+	 * 返回删除 name 前缀 & 的值
+	 *
 	 * Return the actual bean name, stripping out the factory dereference
 	 * prefix (if any, also stripping repeated factory prefixes if found).
 	 *

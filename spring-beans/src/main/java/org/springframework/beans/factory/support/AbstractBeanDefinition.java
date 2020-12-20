@@ -1163,7 +1163,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	}
 
 	/**
-	 * 验证并准备为此bean定义的MethodOverrid。
+	 * 验证并准备为此bean定义的MethodOverride。
 	 * 检查是否存在具有指定名称的方法。
 	 * <p>
 	 * Validate and prepare the method overrides defined for this bean.

@@ -31,6 +31,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
 /**
+ * 候选类型是否与依赖的泛型类型完全匹配
+ * <p>
  * Basic {@link AutowireCandidateResolver} that performs a full generic type
  * match with the candidate's type if the dependency is declared as a generic type
  * (e.g. Repository&lt;Customer&gt;).
@@ -139,6 +141,12 @@ public class GenericTypeAwareAutowireCandidateResolver extends SimpleAutowireCan
 		return dependencyType.isAssignableFrom(targetType);
 	}
 
+	/**
+	 * 获取被装饰的 BeanDefinition
+	 *
+	 * @param rbd
+	 * @return
+	 */
 	@Nullable
 	protected RootBeanDefinition getResolvedDecoratedDefinition(RootBeanDefinition rbd) {
 		BeanDefinitionHolder decDef = rbd.getDecoratedDefinition();
@@ -154,6 +162,13 @@ public class GenericTypeAwareAutowireCandidateResolver extends SimpleAutowireCan
 		return null;
 	}
 
+	/**
+	 * 获取 factory method 的返回类型
+	 *
+	 * @param rbd
+	 * @param descriptor
+	 * @return
+	 */
 	@Nullable
 	protected ResolvableType getReturnTypeForFactoryMethod(RootBeanDefinition rbd, DependencyDescriptor descriptor) {
 		// Should typically be set for any kind of factory method, since the BeanFactory

@@ -278,17 +278,21 @@ public class PathMatchingResourcePatternResolver implements ResourcePatternResol
 	public Resource[] getResources(String locationPattern) throws IOException {
 		Assert.notNull(locationPattern, "Location pattern must not be null");
 		if (locationPattern.startsWith(CLASSPATH_ALL_URL_PREFIX)) {
+			// 资源路径模式字符串以 classpath*: 开头
 			// a class path resource (multiple resources for same name possible)
 			if (getPathMatcher().isPattern(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()))) {
+				// 如果资源路径是匹配的模式，则查找匹配的资源
 				// a class path resource pattern
 				return findPathMatchingResources(locationPattern);
 			}
 			else {
+				// 否则查找类路径下给定名称的所有资源
 				// all class path resources with the given name
 				return findAllClassPathResources(locationPattern.substring(CLASSPATH_ALL_URL_PREFIX.length()));
 			}
 		}
 		else {
+			// 否则对路径进行处理后再获取资源
 			// Generally only look for a pattern after a prefix here,
 			// and on Tomcat only after the "*/" separator for its "war:" protocol.
 			int prefixEnd = (locationPattern.startsWith("war:") ? locationPattern.indexOf("*/") + 1 :

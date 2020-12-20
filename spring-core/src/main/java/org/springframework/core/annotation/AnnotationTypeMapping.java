@@ -55,12 +55,12 @@ final class AnnotationTypeMapping {
 	private final AnnotationTypeMapping source;
 
 	/**
-	 * 根注解，即当前注解为元注解时，在注解层次结构中查找到的标注的非元注解
+	 * 根注解，即当前注解为元注解时，注解层次结构中的顶层注解。
 	 */
 	private final AnnotationTypeMapping root;
 
 	/**
-	 * 注解距离根注解的距离，如果当前注解为根注解则为0
+	 * 注解距离根注解的距离，如果当前注TypeMappedAnnotation解为根注解则为0
 	 */
 	private final int distance;
 
@@ -85,30 +85,39 @@ final class AnnotationTypeMapping {
 	 */
 	private final AttributeMethods attributes;
 
+	/**
+	 * 注解中属性方法的镜像集合
+	 */
 	private final MirrorSets mirrorSets;
 
 	/**
-	 * 当前注解attributes中作为别名的属性方法索引 -> 根注解attributes中直接或间接标注别名的属性方法索引
+	 * 当前 attributes下标 -> root attributes 下标(是当前 attributes 下标的别名方法下标)
 	 */
 	private final int[] aliasMappings;
 
+	/**
+	 * 当前 attributes下标(或其别名下标) -> root attributes 同名属性方法的下标
+	 */
 	private final int[] conventionMappings;
 
 	/**
-	 * attributes 的属性方法下标 -> 对应的最后一个镜像方法在 attributes 的下标
+	 * attributes 下标 -> 对应的(同名或别名)较高层次的 AnnotationTypeMapping 的 attributes 下标
 	 */
 	private final int[] annotationValueMappings;
 
 	/**
-	 * attributes 的属性方法下标 -> AnnotationTypeMapping
+	 * attributes 下标 -> 对应的(同名或别名)较高层次的 AnnotationTypeMapping
 	 */
 	private final AnnotationTypeMapping[] annotationValueSource;
 
 	/**
-	 * 不考虑递归，注解属性方法(可能是当前注解或当前注解的元注解的属性) -> 使用@AliasFor标注了该注解属性方法名称的注解属性列表
+	 * 注解属性方法 -> 使用 @AliasFor 标注了该注解属性方法名称的注解属性列表
 	 */
 	private final Map<Method, List<Method>> aliasedBy;
 
+	/**
+	 * 当前注解的属性值是否是合成的
+	 */
 	private final boolean synthesizable;
 
 	/**
@@ -189,7 +198,7 @@ final class AnnotationTypeMapping {
 	 * @param attribute      注解属性
 	 * @param aliasFor       注解属性上的@AliasFor注解实例
 	 * @param checkAliasPair 是否在同一个注解中两个标注了@AliasFor的注解必须互为别名
-	 * @return
+	 * @return attribute 上 @AliasFor 注解标注的别名方法
 	 */
 	private Method resolveAliasTarget(Method attribute, AliasFor aliasFor, boolean checkAliasPair) {
 		if (StringUtils.hasText(aliasFor.value()) && StringUtils.hasText(aliasFor.attribute())) {
@@ -279,7 +288,7 @@ final class AnnotationTypeMapping {
 	/**
 	 * 从当前 AnnotationTypeMapping 递归到 source ，添加别名属性到 aliases
 	 *
-	 * @param aliases
+	 * @param aliases 别名方法列表，其中的别名可能是当前注解或元注解中的别名，因此需要递归处理
 	 */
 	private void collectAliases(List<Method> aliases) {
 		AnnotationTypeMapping mapping = this;
@@ -295,6 +304,12 @@ final class AnnotationTypeMapping {
 		}
 	}
 
+	/**
+	 * 处理第 attributeIndex 个索引位置的属性方法别名
+	 *
+	 * @param attributeIndex 属性索引位置
+	 * @param aliases        当前属性索引位置对应的一组互为别名的属性方法列表
+	 */
 	private void processAliases(int attributeIndex, List<Method> aliases) {
 		//aliases列表中第一个根注解属性的索引
 		int rootAttributeIndex = getFirstRootAttributeIndex(aliases);
@@ -312,6 +327,7 @@ final class AnnotationTypeMapping {
 			mapping.mirrorSets.updateFrom(aliases);
 			mapping.claimedAliases.addAll(aliases);
 			if (mapping.annotation != null) {
+				// mapping attributes 下标 -> 对应的镜像中最后一个属性方法下标
 				int[] resolvedMirrors = mapping.mirrorSets.resolve(null,
 						mapping.annotation, ReflectionUtils::invokeMethod);
 				for (int i = 0; i < mapping.attributes.size(); i++) {
@@ -773,10 +789,12 @@ final class AnnotationTypeMapping {
 		}
 
 		/**
+		 * 获取 attributes 每个索引下标对应的镜像中最后一个属性方法的索引下标
+		 *
 		 * @param source
 		 * @param annotation
 		 * @param valueExtractor
-		 * @return attributes 索引下标 -> 对应的最后一个镜像属性索引
+		 * @return attributes 索引下标 -> 镜像中最后一个属性方法的索引下标
 		 */
 		int[] resolve(@Nullable Object source, @Nullable Object annotation, ValueExtractor valueExtractor) {
 			int[] result = new int[attributes.size()];
@@ -785,6 +803,7 @@ final class AnnotationTypeMapping {
 			}
 			for (int i = 0; i < size(); i++) {
 				MirrorSet mirrorSet = get(i);
+				// 镜像中最后一个属性方法的索引下标
 				int resolved = mirrorSet.resolve(source, annotation, valueExtractor);
 				for (int j = 0; j < mirrorSet.size; j++) {
 					result[mirrorSet.indexes[j]] = resolved;

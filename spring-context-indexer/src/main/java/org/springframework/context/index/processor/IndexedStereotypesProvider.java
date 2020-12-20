@@ -43,7 +43,15 @@ class IndexedStereotypesProvider implements StereotypesProvider {
 		this.typeHelper = typeHelper;
 	}
 
-
+	/**
+	 * 从元素上获取组合，
+	 * 包括直接标注 @Indexed 的类型，
+	 * 通过继承标注 @Indexed 的类型，
+	 * 及父类和接口直接标注和继承 @Indexed 注解的类型
+	 *
+	 * @param element the element to handle
+	 * @return
+	 */
 	@Override
 	public Set<String> getStereotypes(Element element) {
 		Set<String> stereotypes = new LinkedHashSet<>();
@@ -58,6 +66,13 @@ class IndexedStereotypesProvider implements StereotypesProvider {
 		return stereotypes;
 	}
 
+	/**
+	 * 收集 @Indexed 标注(或元标注)的组合
+	 *
+	 * @param seen
+	 * @param stereotypes
+	 * @param element
+	 */
 	private void collectStereotypesOnAnnotations(Set<Element> seen, Set<String> stereotypes, Element element) {
 		for (AnnotationMirror annotation : this.typeHelper.getAllAnnotationMirrors(element)) {
 			Element next = collectStereotypes(seen, stereotypes, element, annotation);
@@ -67,6 +82,13 @@ class IndexedStereotypesProvider implements StereotypesProvider {
 		}
 	}
 
+	/**
+	 * 收集直接标注 @Indexed 注解的类型(包括父类上的和接口上的)到 stereotypes
+	 *
+	 * @param seen
+	 * @param stereotypes
+	 * @param type
+	 */
 	private void collectStereotypesOnTypes(Set<Element> seen, Set<String> stereotypes, Element type) {
 		if (!seen.contains(type)) {
 			seen.add(type);
@@ -82,15 +104,32 @@ class IndexedStereotypesProvider implements StereotypesProvider {
 		}
 	}
 
+	/**
+	 * 从注解上收集组合
+	 *
+	 * @param seen
+	 * @param stereotypes
+	 * @param element
+	 * @param annotation
+	 * @return
+	 */
 	private Element collectStereotypes(Set<Element> seen, Set<String> stereotypes, Element element,
 			AnnotationMirror annotation) {
-
+		// 先根据元素上的 @Indexed 注解直接收集组合
 		if (isIndexedAnnotation(annotation)) {
 			stereotypes.add(this.typeHelper.getType(element));
 		}
+		// 再获取注解对应的元素(元注解可能是 @Indexed )
 		return getCandidateAnnotationElement(seen, annotation);
 	}
 
+	/**
+	 * 获取注解对应的元素
+	 *
+	 * @param seen
+	 * @param annotation
+	 * @return
+	 */
 	private Element getCandidateAnnotationElement(Set<Element> seen, AnnotationMirror annotation) {
 		Element element = annotation.getAnnotationType().asElement();
 		if (seen.contains(element)) {
@@ -103,6 +142,12 @@ class IndexedStereotypesProvider implements StereotypesProvider {
 		return (!element.toString().startsWith("java.lang") ? element : null);
 	}
 
+	/**
+	 * 给定的类型上是否直接被 @Indexed 标注
+	 *
+	 * @param type
+	 * @return
+	 */
 	private boolean isAnnotatedWithIndexed(Element type) {
 		for (AnnotationMirror annotation : type.getAnnotationMirrors()) {
 			if (isIndexedAnnotation(annotation)) {
@@ -112,6 +157,12 @@ class IndexedStereotypesProvider implements StereotypesProvider {
 		return false;
 	}
 
+	/**
+	 * 注解是否为 @Indexed
+	 *
+	 * @param annotation
+	 * @return
+	 */
 	private boolean isIndexedAnnotation(AnnotationMirror annotation) {
 		return INDEXED_ANNOTATION.equals(annotation.getAnnotationType().toString());
 	}

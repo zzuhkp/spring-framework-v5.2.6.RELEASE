@@ -20,6 +20,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
 /**
+ * 给定的类型是否匹配目标类
+ *
  * A simple filter which matches classes that are assignable to a given type.
  *
  * @author Rod Johnson

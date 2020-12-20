@@ -100,6 +100,7 @@ public class ResourceEntityResolver extends DelegatingEntityResolver {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Trying to locate XML entity [" + systemId + "] as resource [" + resourcePath + "]");
 				}
+				// 优先读取本地资源
 				Resource resource = this.resourceLoader.getResource(resourcePath);
 				source = new InputSource(resource.getInputStream());
 				source.setPublicId(publicId);
@@ -109,6 +110,7 @@ public class ResourceEntityResolver extends DelegatingEntityResolver {
 				}
 			}
 			else if (systemId.endsWith(DTD_SUFFIX) || systemId.endsWith(XSD_SUFFIX)) {
+				// 本地资源不存在时读取网络资源
 				// External dtd/xsd lookup via https even for canonical http declaration
 				String url = systemId;
 				if (url.startsWith("http:")) {

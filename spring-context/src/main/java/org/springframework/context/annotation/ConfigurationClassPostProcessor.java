@@ -24,10 +24,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.aop.framework.autoproxy.AutoProxyUtils;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.BeanClassLoaderAware;
@@ -92,8 +90,9 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 * {@link #setBeanNameGenerator}. Note that the default for component scanning purposes
 	 * is a plain {@link AnnotationBeanNameGenerator#INSTANCE}, unless overridden through
 	 * {@link #setBeanNameGenerator} with a unified user-level bean name generator.
-	 * @since 5.2
+	 *
 	 * @see #setBeanNameGenerator
+	 * @since 5.2
 	 */
 	public static final AnnotationBeanNameGenerator IMPORT_BEAN_NAME_GENERATOR =
 			new FullyQualifiedAnnotationBeanNameGenerator();
@@ -118,21 +117,37 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 
 	private MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory();
 
+	/**
+	 * setMetadataReaderFactory 方法是否被调用
+	 */
 	private boolean setMetadataReaderFactoryCalled = false;
 
+	/**
+	 * BeanFactory 标识，避免当前 processor 在每个 BeanFactory 都调用一次 postProcessBeanDefinitionRegistry
+	 */
 	private final Set<Integer> registriesPostProcessed = new HashSet<>();
 
+	/**
+	 * BeanFactory 标识，避免当前 processor 在每个 BeanFactory 都调用一次 postProcessBeanFactory
+	 */
 	private final Set<Integer> factoriesPostProcessed = new HashSet<>();
 
 	@Nullable
 	private ConfigurationClassBeanDefinitionReader reader;
 
+	/**
+	 * 是否使用当前类中的 BeanNameGenerator
+	 */
 	private boolean localBeanNameGeneratorSet = false;
 
-	/* Using short class names as default bean names by default. */
+	/**
+	 * Using short class names as default bean names by default.
+	 */
 	private BeanNameGenerator componentScanBeanNameGenerator = AnnotationBeanNameGenerator.INSTANCE;
 
-	/* Using fully qualified class names as default bean names by default. */
+	/**
+	 * Using fully qualified class names as default bean names by default.
+	 */
 	private BeanNameGenerator importBeanNameGenerator = IMPORT_BEAN_NAME_GENERATOR;
 
 
@@ -182,9 +197,10 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 * standalone bean definition in XML, e.g. not using the dedicated {@code AnnotationConfig*}
 	 * application contexts or the {@code <context:annotation-config>} element. Any bean name
 	 * generator specified against the application context will take precedence over any set here.
-	 * @since 3.1.1
+	 *
 	 * @see AnnotationConfigApplicationContext#setBeanNameGenerator(BeanNameGenerator)
 	 * @see AnnotationConfigUtils#CONFIGURATION_BEAN_NAME_GENERATOR
+	 * @since 3.1.1
 	 */
 	public void setBeanNameGenerator(BeanNameGenerator beanNameGenerator) {
 		Assert.notNull(beanNameGenerator, "BeanNameGenerator must not be null");
@@ -259,6 +275,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	}
 
 	/**
+	 * 处理配置 bean 的 BeanDefinition
+	 * <p>
 	 * Build and validate a configuration model based on the registry of
 	 * {@link Configuration} classes.
 	 */
@@ -272,8 +290,8 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				if (logger.isDebugEnabled()) {
 					logger.debug("Bean definition has already been processed as a configuration class: " + beanDef);
 				}
-			}
-			else if (ConfigurationClassUtils.checkConfigurationClassCandidate(beanDef, this.metadataReaderFactory)) {
+			} else if (ConfigurationClassUtils.checkConfigurationClassCandidate(beanDef, this.metadataReaderFactory)) {
+				// 给定的 BeanDefinition 是配置类
 				configCandidates.add(new BeanDefinitionHolder(beanDef, beanName));
 			}
 		}
@@ -344,6 +362,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 						BeanDefinition bd = registry.getBeanDefinition(candidateName);
 						if (ConfigurationClassUtils.checkConfigurationClassCandidate(bd, this.metadataReaderFactory) &&
 								!alreadyParsedClasses.contains(bd.getBeanClassName())) {
+							// 新的候选项中存在未解析的 BeanDefinition
 							candidates.add(new BeanDefinitionHolder(bd, candidateName));
 						}
 					}
@@ -369,6 +388,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 * Post-processes a BeanFactory in search of Configuration class BeanDefinitions;
 	 * any candidates are then enhanced by a {@link ConfigurationClassEnhancer}.
 	 * Candidate status is determined by BeanDefinition attribute metadata.
+	 *
 	 * @see ConfigurationClassEnhancer
 	 */
 	public void enhanceConfigurationClasses(ConfigurableListableBeanFactory beanFactory) {
@@ -387,8 +407,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				if (!abd.hasBeanClass()) {
 					try {
 						abd.resolveBeanClass(this.beanClassLoader);
-					}
-					catch (Throwable ex) {
+					} catch (Throwable ex) {
 						throw new IllegalStateException(
 								"Cannot load configuration class: " + beanDef.getBeanClassName(), ex);
 					}
@@ -398,13 +417,13 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				if (!(beanDef instanceof AbstractBeanDefinition)) {
 					throw new BeanDefinitionStoreException("Cannot enhance @Configuration bean definition '" +
 							beanName + "' since it is not stored in an AbstractBeanDefinition subclass");
-				}
-				else if (logger.isInfoEnabled() && beanFactory.containsSingleton(beanName)) {
+				} else if (logger.isInfoEnabled() && beanFactory.containsSingleton(beanName)) {
 					logger.info("Cannot enhance @Configuration bean definition '" + beanName +
 							"' since its singleton instance has been created too early. The typical cause " +
 							"is a non-static @Bean method with a BeanDefinitionRegistryPostProcessor " +
 							"return type: Consider declaring such methods as 'static'.");
 				}
+				// 只代理被 @Configuration 标注的配置类
 				configBeanDefs.put(beanName, (AbstractBeanDefinition) beanDef);
 			}
 		}

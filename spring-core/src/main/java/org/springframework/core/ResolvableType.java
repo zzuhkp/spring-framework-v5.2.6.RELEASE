@@ -748,17 +748,22 @@ public class ResolvableType implements Serializable {
 	 * @see #resolveGenerics()
 	 */
 	public ResolvableType getGeneric(@Nullable int... indexes) {
+		// 获取所有的泛型参数
 		ResolvableType[] generics = getGenerics();
 		if (indexes == null || indexes.length == 0) {
+			// 不存索引，返回 NONE 或第一个泛型类型
 			return (generics.length == 0 ? NONE : generics[0]);
 		}
 		ResolvableType generic = this;
 		for (int index : indexes) {
-			//通过迭代支持嵌套的泛型参数
+			// 通过循环索引，支持嵌套的泛型参数
 			generics = generic.getGenerics();
 			if (index < 0 || index >= generics.length) {
 				return NONE;
 			}
+			// 如实例表示的类型为 Map<String,List<Integer>>，参数为 [1,0]
+			// 第一次获取到的 generics 为 [String,List<Integer>],取索引位置 1 的 List<Integer>
+			// 第二次获取到的 generics [Integer],取索引位置 0 的 Integer
 			generic = generics[index];
 		}
 		return generic;
@@ -1595,15 +1600,20 @@ public class ResolvableType implements Serializable {
 	 * Return a {@link ResolvableType} for the specified {@link Type} backed by a given
 	 * {@link VariableResolver}.
 	 *
-	 * @param type             the source type or {@code null}
-	 * @param typeProvider     the type provider or {@code null}
-	 * @param variableResolver the variable resolver or {@code null}
-	 * @return a {@link ResolvableType} for the specified {@link Type} and {@link VariableResolver}
+	 * @param type             源类型
+	 *                         the source type or {@code null}
+	 * @param typeProvider     类型提供者
+	 *                         the type provider or {@code null}
+	 * @param variableResolver 类型变量解析器，可以将类型变量解析为 ResolvableType
+	 *                         the variable resolver or {@code null}
+	 * @return 指定类型和类型变量解析器对应的 ResolvableType
+	 * a {@link ResolvableType} for the specified {@link Type} and {@link VariableResolver}
 	 */
 	static ResolvableType forType(
 			@Nullable Type type, @Nullable TypeProvider typeProvider, @Nullable VariableResolver variableResolver) {
 
 		if (type == null && typeProvider != null) {
+			// 未直接指定类型，根据 TypeProvider 获取类型
 			type = SerializableTypeWrapper.forTypeProvider(typeProvider);
 		}
 		if (type == null) {
@@ -1613,12 +1623,14 @@ public class ResolvableType implements Serializable {
 		// For simple Class references, build the wrapper right away -
 		// no expensive resolution necessary, so not worth caching...
 		if (type instanceof Class) {
+			// Class 类型直接实例化
 			return new ResolvableType(type, typeProvider, variableResolver, (ResolvableType) null);
 		}
 
 		// Purge empty entries on access since we don't have a clean-up thread or the like.
 		cache.purgeUnreferencedEntries();
 
+		// 其他类型实例化后进行缓存
 		// Check the cache - we may have a ResolvableType which has been resolved before...
 		ResolvableType resultType = new ResolvableType(type, typeProvider, variableResolver);
 		ResolvableType cachedType = cache.get(resultType);

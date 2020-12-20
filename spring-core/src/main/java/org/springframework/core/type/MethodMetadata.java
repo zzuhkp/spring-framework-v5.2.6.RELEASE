@@ -17,6 +17,8 @@
 package org.springframework.core.type;
 
 /**
+ * 访问特定类的注解的接口，不需要进行类加载。
+ *
  * Interface that defines abstract access to the annotations of a specific
  * class, in a form that does not require that class to be loaded yet.
  *

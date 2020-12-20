@@ -119,6 +119,7 @@ public class PluggableSchemaResolver implements EntityResolver {
 				resourceLocation = getSchemaMappings().get("http:" + systemId.substring(6));
 			}
 			if (resourceLocation != null) {
+				// 优先使用本地 xsd 文件，文件的位置由 spring.schemas 文件指定
 				Resource resource = new ClassPathResource(resourceLocation, this.classLoader);
 				try {
 					InputSource source = new InputSource(resource.getInputStream());

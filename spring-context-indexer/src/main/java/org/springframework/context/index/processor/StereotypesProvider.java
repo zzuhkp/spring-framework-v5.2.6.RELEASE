@@ -31,7 +31,9 @@ import javax.lang.model.element.Element;
 interface StereotypesProvider {
 
 	/**
+	 * 返回标注在给定元素上的组合
 	 * Return the stereotypes that are present on the given {@link Element}.
+	 *
 	 * @param element the element to handle
 	 * @return the stereotypes or an empty set if none were found
 	 */

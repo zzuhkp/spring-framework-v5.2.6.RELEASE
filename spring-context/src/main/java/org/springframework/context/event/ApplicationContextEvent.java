@@ -37,7 +37,7 @@ public abstract class ApplicationContextEvent extends ApplicationEvent {
 		super(source);
 	}
 
-	/**
+	/**ApplicationListener
 	 * Get the {@code ApplicationContext} that the event was raised for.
 	 */
 	public final ApplicationContext getApplicationContext() {

@@ -61,6 +61,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 
 	/**
 	 * 确定BeanDefinition是否需要重新合并
+	 *
 	 * Determines if the definition needs to be re-merged.
 	 */
 	volatile boolean stale;
@@ -70,8 +71,14 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	 */
 	boolean allowCaching = true;
 
+	/**
+	 * 工厂方法是否是唯一的，唯一则可以直接获取 this.factoryMethodToIntrospect
+	 */
 	boolean isFactoryMethodUnique = false;
 
+	/**
+	 * bean 的目标类型
+	 */
 	@Nullable
 	volatile ResolvableType targetType;
 
@@ -84,6 +91,8 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	volatile Class<?> resolvedTargetType;
 
 	/**
+	 * 当前 bean 是否为 FactoryBean
+	 *
 	 * Package-visible field for caching if the bean is a factory bean.
 	 */
 	@Nullable

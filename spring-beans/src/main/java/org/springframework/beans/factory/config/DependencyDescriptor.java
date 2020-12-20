@@ -95,11 +95,14 @@ public class DependencyDescriptor extends InjectionPoint implements Serializable
 	private int nestingLevel = 1;
 
 	/**
-	 * 方法所在的类
+	 * 属性或方法所在的类
 	 */
 	@Nullable
 	private Class<?> containingClass;
 
+	/**
+	 * 成员变量或方法参数的类型
+	 */
 	@Nullable
 	private transient volatile ResolvableType resolvableType;
 

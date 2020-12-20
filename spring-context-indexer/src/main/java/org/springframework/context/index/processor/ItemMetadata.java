@@ -20,6 +20,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * 索引中的项
+ *
  * Represents one entry in the index. The type defines the identify of the target
  * candidate (usually fully qualified name) and the stereotypes are "markers" that can
  * be used to retrieve the candidates. A typical use case is the presence of a given

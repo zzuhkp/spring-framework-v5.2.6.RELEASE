@@ -30,6 +30,8 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
 /**
+ * 有关类型的工具类
+ * <p>
  * Type utilities.
  *
  * @author Stephane Nicoll
@@ -56,6 +58,12 @@ class TypeHelper {
 		return getType(annotation != null ? annotation.getAnnotationType() : null);
 	}
 
+	/**
+	 * 获取类型对应的名称
+	 *
+	 * @param type
+	 * @return
+	 */
 	public String getType(TypeMirror type) {
 		if (type == null) {
 			return null;
@@ -65,14 +73,19 @@ class TypeHelper {
 			Element enclosingElement = declaredType.asElement().getEnclosingElement();
 			if (enclosingElement != null && enclosingElement instanceof TypeElement) {
 				return getQualifiedName(enclosingElement) + "$" + declaredType.asElement().getSimpleName().toString();
-			}
-			else {
+			} else {
 				return getQualifiedName(declaredType.asElement());
 			}
 		}
 		return type.toString();
 	}
 
+	/**
+	 * 获取元素的标识符
+	 *
+	 * @param element
+	 * @return
+	 */
 	private String getQualifiedName(Element element) {
 		if (element instanceof QualifiedNameable) {
 			return ((QualifiedNameable) element).getQualifiedName().toString();
@@ -81,6 +94,8 @@ class TypeHelper {
 	}
 
 	/**
+	 * 获取元素的父类
+	 * <p>
 	 * Return the super class of the specified {@link Element} or null if this
 	 * {@code element} represents {@link Object}.
 	 */
@@ -93,6 +108,8 @@ class TypeHelper {
 	}
 
 	/**
+	 * 获取元素直接实现的接口列表
+	 * <p>
 	 * Return the interfaces that are <strong>directly</strong> implemented by the
 	 * specified {@link Element} or an empty list if this {@code element} does not
 	 * implement any interface.
@@ -111,11 +128,16 @@ class TypeHelper {
 		return directInterfaces;
 	}
 
+	/**
+	 * 获取元素上的所有注解，包括直接标注和通过实现获取
+	 *
+	 * @param e
+	 * @return
+	 */
 	public List<? extends AnnotationMirror> getAllAnnotationMirrors(Element e) {
 		try {
 			return this.env.getElementUtils().getAllAnnotationMirrors(e);
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			// This may fail if one of the annotations is not available.
 			return Collections.emptyList();
 		}

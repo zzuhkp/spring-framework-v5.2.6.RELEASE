@@ -27,10 +27,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.CachedIntrospectionResults;
 import org.springframework.beans.factory.BeanFactory;
@@ -236,17 +234,23 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	private ApplicationEventMulticaster applicationEventMulticaster;
 
 	/**
+	 * 添加到当前上下文的事件监听器，可能在刷新前或刷新后添加
+	 *
 	 * Statically specified listeners.
 	 */
 	private final Set<ApplicationListener<?>> applicationListeners = new LinkedHashSet<>();
 
 	/**
+	 * 刷新当前应用上下文注册的事件监听器
+	 *
 	 * Local listeners registered before refresh.
 	 */
 	@Nullable
 	private Set<ApplicationListener<?>> earlyApplicationListeners;
 
 	/**
+	 * 当前应用上下文刷新添加添加的事件
+	 *
 	 * ApplicationEvents published before the multicaster setup.
 	 */
 	@Nullable
@@ -428,6 +432,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Multicast right now if possible - or lazily once the multicaster is initialized
 		if (this.earlyApplicationEvents != null) {
+			// 调用 refresh 初始化 earlyApplicationEvents 后，BeanFactoryPostProcessor 可能发布事件
 			this.earlyApplicationEvents.add(applicationEvent);
 		} else {
 			getApplicationEventMulticaster().multicastEvent(applicationEvent, eventType);
@@ -629,8 +634,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 		// Store pre-refresh ApplicationListeners...
 		if (this.earlyApplicationListeners == null) {
+			// 首次 fresh，把刷新前添加的监听器添加到 earlyApplicationListeners
 			this.earlyApplicationListeners = new LinkedHashSet<>(this.applicationListeners);
 		} else {
+			// 再次 fresh，把之前添加的监听器添加到 applicationListeners
 			// Reset local application listeners to pre-refresh state.
 			this.applicationListeners.clear();
 			this.applicationListeners.addAll(this.earlyApplicationListeners);
@@ -859,6 +866,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		this.earlyApplicationEvents = null;
 		if (earlyEventsToProcess != null) {
 			for (ApplicationEvent earlyEvent : earlyEventsToProcess) {
+				// 广播当前应用上下文刷新前发布的事件
 				getApplicationEventMulticaster().multicastEvent(earlyEvent);
 			}
 		}

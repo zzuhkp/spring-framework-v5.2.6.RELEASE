@@ -25,6 +25,8 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
+ * 将 CandidateComponentsMetadata 作为 properties 写到输出流
+ *
  * Marshaller to write {@link CandidateComponentsMetadata} as properties.
  *
  * @author Stephane Nicoll

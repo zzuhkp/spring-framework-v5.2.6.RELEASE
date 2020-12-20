@@ -20,6 +20,9 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.util.Assert;
 
 /**
+ * 描述 Spring 管理的 bean 的作用域特性，包括作用域名称 和 scoped-proxy 行为。
+ * 默认的作用域是 singleton，默认不创建 scoped-proxies.
+ * <p>
  * Describes scope characteristics for a Spring-managed bean including the scope
  * name and the scoped-proxy behavior.
  *
@@ -28,9 +31,9 @@ import org.springframework.util.Assert;
  *
  * @author Mark Fisher
  * @author Juergen Hoeller
- * @since 2.5
  * @see ScopeMetadataResolver
  * @see ScopedProxyMode
+ * @since 2.5
  */
 public class ScopeMetadata {
 

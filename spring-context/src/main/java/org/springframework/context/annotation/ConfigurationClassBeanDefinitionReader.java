@@ -57,6 +57,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
+ * 读取 ConfigurationClass ，注册 BeanDefinition
+ * <p>
  * Reads a given fully-populated set of ConfigurationClass instances, registering bean
  * definitions with the given {@link BeanDefinitionRegistry} based on its contents.
  *
@@ -68,8 +70,8 @@ import org.springframework.util.StringUtils;
  * @author Juergen Hoeller
  * @author Phillip Webb
  * @author Sam Brannen
- * @since 3.0
  * @see ConfigurationClassParser
+ * @since 3.0
  */
 class ConfigurationClassBeanDefinitionReader {
 
@@ -122,6 +124,7 @@ class ConfigurationClassBeanDefinitionReader {
 	}
 
 	/**
+	 * 根据 ConfigurationClass 注册 bean
 	 * Read a particular {@link ConfigurationClass}, registering bean definitions
 	 * for the class itself and all of its {@link Bean} methods.
 	 */
@@ -134,6 +137,7 @@ class ConfigurationClassBeanDefinitionReader {
 				this.registry.removeBeanDefinition(beanName);
 			}
 			this.importRegistry.removeImportingClass(configClass.getMetadata().getClassName());
+			// 配置类 @Conditional 不满足条件，不再注册配置类包含的其他 bean
 			return;
 		}
 
@@ -204,7 +208,8 @@ class ConfigurationClassBeanDefinitionReader {
 		// Has this effectively been overridden before (e.g. via XML)?
 		if (isOverriddenByExistingDefinition(beanMethod, beanName)) {
 			if (beanName.equals(beanMethod.getConfigurationClass().getBeanName())) {
-				throw new BeanDefinitionStoreException(beanMethod.getConfigurationClass().getResource().getDescription(),
+				throw new BeanDefinitionStoreException(
+						beanMethod.getConfigurationClass().getResource().getDescription(),
 						beanName, "Bean name derived from @Bean method '" + beanMethod.getMetadata().getMethodName() +
 						"' clashes with bean name for containing configuration class; please make those names unique!");
 			}
@@ -218,13 +223,11 @@ class ConfigurationClassBeanDefinitionReader {
 			// static @Bean method
 			if (configClass.getMetadata() instanceof StandardAnnotationMetadata) {
 				beanDef.setBeanClass(((StandardAnnotationMetadata) configClass.getMetadata()).getIntrospectedClass());
-			}
-			else {
+			} else {
 				beanDef.setBeanClassName(configClass.getMetadata().getClassName());
 			}
 			beanDef.setUniqueFactoryMethodName(methodName);
-		}
-		else {
+		} else {
 			// instance @Bean method
 			beanDef.setFactoryBeanName(configClass.getBeanName());
 			beanDef.setUniqueFactoryMethodName(methodName);
@@ -304,8 +307,7 @@ class ConfigurationClassBeanDefinitionReader {
 					ccbd.setNonUniqueFactoryMethodName(ccbd.getFactoryMethodMetadata().getMethodName());
 				}
 				return true;
-			}
-			else {
+			} else {
 				return false;
 			}
 		}
@@ -331,7 +333,7 @@ class ConfigurationClassBeanDefinitionReader {
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("Skipping bean definition for %s: a definition for bean '%s' " +
-					"already exists. This top-level bean definition is considered as an override.",
+							"already exists. This top-level bean definition is considered as an override.",
 					beanMethod, beanName));
 		}
 		return true;
@@ -348,8 +350,7 @@ class ConfigurationClassBeanDefinitionReader {
 				if (StringUtils.endsWithIgnoreCase(resource, ".groovy")) {
 					// When clearly asking for Groovy, that's what they'll get...
 					readerClass = GroovyBeanDefinitionReader.class;
-				}
-				else {
+				} else {
 					// Primarily ".xml" files but for any other extension as well
 					readerClass = XmlBeanDefinitionReader.class;
 				}
@@ -367,8 +368,7 @@ class ConfigurationClassBeanDefinitionReader {
 						abdr.setEnvironment(this.environment);
 					}
 					readerInstanceCache.put(readerClass, reader);
-				}
-				catch (Throwable ex) {
+				} catch (Throwable ex) {
 					throw new IllegalStateException(
 							"Could not instantiate BeanDefinitionReader class [" + readerClass.getName() + "]");
 				}
@@ -392,7 +392,8 @@ class ConfigurationClassBeanDefinitionReader {
 	 * definition was created externally.
 	 */
 	@SuppressWarnings("serial")
-	private static class ConfigurationClassBeanDefinition extends RootBeanDefinition implements AnnotatedBeanDefinition {
+	private static class ConfigurationClassBeanDefinition extends RootBeanDefinition implements
+			AnnotatedBeanDefinition {
 
 		private final AnnotationMetadata annotationMetadata;
 

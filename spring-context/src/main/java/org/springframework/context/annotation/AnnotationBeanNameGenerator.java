@@ -34,38 +34,36 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * {@link BeanNameGenerator} implementation for bean classes annotated with the
- * {@link org.springframework.stereotype.Component @Component} annotation or
- * with another annotation that is itself annotated with {@code @Component} as a
- * meta-annotation. For example, Spring's stereotype annotations (such as
- * {@link org.springframework.stereotype.Repository @Repository}) are
- * themselves annotated with {@code @Component}.
+ * {@link BeanNameGenerator} implementation for bean classes annotated with the {@link
+ * org.springframework.stereotype.Component @Component} annotation or with another annotation that is itself annotated
+ * with {@code @Component} as a meta-annotation. For example, Spring's stereotype annotations (such as {@link
+ * org.springframework.stereotype.Repository @Repository}) are themselves annotated with {@code @Component}.
  *
  * <p>Also supports Java EE 6's {@link javax.annotation.ManagedBean} and
- * JSR-330's {@link javax.inject.Named} annotations, if available. Note that
- * Spring component annotations always override such standard annotations.
+ * JSR-330's {@link javax.inject.Named} annotations, if available. Note that Spring component annotations always
+ * override such standard annotations.
  *
  * <p>If the annotation's value doesn't indicate a bean name, an appropriate
- * name will be built based on the short name of the class (with the first
- * letter lower-cased). For example:
+ * name will be built based on the short name of the class (with the first letter lower-cased). For example:
  *
  * <pre class="code">com.xyz.FooServiceImpl -&gt; fooServiceImpl</pre>
  *
  * @author Juergen Hoeller
  * @author Mark Fisher
- * @since 2.5
  * @see org.springframework.stereotype.Component#value()
  * @see org.springframework.stereotype.Repository#value()
  * @see org.springframework.stereotype.Service#value()
  * @see org.springframework.stereotype.Controller#value()
  * @see javax.inject.Named#value()
  * @see FullyQualifiedAnnotationBeanNameGenerator
+ * @since 2.5
  */
 public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 
 	/**
-	 * A convenient constant for a default {@code AnnotationBeanNameGenerator} instance,
-	 * as used for component scanning purposes.
+	 * A convenient constant for a default {@code AnnotationBeanNameGenerator} instance, as used for component scanning
+	 * purposes.
+	 *
 	 * @since 5.2
 	 */
 	public static final AnnotationBeanNameGenerator INSTANCE = new AnnotationBeanNameGenerator();
@@ -75,6 +73,15 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	private final Map<String, Set<String>> metaAnnotationTypesCache = new ConcurrentHashMap<>();
 
 
+	/**
+	 * 生成 bean 的名称，
+	 * 优先通过直接在类上标注的注解(该注解是 @Component 或被 @Component 元标注)的 value 作为 bean 名称，
+	 * 获取不到则获取类的简写名称作为 bean 名称
+	 *
+	 * @param definition the bean definition to generate a name for
+	 * @param registry   the bean definition registry that the given definition is supposed to be registered with
+	 * @return
+	 */
 	@Override
 	public String generateBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
 		if (definition instanceof AnnotatedBeanDefinition) {
@@ -90,17 +97,20 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 
 	/**
 	 * Derive a bean name from one of the annotations on the class.
+	 *
 	 * @param annotatedDef the annotation-aware bean definition
 	 * @return the bean name, or {@code null} if none is found
 	 */
 	@Nullable
 	protected String determineBeanNameFromAnnotation(AnnotatedBeanDefinition annotatedDef) {
 		AnnotationMetadata amd = annotatedDef.getMetadata();
+		// 直接在类上标注的注解类型数组
 		Set<String> types = amd.getAnnotationTypes();
 		String beanName = null;
 		for (String type : types) {
 			AnnotationAttributes attributes = AnnotationConfigUtils.attributesFor(amd, type);
 			if (attributes != null) {
+				// 注解上的注解类型
 				Set<String> metaTypes = this.metaAnnotationTypesCache.computeIfAbsent(type, key -> {
 					Set<String> result = amd.getMetaAnnotationTypes(key);
 					return (result.isEmpty() ? Collections.emptySet() : result);
@@ -114,6 +124,7 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 								throw new IllegalStateException("Stereotype annotations suggest inconsistent " +
 										"component names: '" + beanName + "' versus '" + strVal + "'");
 							}
+							// 直接在类上标注的注解的 value 属性值作为 bean 的名称
 							beanName = strVal;
 						}
 					}
@@ -124,11 +135,14 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	}
 
 	/**
-	 * Check whether the given annotation is a stereotype that is allowed
-	 * to suggest a component name through its annotation {@code value()}.
-	 * @param annotationType the name of the annotation class to check
+	 * 检查给定的注解是否为建议一个组件名称的模式。
+	 * <p>
+	 * Check whether the given annotation is a stereotype that is allowed to suggest a component name through its
+	 * annotation {@code value()}.
+	 *
+	 * @param annotationType      the name of the annotation class to check
 	 * @param metaAnnotationTypes the names of meta-annotations on the given annotation
-	 * @param attributes the map of attributes for the given annotation
+	 * @param attributes          the map of attributes for the given annotation
 	 * @return whether the annotation qualifies as a stereotype with component name
 	 */
 	protected boolean isStereotypeWithNameValue(String annotationType,
@@ -143,10 +157,13 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	}
 
 	/**
+	 * 构建默认的 bean 名称
+	 * <p>
 	 * Derive a default bean name from the given bean definition.
 	 * <p>The default implementation delegates to {@link #buildDefaultBeanName(BeanDefinition)}.
+	 *
 	 * @param definition the bean definition to build a bean name for
-	 * @param registry the registry that the given bean definition is being registered with
+	 * @param registry   the registry that the given bean definition is being registered with
 	 * @return the default bean name (never {@code null})
 	 */
 	protected String buildDefaultBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
@@ -154,12 +171,16 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	}
 
 	/**
+	 * 构建默认的 bean 名称，为类名的简单名称，如 "mypackage.MyJdbcDao" -> "myJdbcDao"， 有内部类的情况下会存在 "outerClassName.InnerClassName"
+	 * 形式的名称。
+	 * <p>
 	 * Derive a default bean name from the given bean definition.
 	 * <p>The default implementation simply builds a decapitalized version
 	 * of the short class name: e.g. "mypackage.MyJdbcDao" -> "myJdbcDao".
 	 * <p>Note that inner classes will thus have names of the form
-	 * "outerClassName.InnerClassName", which because of the period in the
-	 * name may be an issue if you are autowiring by name.
+	 * "outerClassName.InnerClassName", which because of the period in the name may be an issue if you are autowiring by
+	 * name.
+	 *
 	 * @param definition the bean definition to build a bean name for
 	 * @return the default bean name (never {@code null})
 	 */

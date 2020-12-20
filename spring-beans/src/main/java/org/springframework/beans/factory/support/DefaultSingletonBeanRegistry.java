@@ -77,28 +77,35 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 	/**
 	 * 一级缓存，存放初始化结束的bean
+	 *
 	 * Cache of singleton objects: bean name to bean instance.
 	 */
 	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
 
 	/**
 	 * 三级缓存，bean名称->获取未初始化结束bean的ObjectFactory
+	 *
 	 * Cache of singleton factories: bean name to ObjectFactory.
 	 */
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 
 	/**
 	 * 二级缓存，bean名称->未初始化结束的bean
+	 *
 	 * Cache of early singleton objects: bean name to bean instance.
 	 */
 	private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);
 
 	/**
+	 * 保存 bean 注册的顺序
+	 *
 	 * Set of registered singletons, containing the bean names in registration order.
 	 */
 	private final Set<String> registeredSingletons = new LinkedHashSet<>(256);
 
 	/**
+	 * 正在创建的 bean 的名称
+	 *
 	 * Names of beans that are currently in creation.
 	 */
 	private final Set<String> singletonsCurrentlyInCreation =
@@ -127,19 +134,21 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	private final Map<String, Object> disposableBeans = new LinkedHashMap<>();
 
 	/**
-	 * bean名称 -> bean包含的其他bean的名称的集合
+	 * bean 名称 -> bean 包含的其他 bean 的名称的集合
+	 *
 	 * Map between containing bean names: bean name to Set of bean names that the bean contains.
 	 */
 	private final Map<String, Set<String>> containedBeanMap = new ConcurrentHashMap<>(16);
 
 	/**
-	 * 规范化的bean名称 -> 依赖该bean名称的其他bean名称集合
+	 * 规范化的 bean 名称 -> 依赖该 bean 名称的其他 bean 名称集合
+	 *
 	 * Map between dependent bean names: bean name to Set of dependent bean names.
 	 */
 	private final Map<String, Set<String>> dependentBeanMap = new ConcurrentHashMap<>(64);
 
 	/**
-	 * bean名称 -> bean依赖的其他bean的规范化名称的集合
+	 * bean 名称 -> bean 依赖的其他 bean 的规范化名称的集合
 	 * Map between depending bean names: bean name to Set of bean names for the bean's dependencies.
 	 */
 	private final Map<String, Set<String>> dependenciesForBeanMap = new ConcurrentHashMap<>(64);
@@ -243,7 +252,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
-	 * {@link AbstractBeanFactory#doGetBean} 调用该方法
+	 * {@link AbstractBeanFactory#doGetBean} 获取单例 bean 调用该方法，将缓存单例 bean
 	 * <p>
 	 * Return the (raw) singleton object registered under the given name,
 	 * creating and registering a new one if none registered yet.
@@ -308,6 +317,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					afterSingletonCreation(beanName);
 				}
 				if (newSingleton) {
+					// 创建单例 bean 结束，缓存单例 bean 到一级缓存
 					addSingleton(beanName, singletonObject);
 				}
 			}
@@ -498,7 +508,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
-	 * dependentBeanName是否依赖beanName
+	 * dependentBeanName 是否依赖 beanName
 	 * Determine whether the specified dependent bean has been registered as
 	 * dependent on the given bean or on any of its transitive dependencies.
 	 *
@@ -513,7 +523,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
-	 * dependentBeanName是否依赖beanName
+	 * dependentBeanName 是否依赖 beanName
 	 *
 	 * @param beanName
 	 * @param dependentBeanName

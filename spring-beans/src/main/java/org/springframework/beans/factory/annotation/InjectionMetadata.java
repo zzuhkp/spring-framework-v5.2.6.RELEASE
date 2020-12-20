@@ -25,10 +25,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -36,6 +34,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
 
 /**
+ * 管理注入元数据的内部类
+ * <p>
  * Internal class for managing injection metadata.
  * Not intended for direct use in applications.
  *
@@ -50,6 +50,7 @@ public class InjectionMetadata {
 
 	/**
 	 * An empty {@code InjectionMetadata} instance with no-op callbacks.
+	 *
 	 * @since 5.2
 	 */
 	public static final InjectionMetadata EMPTY = new InjectionMetadata(Object.class, Collections.emptyList()) {
@@ -57,12 +58,15 @@ public class InjectionMetadata {
 		protected boolean needsRefresh(Class<?> clazz) {
 			return false;
 		}
+
 		@Override
 		public void checkConfigMembers(RootBeanDefinition beanDefinition) {
 		}
+
 		@Override
 		public void inject(Object target, @Nullable String beanName, @Nullable PropertyValues pvs) {
 		}
+
 		@Override
 		public void clear(@Nullable PropertyValues pvs) {
 		}
@@ -71,8 +75,14 @@ public class InjectionMetadata {
 
 	private static final Log logger = LogFactory.getLog(InjectionMetadata.class);
 
+	/**
+	 * 需要注入值的目标类
+	 */
 	private final Class<?> targetClass;
 
+	/**
+	 * 需要注入的属性或方法参数
+	 */
 	private final Collection<InjectedElement> injectedElements;
 
 	@Nullable
@@ -83,8 +93,9 @@ public class InjectionMetadata {
 	 * Create a new {@code InjectionMetadata instance}.
 	 * <p>Preferably use {@link #forElements} for reusing the {@link #EMPTY}
 	 * instance in case of no elements.
+	 *
 	 * @param targetClass the target class
-	 * @param elements the associated elements to inject
+	 * @param elements    the associated elements to inject
 	 * @see #forElements
 	 */
 	public InjectionMetadata(Class<?> targetClass, Collection<InjectedElement> elements) {
@@ -94,7 +105,10 @@ public class InjectionMetadata {
 
 
 	/**
+	 * 确定是否元数据实例需要被刷新
+	 *
 	 * Determine whether this metadata instance needs to be refreshed.
+	 *
 	 * @param clazz the current target class
 	 * @return {@code true} indicating a refresh, {@code false} otherwise
 	 * @since 5.2.4
@@ -111,13 +125,22 @@ public class InjectionMetadata {
 				beanDefinition.registerExternallyManagedConfigMember(member);
 				checkedElements.add(element);
 				if (logger.isTraceEnabled()) {
-					logger.trace("Registered injected element on class [" + this.targetClass.getName() + "]: " + element);
+					logger.trace(
+							"Registered injected element on class [" + this.targetClass.getName() + "]: " + element);
 				}
 			}
 		}
 		this.checkedElements = checkedElements;
 	}
 
+	/**
+	 * 注入元素的值
+	 *
+	 * @param target   目标类的实例
+	 * @param beanName 目标类的 bean 名称
+	 * @param pvs
+	 * @throws Throwable
+	 */
 	public void inject(Object target, @Nullable String beanName, @Nullable PropertyValues pvs) throws Throwable {
 		Collection<InjectedElement> checkedElements = this.checkedElements;
 		Collection<InjectedElement> elementsToIterate =
@@ -134,6 +157,7 @@ public class InjectionMetadata {
 
 	/**
 	 * Clear property skipping for the contained elements.
+	 *
 	 * @since 3.2.13
 	 */
 	public void clear(@Nullable PropertyValues pvs) {
@@ -150,8 +174,9 @@ public class InjectionMetadata {
 
 	/**
 	 * Return an {@code InjectionMetadata} instance, possibly for empty elements.
+	 *
 	 * @param elements the elements to inject (possibly empty)
-	 * @param clazz the target class
+	 * @param clazz    the target class
 	 * @return a new {@link #InjectionMetadata(Class, Collection)} instance,
 	 * or {@link #EMPTY} in case of no elements
 	 * @since 5.2
@@ -161,9 +186,12 @@ public class InjectionMetadata {
 	}
 
 	/**
+	 * 检查是否给定的注入元数据需要被刷新
+	 *
 	 * Check whether the given injection metadata needs to be refreshed.
+	 *
 	 * @param metadata the existing metadata instance
-	 * @param clazz the current target class
+	 * @param clazz    the current target class
 	 * @return {@code true} indicating a refresh, {@code false} otherwise
 	 * @see #needsRefresh(Class)
 	 */
@@ -173,14 +201,25 @@ public class InjectionMetadata {
 
 
 	/**
+	 * 单个注入的元素
+	 * <p>
 	 * A single injected element.
 	 */
 	public abstract static class InjectedElement {
 
+		/**
+		 * 成员变量或方法
+		 */
 		protected final Member member;
 
+		/**
+		 * 是否为成员变量
+		 */
 		protected final boolean isField;
 
+		/**
+		 * 成员变量或方法参数的属性描述信息
+		 */
 		@Nullable
 		protected final PropertyDescriptor pd;
 
@@ -197,18 +236,26 @@ public class InjectionMetadata {
 			return this.member;
 		}
 
+		/**
+		 * 获取需要注入元素的类型
+		 *
+		 * @return
+		 */
 		protected final Class<?> getResourceType() {
 			if (this.isField) {
 				return ((Field) this.member).getType();
-			}
-			else if (this.pd != null) {
+			} else if (this.pd != null) {
 				return this.pd.getPropertyType();
-			}
-			else {
+			} else {
 				return ((Method) this.member).getParameterTypes()[0];
 			}
 		}
 
+		/**
+		 * 检查参数给定的类型是否与需要注入的类型匹配
+		 *
+		 * @param resourceType
+		 */
 		protected final void checkResourceType(Class<?> resourceType) {
 			if (this.isField) {
 				Class<?> fieldType = ((Field) this.member).getType();
@@ -216,8 +263,7 @@ public class InjectionMetadata {
 					throw new IllegalStateException("Specified field type [" + fieldType +
 							"] is incompatible with resource type [" + resourceType.getName() + "]");
 				}
-			}
-			else {
+			} else {
 				Class<?> paramType =
 						(this.pd != null ? this.pd.getPropertyType() : ((Method) this.member).getParameterTypes()[0]);
 				if (!(resourceType.isAssignableFrom(paramType) || paramType.isAssignableFrom(resourceType))) {
@@ -228,35 +274,45 @@ public class InjectionMetadata {
 		}
 
 		/**
+		 * 注入元素的值
+		 *
 		 * Either this or {@link #getResourceToInject} needs to be overridden.
+		 *
+		 * @param target             目标 bean 实例
+		 * @param requestingBeanName 目标 bean 名称
+		 * @param pvs                BeanDefinition 中的 PropertyValues
 		 */
 		protected void inject(Object target, @Nullable String requestingBeanName, @Nullable PropertyValues pvs)
 				throws Throwable {
 
 			if (this.isField) {
+				// 注入成员变量
 				Field field = (Field) this.member;
 				ReflectionUtils.makeAccessible(field);
 				field.set(target, getResourceToInject(target, requestingBeanName));
-			}
-			else {
+			} else {
 				if (checkPropertySkipping(pvs)) {
 					return;
 				}
 				try {
+					// 注入方法参数的值
 					Method method = (Method) this.member;
 					ReflectionUtils.makeAccessible(method);
 					method.invoke(target, getResourceToInject(target, requestingBeanName));
-				}
-				catch (InvocationTargetException ex) {
+				} catch (InvocationTargetException ex) {
 					throw ex.getTargetException();
 				}
 			}
 		}
 
 		/**
+		 * 检查 injector 的属性是否需要被跳过
+		 * <p>
 		 * Check whether this injector's property needs to be skipped due to
 		 * an explicit property value having been specified. Also marks the
 		 * affected property as processed for other processors to ignore it.
+		 *
+		 * @param pvs RootBeanDefinition 中保存的属性值
 		 */
 		protected boolean checkPropertySkipping(@Nullable PropertyValues pvs) {
 			Boolean skip = this.skip;
@@ -274,11 +330,11 @@ public class InjectionMetadata {
 				}
 				if (this.pd != null) {
 					if (pvs.contains(this.pd.getName())) {
+						// 值被 BeanDefinition 提供
 						// Explicit value provided as part of the bean definition.
 						this.skip = true;
 						return true;
-					}
-					else if (pvs instanceof MutablePropertyValues) {
+					} else if (pvs instanceof MutablePropertyValues) {
 						((MutablePropertyValues) pvs).registerProcessedProperty(this.pd.getName());
 					}
 				}
@@ -289,6 +345,7 @@ public class InjectionMetadata {
 
 		/**
 		 * Clear property skipping for this element.
+		 *
 		 * @since 3.2.13
 		 */
 		protected void clearPropertySkipping(@Nullable PropertyValues pvs) {

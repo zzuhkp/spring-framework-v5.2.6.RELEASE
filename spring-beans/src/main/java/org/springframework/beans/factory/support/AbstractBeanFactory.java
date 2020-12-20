@@ -280,10 +280,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
 			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
 
+		// 先去除前缀&获取别名对应的真实名称
 		final String beanName = transformedBeanName(name);
 		Object bean;
 
 		// Eagerly check singleton cache for manually registered singletons.
+		// 先从缓存中获取单例 bean
 		// getSingleton方法可能获取到未初始化结束的bean，这是由于循环引用导致
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
@@ -297,11 +299,13 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 			}
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
-		} else {// bean不是singleton或参数args不为空
+		} else {
+			// 只要参数 args 不为空，就需要重新获取
+
 			// Fail if we're already creating this bean instance:
 			// We're assumably within a circular reference.
 			if (isPrototypeCurrentlyInCreation(beanName)) {
-				//如果当前bean为prototype类型，且正在创建则直接抛出异常
+				//如果当前 bean 为 prototype 类型，且正在创建则直接抛出异常
 				throw new BeanCurrentlyInCreationException(beanName);
 			}
 
@@ -345,7 +349,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						}
 						registerDependentBean(dep, beanName);
 						try {
-							//先加载依赖给定bean的bean
+							//先加载依赖给定 bean 的 bean
 							getBean(dep);
 						} catch (NoSuchBeanDefinitionException ex) {
 							throw new BeanCreationException(mbd.getResourceDescription(), beanName,
@@ -541,6 +545,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * 给定名称的bean是否与指定类型匹配
+	 *
 	 * Internal extended variant of {@link #isTypeMatch(String, ResolvableType)}
 	 * to check whether the bean with the given name matches the specified type. Allow
 	 * additional constraints to be applied to ensure that beans are not created early.
@@ -1395,12 +1400,13 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * 返回和父BeanDefinition合并后的RootBeanDefinition
+	 *
 	 * Return a RootBeanDefinition for the given bean, by merging with the
 	 * parent if the given bean's definition is a child bean definition.
 	 *
 	 * @param beanName     the name of the bean definition
 	 * @param bd           the original bean definition (Root/ChildBeanDefinition)
-	 * @param containingBd 内部bean所在的bean definition
+	 * @param containingBd 内部 bean 所在的 bean definition
 	 *                     the containing bean definition in case of inner bean,
 	 *                     or {@code null} in case of a top-level bean
 	 * @return a (potentially merged) RootBeanDefinition for the given bean
@@ -1440,7 +1446,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 						String parentBeanName = transformedBeanName(bd.getParentName());
 						//当前beanName和父beanName不同
 						if (!beanName.equals(parentBeanName)) {
-							//根据父beanName获取父BeanDefinition
+							//根据父 beanName 获取父 BeanDefinition
 							pbd = getMergedBeanDefinition(parentBeanName);
 						} else {
 							//当前beanName和父beanName相同
@@ -1563,7 +1569,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
-	 * 将执行的BeanDefinition解析为bean class
+	 * 将执行的 BeanDefinition 解析为 bean class
+	 *
 	 * Resolve the bean class for the specified bean definition,
 	 * resolving a bean class name into a Class reference (if necessary)
 	 * and storing the resolved Class in the bean definition for further use.
@@ -1600,7 +1607,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
-	 * 解析BeanDefinition为class
+	 * 解析 BeanDefinition 为 class
 	 *
 	 * @param mbd
 	 * @param typesToMatch
@@ -1694,6 +1701,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * 预测bean的类型
+	 *
 	 * Predict the eventual bean type (of the processed bean instance) for the
 	 * specified bean. Called by {@link #getType} and {@link #isTypeMatch}.
 	 * Does not need to handle FactoryBeans specifically, since it is only
@@ -1723,6 +1731,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * 检查给定的bean是否定义为FactoryBean
+	 *
 	 * Check whether the given bean is defined as a {@link FactoryBean}.
 	 *
 	 * @param beanName the name of the bean
@@ -1834,7 +1843,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
-	 * 标记指定的bean已经创建或正在创建
+	 * 标记指定的 bean 已经创建或正在创建
+	 *
 	 * Mark the specified bean as already created (or about to be created).
 	 * <p>This allows the bean factory to optimize its caching for repeated
 	 * creation of the specified bean.

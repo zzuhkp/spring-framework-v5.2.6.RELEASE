@@ -523,7 +523,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 	/**
 	 * 此类的中心方法：创建bean实例、填充bean实例、应用后处理器等。
-	 * <p>
+	 *
 	 * Central method of this class: creates a bean instance,
 	 * populates the bean instance, applies post-processors, etc.
 	 *
@@ -544,7 +544,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// 确保此时实际解析了bean类，如果动态解析的类不能存储在共享合并bean定义中，请复制BeanDefinition。
 		Class<?> resolvedClass = resolveBeanClass(mbd, beanName);
 		if (resolvedClass != null && !mbd.hasBeanClass() && mbd.getBeanClassName() != null) {
-			// resolvedClass是根据beanClassName解析出的类
+			// resolvedClass 是根据 beanClassName解析出的类
 			mbdToUse = new RootBeanDefinition(mbd);
 			mbdToUse.setBeanClass(resolvedClass);
 		}

@@ -43,6 +43,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * 检查 BeanDefinition 上的 qualifier 和成员变量或方法参数上的 @Qualifier 是否匹配
+ * <p>
  * {@link AutowireCandidateResolver} implementation that matches bean definition qualifiers
  * against {@link Qualifier qualifier annotations} on the field or parameter to be autowired.
  * Also supports suggested expression values through a {@link Value value} annotation.
@@ -52,10 +54,10 @@ import org.springframework.util.StringUtils;
  * @author Mark Fisher
  * @author Juergen Hoeller
  * @author Stephane Nicoll
- * @since 2.5
  * @see AutowireCandidateQualifier
  * @see Qualifier
  * @see Value
+ * @since 2.5
  */
 public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwareAutowireCandidateResolver {
 
@@ -74,9 +76,8 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 		this.qualifierTypes.add(Qualifier.class);
 		try {
 			this.qualifierTypes.add((Class<? extends Annotation>) ClassUtils.forName("javax.inject.Qualifier",
-							QualifierAnnotationAutowireCandidateResolver.class.getClassLoader()));
-		}
-		catch (ClassNotFoundException ex) {
+					QualifierAnnotationAutowireCandidateResolver.class.getClassLoader()));
+		} catch (ClassNotFoundException ex) {
 			// JSR-330 API not available - simply skip.
 		}
 	}
@@ -84,6 +85,7 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 	/**
 	 * Create a new QualifierAnnotationAutowireCandidateResolver
 	 * for the given qualifier annotation type.
+	 *
 	 * @param qualifierType the qualifier annotation to look for
 	 */
 	public QualifierAnnotationAutowireCandidateResolver(Class<? extends Annotation> qualifierType) {
@@ -94,6 +96,7 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 	/**
 	 * Create a new QualifierAnnotationAutowireCandidateResolver
 	 * for the given qualifier annotation types.
+	 *
 	 * @param qualifierTypes the qualifier annotations to look for
 	 */
 	public QualifierAnnotationAutowireCandidateResolver(Set<Class<? extends Annotation>> qualifierTypes) {
@@ -110,6 +113,7 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 	 * <p>This implementation only supports annotations as qualifier types.
 	 * The default is Spring's {@link Qualifier} annotation which serves
 	 * as a qualifier for direct use and also as a meta annotation.
+	 *
 	 * @param qualifierType the annotation type to register
 	 */
 	public void addQualifierType(Class<? extends Annotation> qualifierType) {
@@ -140,14 +144,17 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 	 * the same qualifier or match by meta attributes. A "value" attribute will
 	 * fallback to match against the bean name or an alias if a qualifier or
 	 * attribute does not match.
+	 *
 	 * @see Qualifier
 	 */
 	@Override
 	public boolean isAutowireCandidate(BeanDefinitionHolder bdHolder, DependencyDescriptor descriptor) {
 		boolean match = super.isAutowireCandidate(bdHolder, descriptor);
 		if (match) {
+			// 先检查 BeanDefinition 是否满足成员变量或方法参数上的注解
 			match = checkQualifiers(bdHolder, descriptor.getAnnotations());
 			if (match) {
+				// 然后检查 BeanDefinition 是否满足参数对应方法上的注解
 				MethodParameter methodParam = descriptor.getMethodParameter();
 				if (methodParam != null) {
 					Method method = methodParam.getMethod();
@@ -170,17 +177,20 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 		SimpleTypeConverter typeConverter = new SimpleTypeConverter();
 		for (Annotation annotation : annotationsToSearch) {
 			Class<? extends Annotation> type = annotation.annotationType();
+			// 是否检查元注解
 			boolean checkMeta = true;
+			// 是否回退到元注解检查
 			boolean fallbackToMeta = false;
 			if (isQualifier(type)) {
 				if (!checkQualifier(bdHolder, annotation, typeConverter)) {
+					// 给定的类型不是 qualifier ，回退到检查元注解
 					fallbackToMeta = true;
-				}
-				else {
+				} else {
 					checkMeta = false;
 				}
 			}
 			if (checkMeta) {
+				// 是否查到为 Qualifier 的元注解
 				boolean foundMeta = false;
 				for (Annotation metaAnn : type.getAnnotations()) {
 					Class<? extends Annotation> metaType = metaAnn.annotationType();
@@ -203,6 +213,8 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 	}
 
 	/**
+	 * 给定的注解或其元注解是否为 qualifier 类型
+	 *
 	 * Checks whether the given annotation type is a recognized qualifier type.
 	 */
 	protected boolean isQualifier(Class<? extends Annotation> annotationType) {
@@ -228,6 +240,7 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 			qualifier = bd.getQualifier(ClassUtils.getShortName(type));
 		}
 		if (qualifier == null) {
+
 			// First, check annotation on qualified element, if any
 			Annotation targetAnnotation = getQualifiedElementAnnotation(bd, type);
 			// Then, check annotation on factory method, if applicable
@@ -248,8 +261,7 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 						if (beanType != null) {
 							targetAnnotation = AnnotationUtils.getAnnotation(ClassUtils.getUserClass(beanType), type);
 						}
-					}
-					catch (NoSuchBeanDefinitionException ex) {
+					} catch (NoSuchBeanDefinitionException ex) {
 						// Not the usual case - simply forget about the type check...
 					}
 				}
@@ -257,6 +269,7 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 					targetAnnotation = AnnotationUtils.getAnnotation(ClassUtils.getUserClass(bd.getBeanClass()), type);
 				}
 			}
+			// @Autowired 标注对象上的 @Qualifier 实际类型和 bean 上的 @Qualifier 一致
 			if (targetAnnotation != null && targetAnnotation.equals(annotation)) {
 				return true;
 			}
@@ -268,6 +281,7 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 			return false;
 		}
 		for (Map.Entry<String, Object> entry : attributes.entrySet()) {
+			// @Autowired 标注对象上的 @Qualifier 实际类型和 bean 上的 @Qualifier 参数必须一致
 			String attributeName = entry.getKey();
 			Object expectedValue = entry.getValue();
 			Object actualValue = null;
@@ -282,6 +296,7 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 			if (actualValue == null && attributeName.equals(AutowireCandidateQualifier.VALUE_KEY) &&
 					expectedValue instanceof String && bdHolder.matchesName((String) expectedValue)) {
 				// Fall back on bean name (or alias) match
+				// @Autowired 标注的对象上不存在 @Qualifier 注解
 				continue;
 			}
 			if (actualValue == null && qualifier != null) {
@@ -314,6 +329,7 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 	/**
 	 * Determine whether the given dependency declares an autowired annotation,
 	 * checking its required flag.
+	 *
 	 * @see Autowired#required()
 	 */
 	@Override
@@ -327,6 +343,7 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 
 	/**
 	 * Determine whether the given dependency declares a qualifier annotation.
+	 *
 	 * @see #isQualifier(Class)
 	 * @see Qualifier
 	 */
@@ -342,6 +359,7 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 
 	/**
 	 * Determine whether the given dependency declares a value annotation.
+	 *
 	 * @see Value
 	 */
 	@Override
@@ -374,6 +392,7 @@ public class QualifierAnnotationAutowireCandidateResolver extends GenericTypeAwa
 
 	/**
 	 * Extract the value attribute from the given annotation.
+	 *
 	 * @since 4.3
 	 */
 	protected Object extractValue(AnnotationAttributes attr) {

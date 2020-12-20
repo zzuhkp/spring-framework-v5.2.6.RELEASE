@@ -378,8 +378,9 @@ final class TypeMappedAnnotation<A extends Annotation> extends AbstractMergedAnn
 				mappedIndex = this.mapping.getConventionMapping(attributeIndex);
 			}
 			if (mappedIndex != -1) {
+				// 优先从属性对应的较高层次结构中别名属性中获取值
 				mapping = mapping.getRoot();
-				attributeIndex = mappedIndex;
+				attributImport eIndex = mappedIndex;
 			}
 		}
 		if (!forMirrorResolution) {

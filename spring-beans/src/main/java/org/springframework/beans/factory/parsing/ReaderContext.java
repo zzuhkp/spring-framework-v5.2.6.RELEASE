@@ -40,9 +40,10 @@ public class ReaderContext {
 
 	/**
 	 * Construct a new {@code ReaderContext}.
-	 * @param resource the XML bean definition resource
+	 *
+	 * @param resource        the XML bean definition resource
 	 * @param problemReporter the problem reporter in use
-	 * @param eventListener the event listener in use
+	 * @param eventListener   the event listener in use
 	 * @param sourceExtractor the source extractor in use
 	 */
 	public ReaderContext(Resource resource, ProblemReporter problemReporter,
@@ -57,7 +58,6 @@ public class ReaderContext {
 	public final Resource getResource() {
 		return this.resource;
 	}
-
 
 	// Errors and warnings
 
@@ -85,7 +85,8 @@ public class ReaderContext {
 	/**
 	 * Raise a fatal error.
 	 */
-	public void fatal(String message, @Nullable Object source, @Nullable ParseState parseState, @Nullable Throwable cause) {
+	public void fatal(String message, @Nullable Object source, @Nullable ParseState parseState,
+			@Nullable Throwable cause) {
 		Location location = new Location(getResource(), source);
 		this.problemReporter.fatal(new Problem(message, location, parseState, cause));
 	}
@@ -114,7 +115,8 @@ public class ReaderContext {
 	/**
 	 * Raise a regular error.
 	 */
-	public void error(String message, @Nullable Object source, @Nullable ParseState parseState, @Nullable Throwable cause) {
+	public void error(String message, @Nullable Object source, @Nullable ParseState parseState,
+			@Nullable Throwable cause) {
 		Location location = new Location(getResource(), source);
 		this.problemReporter.error(new Problem(message, location, parseState, cause));
 	}
@@ -143,11 +145,11 @@ public class ReaderContext {
 	/**
 	 * Raise a non-critical warning.
 	 */
-	public void warning(String message, @Nullable Object source, @Nullable ParseState parseState, @Nullable Throwable cause) {
+	public void warning(String message, @Nullable Object source, @Nullable ParseState parseState,
+			@Nullable Throwable cause) {
 		Location location = new Location(getResource(), source);
 		this.problemReporter.warning(new Problem(message, location, parseState, cause));
 	}
-
 
 	// Explicit parse events
 
@@ -186,7 +188,6 @@ public class ReaderContext {
 		this.eventListener.importProcessed(new ImportDefinition(importedResource, actualResources, source));
 	}
 
-
 	// Source extraction
 
 	/**
@@ -198,6 +199,7 @@ public class ReaderContext {
 
 	/**
 	 * Call the source extractor for the given source object.
+	 *
 	 * @param sourceCandidate the original source object
 	 * @return the source object to store, or {@code null} for none.
 	 * @see #getSourceExtractor()
