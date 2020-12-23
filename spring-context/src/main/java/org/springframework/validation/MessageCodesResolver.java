@@ -19,6 +19,8 @@ package org.springframework.validation;
 import org.springframework.lang.Nullable;
 
 /**
+ * 从校验的错误编码构建消息编码的策略接口
+ *
  * Strategy interface for building message codes from validation error codes.
  * Used by DataBinder to build the codes list for ObjectErrors and FieldErrors.
  *

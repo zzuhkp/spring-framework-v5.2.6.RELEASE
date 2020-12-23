@@ -23,6 +23,10 @@ import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.lang.Nullable;
 
 /**
+ * 表示绑定结果的接口，添加了特定绑定的分析信息和构建模型
+ *
+ * 作为 DataBinder 绑定属性的结果
+ *
  * General interface that represents binding results. Extends the
  * {@link Errors interface} for error registration capabilities,
  * allowing for a {@link Validator} to be applied, and adds
@@ -45,6 +49,8 @@ import org.springframework.lang.Nullable;
 public interface BindingResult extends Errors {
 
 	/**
+	 * 模型中 BinderResult 实例的前缀名称，后面紧跟对象的名称
+	 *
 	 * Prefix for the name of the BindingResult instance in a model,
 	 * followed by the object name.
 	 */
@@ -52,6 +58,8 @@ public interface BindingResult extends Errors {
 
 
 	/**
+	 * 获取包装的目标对象
+	 *
 	 * Return the wrapped target object, which may be a bean, an object with
 	 * public fields, a Map - depending on the concrete binding strategy.
 	 */
@@ -59,6 +67,8 @@ public interface BindingResult extends Errors {
 	Object getTarget();
 
 	/**
+	 * 返回获取状态的模型对象
+	 *
 	 * Return a model Map for the obtained state, exposing a BindingResult
 	 * instance as '{@link #MODEL_KEY_PREFIX MODEL_KEY_PREFIX} + objectName'
 	 * and the object itself as 'objectName'.
@@ -79,6 +89,8 @@ public interface BindingResult extends Errors {
 	Map<String, Object> getModel();
 
 	/**
+	 * 提取给定字段的原始字段值
+	 *
 	 * Extract the raw field value for the given field.
 	 * Typically used for comparison purposes.
 	 * @param field the field to check
@@ -88,6 +100,8 @@ public interface BindingResult extends Errors {
 	Object getRawFieldValue(String field);
 
 	/**
+	 * 查找给定字段和类型的属性编辑器
+	 *
 	 * Find a custom property editor for the given type and property.
 	 * @param field the path of the property (name or nested path), or
 	 * {@code null} if looking for an editor for all properties of the given type
@@ -99,6 +113,8 @@ public interface BindingResult extends Errors {
 	PropertyEditor findEditor(@Nullable String field, @Nullable Class<?> valueType);
 
 	/**
+	 * 返回底层的 PropertyEditorRegistry
+	 *
 	 * Return the underlying PropertyEditorRegistry.
 	 * @return the PropertyEditorRegistry, or {@code null} if none
 	 * available for this BindingResult
@@ -107,6 +123,8 @@ public interface BindingResult extends Errors {
 	PropertyEditorRegistry getPropertyEditorRegistry();
 
 	/**
+	 * 将给定的错误码解析为消息编码
+	 *
 	 * Resolve the given error code into message codes.
 	 * <p>Calls the configured {@link MessageCodesResolver} with appropriate parameters.
 	 * @param errorCode the error code to resolve into message codes
@@ -115,6 +133,8 @@ public interface BindingResult extends Errors {
 	String[] resolveMessageCodes(String errorCode);
 
 	/**
+	 * 将错误码解析为给定字段的消息编码
+	 *
 	 * Resolve the given error code into message codes for the given field.
 	 * <p>Calls the configured {@link MessageCodesResolver} with appropriate parameters.
 	 * @param errorCode the error code to resolve into message codes
@@ -124,6 +144,8 @@ public interface BindingResult extends Errors {
 	String[] resolveMessageCodes(String errorCode, String field);
 
 	/**
+	 * 将自定义的 ObjectError 或 FieldError 添加到错误列表
+	 *
 	 * Add a custom {@link ObjectError} or {@link FieldError} to the errors list.
 	 * <p>Intended to be used by cooperating strategies such as {@link BindingErrorProcessor}.
 	 * @see ObjectError
@@ -133,6 +155,8 @@ public interface BindingResult extends Errors {
 	void addError(ObjectError error);
 
 	/**
+	 * 记录给定字段的值，用于无法构建对象时使用，可通过 getFieldValue 方法获取
+	 *
 	 * Record the given value for the specified field.
 	 * <p>To be used when a target object cannot be constructed, making
 	 * the original field values available through {@link #getFieldValue}.
@@ -147,6 +171,8 @@ public interface BindingResult extends Errors {
 	}
 
 	/**
+	 * 将禁止的字段标记为抑制
+	 *
 	 * Mark the specified disallowed field as suppressed.
 	 * <p>The data binder invokes this for each field value that was
 	 * detected to target a disallowed field.
@@ -156,6 +182,8 @@ public interface BindingResult extends Errors {
 	}
 
 	/**
+	 * 返回绑定过程中被抑制的字段列表
+	 *
 	 * Return the list of fields that were suppressed during the bind process.
 	 * <p>Can be used to determine whether any field values were targeting
 	 * disallowed fields.

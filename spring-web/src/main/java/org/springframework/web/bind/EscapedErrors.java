@@ -27,6 +27,8 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.util.HtmlUtils;
 
 /**
+ * 将 html 特殊字符转义的包装类
+ *
  * Errors wrapper that adds automatic HTML escaping to the wrapped instance,
  * for convenient usage in HTML views. Can be retrieved easily via
  * RequestContext's {@code getErrors} method.

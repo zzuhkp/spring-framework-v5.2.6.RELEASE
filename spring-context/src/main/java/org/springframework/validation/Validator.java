@@ -17,6 +17,8 @@
 package org.springframework.validation;
 
 /**
+ * 特定的应用程序对象的验证器
+ *
  * A validator for application-specific objects.
  *
  * <p>This interface is totally divorced from any infrastructure
@@ -66,6 +68,8 @@ package org.springframework.validation;
 public interface Validator {
 
 	/**
+	 * 当前验证器是否支持给定的类型
+	 *
 	 * Can this {@link Validator} {@link #validate(Object, Errors) validate}
 	 * instances of the supplied {@code clazz}?
 	 * <p>This method is <i>typically</i> implemented like so:
@@ -81,6 +85,8 @@ public interface Validator {
 	boolean supports(Class<?> clazz);
 
 	/**
+	 * 校验给定的 target，提供的 errors 对象用于存储和获取错误信息
+	 *
 	 * Validate the supplied {@code target} object, which must be
 	 * of a {@link Class} for which the {@link #supports(Class)} method
 	 * typically has (or would) return {@code true}.

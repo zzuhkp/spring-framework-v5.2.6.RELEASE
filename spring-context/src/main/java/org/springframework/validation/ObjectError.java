@@ -21,6 +21,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 封装独享错误的类，表示全局错误
+ *
  * Encapsulates an object error, that is, a global reason for rejecting
  * an object.
  *
@@ -35,8 +37,14 @@ import org.springframework.util.Assert;
 @SuppressWarnings("serial")
 public class ObjectError extends DefaultMessageSourceResolvable {
 
+	/**
+	 * 影响的对象的名称
+	 */
 	private final String objectName;
 
+	/**
+	 * 错误的根源
+	 */
 	@Nullable
 	private transient Object source;
 
@@ -90,6 +98,8 @@ public class ObjectError extends DefaultMessageSourceResolvable {
 	}
 
 	/**
+	 * 获取给定类型的错误根源对象
+	 *
 	 * Unwrap the source behind this error: possibly an {@link Exception}
 	 * (typically {@link org.springframework.beans.PropertyAccessException})
 	 * or a Bean Validation {@link javax.validation.ConstraintViolation}.
@@ -115,6 +125,8 @@ public class ObjectError extends DefaultMessageSourceResolvable {
 	}
 
 	/**
+	 * 是否包含给定类型的错误根源
+	 *
 	 * Check the source behind this error: possibly an {@link Exception}
 	 * (typically {@link org.springframework.beans.PropertyAccessException})
 	 * or a Bean Validation {@link javax.validation.ConstraintViolation}.

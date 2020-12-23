@@ -28,6 +28,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
 /**
+ * Errors 接口的抽象实现，提供了评估错误的通用实现
+ * <p>
  * Abstract implementation of the {@link Errors} interface. Provides common
  * access to evaluated errors; however, does not define concrete management
  * of {@link ObjectError ObjectErrors} and {@link FieldError FieldErrors}.
@@ -39,8 +41,14 @@ import org.springframework.util.StringUtils;
 @SuppressWarnings("serial")
 public abstract class AbstractErrors implements Errors, Serializable {
 
+	/**
+	 * 最后嵌套的路径，如 a.b.c
+	 */
 	private String nestedPath = "";
 
+	/**
+	 * 中间的嵌套路径，如[a,a.b]
+	 */
 	private final Deque<String> nestedPathStack = new ArrayDeque<>();
 
 
@@ -66,8 +74,7 @@ public abstract class AbstractErrors implements Errors, Serializable {
 		try {
 			String formerNestedPath = this.nestedPathStack.pop();
 			doSetNestedPath(formerNestedPath);
-		}
-		catch (NoSuchElementException ex) {
+		} catch (NoSuchElementException ex) {
 			throw new IllegalStateException("Cannot pop nested path: no nested path on stack");
 		}
 	}
@@ -88,14 +95,15 @@ public abstract class AbstractErrors implements Errors, Serializable {
 	}
 
 	/**
+	 * 将给定字段转换为完整的嵌套路径
+	 *
 	 * Transform the given field into its full path,
 	 * regarding the nested path of this instance.
 	 */
 	protected String fixedField(@Nullable String field) {
 		if (StringUtils.hasLength(field)) {
 			return getNestedPath() + canonicalFieldName(field);
-		}
-		else {
+		} else {
 			String path = getNestedPath();
 			return (path.endsWith(Errors.NESTED_PATH_SEPARATOR) ?
 					path.substring(0, path.length() - NESTED_PATH_SEPARATOR.length()) : path);
@@ -103,8 +111,11 @@ public abstract class AbstractErrors implements Errors, Serializable {
 	}
 
 	/**
+	 * 确定给定字段的规范化的字段名称
+	 *
 	 * Determine the canonical field name for the given field.
 	 * <p>The default implementation simply returns the field name as-is.
+	 *
 	 * @param field the original field name
 	 * @return the canonical field name
 	 */
@@ -224,8 +235,11 @@ public abstract class AbstractErrors implements Errors, Serializable {
 	}
 
 	/**
+	 * 检查 FieldError 是否匹配给定的字段
+	 *
 	 * Check whether the given FieldError matches the given field.
-	 * @param field the field that we are looking up FieldErrors for
+	 *
+	 * @param field      the field that we are looking up FieldErrors for
 	 * @param fieldError the candidate FieldError
 	 * @return whether the FieldError matches the given field
 	 */
