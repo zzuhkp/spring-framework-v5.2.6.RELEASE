@@ -19,6 +19,8 @@ package org.springframework.validation;
 import org.springframework.lang.Nullable;
 
 /**
+ * Validator 接口的扩展，添加了对 hints 的支持
+ * <p>
  * Extended variant of the {@link Validator} interface, adding support for
  * validation 'hints'.
  *
@@ -39,8 +41,9 @@ public interface SmartValidator extends Validator {
 	 * <p>Note: Validation hints may get ignored by the actual target {@code Validator},
 	 * in which case this method should behave just like its regular
 	 * {@link #validate(Object, Errors)} sibling.
-	 * @param target the object that is to be validated
-	 * @param errors contextual state about the validation process
+	 *
+	 * @param target          the object that is to be validated
+	 * @param errors          contextual state about the validation process
 	 * @param validationHints one or more hint objects to be passed to the validation engine
 	 * @see javax.validation.Validator#validate(Object, Class[])
 	 */
@@ -50,13 +53,14 @@ public interface SmartValidator extends Validator {
 	 * Validate the supplied value for the specified field on the target type,
 	 * reporting the same validation errors as if the value would be bound to
 	 * the field on an instance of the target class.
-	 * @param targetType the target type
-	 * @param fieldName the name of the field
-	 * @param value the candidate value
-	 * @param errors contextual state about the validation process
+	 *
+	 * @param targetType      the target type
+	 * @param fieldName       the name of the field
+	 * @param value           the candidate value
+	 * @param errors          contextual state about the validation process
 	 * @param validationHints one or more hint objects to be passed to the validation engine
-	 * @since 5.1
 	 * @see javax.validation.Validator#validateValue(Class, String, Object, Class[])
+	 * @since 5.1
 	 */
 	default void validateValue(
 			Class<?> targetType, String fieldName, @Nullable Object value, Errors errors, Object... validationHints) {

@@ -34,33 +34,54 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * BindingResult 和 Errors 接口的抽象实现，封装了 ObjectError 和 FieldError 的通用管理
+ * <p>
  * Abstract implementation of the {@link BindingResult} interface and
  * its super-interface {@link Errors}. Encapsulates common management of
  * {@link ObjectError ObjectErrors} and {@link FieldError FieldErrors}.
  *
  * @author Juergen Hoeller
  * @author Rob Harrop
- * @since 2.0
  * @see Errors
+ * @since 2.0
  */
 @SuppressWarnings("serial")
 public abstract class AbstractBindingResult extends AbstractErrors implements BindingResult, Serializable {
 
+	/**
+	 * 目标对象的名称
+	 */
 	private final String objectName;
 
+	/**
+	 * 将错误信息解析为消息代码的解析器
+	 */
 	private MessageCodesResolver messageCodesResolver = new DefaultMessageCodesResolver();
 
+	/**
+	 * 全局错误或字段错误
+	 */
 	private final List<ObjectError> errors = new LinkedList<>();
 
+	/**
+	 * 字段名称 -> 字段类型
+	 */
 	private final Map<String, Class<?>> fieldTypes = new HashMap<>();
 
+	/**
+	 * 字段名称 -> 字段值
+	 */
 	private final Map<String, Object> fieldValues = new HashMap<>();
 
+	/**
+	 * 被抑制的字段
+	 */
 	private final Set<String> suppressedFields = new HashSet<>();
 
 
 	/**
 	 * Create a new AbstractBindingResult instance.
+	 *
 	 * @param objectName the name of the target object
 	 * @see DefaultMessageCodesResolver
 	 */
@@ -72,6 +93,7 @@ public abstract class AbstractBindingResult extends AbstractErrors implements Bi
 	/**
 	 * Set the strategy to use for resolving errors into message codes.
 	 * Default is DefaultMessageCodesResolver.
+	 *
 	 * @see DefaultMessageCodesResolver
 	 */
 	public void setMessageCodesResolver(MessageCodesResolver messageCodesResolver) {
@@ -103,7 +125,7 @@ public abstract class AbstractBindingResult extends AbstractErrors implements Bi
 
 	@Override
 	public void rejectValue(@Nullable String field, String errorCode, @Nullable Object[] errorArgs,
-			@Nullable String defaultMessage) {
+							@Nullable String defaultMessage) {
 
 		if ("".equals(getNestedPath()) && !StringUtils.hasLength(field)) {
 			// We're at the top of the nested object hierarchy,
@@ -223,12 +245,10 @@ public abstract class AbstractBindingResult extends AbstractErrors implements Bi
 			Object value = fieldError.getRejectedValue();
 			// Do not apply formatting on binding failures like type mismatches.
 			return (fieldError.isBindingFailure() || getTarget() == null ? value : formatFieldValue(field, value));
-		}
-		else if (getTarget() != null) {
+		} else if (getTarget() != null) {
 			Object value = getActualFieldValue(fixedField(field));
 			return formatFieldValue(field, value);
-		}
-		else {
+		} else {
 			return this.fieldValues.get(field);
 		}
 	}
@@ -237,6 +257,7 @@ public abstract class AbstractBindingResult extends AbstractErrors implements Bi
 	 * This default implementation determines the type based on the actual
 	 * field value, if any. Subclasses should override this to determine
 	 * the type from a descriptor, even for {@code null} values.
+	 *
 	 * @see #getActualFieldValue
 	 */
 	@Override
@@ -265,6 +286,7 @@ public abstract class AbstractBindingResult extends AbstractErrors implements Bi
 	 * <p>The attributes in the model Map returned by this method are usually
 	 * included in the ModelAndView for a form view that uses Spring's bind tag,
 	 * which needs access to the Errors instance.
+	 *
 	 * @see #getObjectName
 	 * @see #MODEL_KEY_PREFIX
 	 */
@@ -299,8 +321,7 @@ public abstract class AbstractBindingResult extends AbstractErrors implements Bi
 				valueTypeToUse = getFieldType(field);
 			}
 			return editorRegistry.findCustomEditor(valueTypeToUse, fixedField(field));
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -340,6 +361,7 @@ public abstract class AbstractBindingResult extends AbstractErrors implements Bi
 	 * Mark the specified disallowed field as suppressed.
 	 * <p>The data binder invokes this for each field value that was
 	 * detected to target a disallowed field.
+	 *
 	 * @see DataBinder#setAllowedFields
 	 */
 	@Override
@@ -351,6 +373,7 @@ public abstract class AbstractBindingResult extends AbstractErrors implements Bi
 	 * Return the list of fields that were suppressed during the bind process.
 	 * <p>Can be used to determine whether any field values were targeting
 	 * disallowed fields.
+	 *
 	 * @see DataBinder#setAllowedFields
 	 */
 	@Override
@@ -384,6 +407,8 @@ public abstract class AbstractBindingResult extends AbstractErrors implements Bi
 	//---------------------------------------------------------------------
 
 	/**
+	 * 获取包装的目标对象
+	 *
 	 * Return the wrapped target object.
 	 */
 	@Override
@@ -391,7 +416,10 @@ public abstract class AbstractBindingResult extends AbstractErrors implements Bi
 	public abstract Object getTarget();
 
 	/**
+	 * 提取给定字段的真实值
+	 *
 	 * Extract the actual field value for the given field.
+	 *
 	 * @param field the field to check
 	 * @return the current value of the field
 	 */
@@ -399,11 +427,14 @@ public abstract class AbstractBindingResult extends AbstractErrors implements Bi
 	protected abstract Object getActualFieldValue(String field);
 
 	/**
+	 * 格式化指定字段的真实值
+	 *
 	 * Format the given value for the specified field.
 	 * <p>The default implementation simply returns the field value as-is.
+	 *
 	 * @param field the field to check
 	 * @param value the value of the field (either a rejected value
-	 * other than from a binding error, or an actual field value)
+	 *              other than from a binding error, or an actual field value)
 	 * @return the formatted value
 	 */
 	@Nullable

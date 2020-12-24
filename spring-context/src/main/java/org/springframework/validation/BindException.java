@@ -25,6 +25,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 发生致命的绑定错误时抛出的异常
+ * <p>
  * Thrown when binding errors are considered fatal. Implements the
  * {@link BindingResult} interface (and its super-interface {@link Errors})
  * to allow for the direct analysis of binding errors.
@@ -49,6 +51,7 @@ public class BindException extends Exception implements BindingResult {
 
 	/**
 	 * Create a new BindException instance for a BindingResult.
+	 *
 	 * @param bindingResult the BindingResult instance to wrap
 	 */
 	public BindException(BindingResult bindingResult) {
@@ -58,7 +61,8 @@ public class BindException extends Exception implements BindingResult {
 
 	/**
 	 * Create a new BindException instance for a target bean.
-	 * @param target the target bean to bind onto
+	 *
+	 * @param target     the target bean to bind onto
 	 * @param objectName the name of the target object
 	 * @see BeanPropertyBindingResult
 	 */
@@ -71,6 +75,7 @@ public class BindException extends Exception implements BindingResult {
 	/**
 	 * Return the BindingResult that this BindException wraps.
 	 * Will typically be a BeanPropertyBindingResult.
+	 *
 	 * @see BeanPropertyBindingResult
 	 */
 	public final BindingResult getBindingResult() {

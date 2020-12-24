@@ -24,6 +24,9 @@ import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.lang.Nullable;
 
 /**
+ * Errors 和 BindingResult 接口的默认实现，用于注册和评估 java bean 对象上的绑定错误，使用标准的 JavaBean 属性访问，支持嵌套属性。
+ *
+ * <p>
  * Default implementation of the {@link Errors} and {@link BindingResult}
  * interfaces, for the registration and evaluation of binding errors on
  * JavaBean objects.
@@ -35,19 +38,28 @@ import org.springframework.lang.Nullable;
  * {@link DataBinder#getBindingResult()}.
  *
  * @author Juergen Hoeller
- * @since 2.0
  * @see DataBinder#getBindingResult()
  * @see DataBinder#initBeanPropertyAccess()
  * @see DirectFieldBindingResult
+ * @since 2.0
  */
 @SuppressWarnings("serial")
 public class BeanPropertyBindingResult extends AbstractPropertyBindingResult implements Serializable {
 
+	/**
+	 * 进行参数绑定的目标对象
+	 */
 	@Nullable
 	private final Object target;
 
+	/**
+	 * 是否自动增长嵌套路径
+	 */
 	private final boolean autoGrowNestedPaths;
 
+	/**
+	 * 增长的数组或集合的大小
+	 */
 	private final int autoGrowCollectionLimit;
 
 	@Nullable
@@ -56,7 +68,8 @@ public class BeanPropertyBindingResult extends AbstractPropertyBindingResult imp
 
 	/**
 	 * Creates a new instance of the {@link BeanPropertyBindingResult} class.
-	 * @param target the target bean to bind onto
+	 *
+	 * @param target     the target bean to bind onto
 	 * @param objectName the name of the target object
 	 */
 	public BeanPropertyBindingResult(@Nullable Object target, String objectName) {
@@ -65,13 +78,14 @@ public class BeanPropertyBindingResult extends AbstractPropertyBindingResult imp
 
 	/**
 	 * Creates a new instance of the {@link BeanPropertyBindingResult} class.
-	 * @param target the target bean to bind onto
-	 * @param objectName the name of the target object
-	 * @param autoGrowNestedPaths whether to "auto-grow" a nested path that contains a null value
+	 *
+	 * @param target                  the target bean to bind onto
+	 * @param objectName              the name of the target object
+	 * @param autoGrowNestedPaths     whether to "auto-grow" a nested path that contains a null value
 	 * @param autoGrowCollectionLimit the limit for array and collection auto-growing
 	 */
 	public BeanPropertyBindingResult(@Nullable Object target, String objectName,
-			boolean autoGrowNestedPaths, int autoGrowCollectionLimit) {
+									 boolean autoGrowNestedPaths, int autoGrowCollectionLimit) {
 
 		super(objectName);
 		this.target = target;
@@ -89,6 +103,7 @@ public class BeanPropertyBindingResult extends AbstractPropertyBindingResult imp
 	/**
 	 * Returns the {@link BeanWrapper} that this instance uses.
 	 * Creates a new one if none existed before.
+	 *
 	 * @see #createBeanWrapper()
 	 */
 	@Override
@@ -103,7 +118,10 @@ public class BeanPropertyBindingResult extends AbstractPropertyBindingResult imp
 	}
 
 	/**
+	 * 为目标 bean 创建一个 BeanWrapper
+	 * <p>
 	 * Create a new {@link BeanWrapper} for the underlying target object.
+	 *
 	 * @see #getTarget()
 	 */
 	protected BeanWrapper createBeanWrapper() {
