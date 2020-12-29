@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.ConfigurablePropertyAccessor;
@@ -49,6 +50,8 @@ import org.springframework.util.PatternMatchUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * 允许设置属性到目标对象的 Binder，包括验证和绑定结果分析的支持。
+ * <p>
  * Binder that allows for setting property values onto a target object,
  * including support for validation and binding result analysis.
  * The binding process can be customized through specifying allowed fields,
@@ -734,7 +737,7 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 
 	@Override
 	public void registerCustomEditor(@Nullable Class<?> requiredType, @Nullable String field,
-			PropertyEditor propertyEditor) {
+									 PropertyEditor propertyEditor) {
 		getPropertyEditorRegistry().registerCustomEditor(requiredType, field, propertyEditor);
 	}
 
@@ -754,7 +757,7 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 	@Override
 	@Nullable
 	public <T> T convertIfNecessary(@Nullable Object value, @Nullable Class<T> requiredType,
-			@Nullable MethodParameter methodParam) throws TypeMismatchException {
+									@Nullable MethodParameter methodParam) throws TypeMismatchException {
 
 		return getTypeConverter().convertIfNecessary(value, requiredType, methodParam);
 	}
@@ -770,7 +773,7 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 	@Nullable
 	@Override
 	public <T> T convertIfNecessary(@Nullable Object value, @Nullable Class<T> requiredType,
-			@Nullable TypeDescriptor typeDescriptor) throws TypeMismatchException {
+									@Nullable TypeDescriptor typeDescriptor) throws TypeMismatchException {
 
 		return getTypeConverter().convertIfNecessary(value, requiredType, typeDescriptor);
 	}
@@ -837,7 +840,7 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 
 	/**
 	 * 给定的字段是否允许绑定
-	 *
+	 * <p>
 	 * Return if the given field is allowed for binding.
 	 * Invoked for each passed-in property value.
 	 * <p>The default implementation checks for "xxx*", "*xxx" and "*xxx*" matches,

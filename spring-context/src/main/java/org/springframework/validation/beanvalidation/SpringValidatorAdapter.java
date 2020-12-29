@@ -238,6 +238,8 @@ public class SpringValidatorAdapter implements SmartValidator, javax.validation.
 	}
 
 	/**
+	 * 使用给定的约束描述符创建一个错误码
+	 * <p>
 	 * Determine a Spring-reported error code for the given constraint descriptor.
 	 * <p>The default implementation returns the simple class name of the descriptor's
 	 * annotation type. Note that the configured
@@ -255,6 +257,8 @@ public class SpringValidatorAdapter implements SmartValidator, javax.validation.
 	}
 
 	/**
+	 * 根据约束描述信息获取参数
+	 * <p>
 	 * Return FieldError arguments for a validation error on the given field.
 	 * Invoked for each violated constraint.
 	 * <p>The default implementation returns a first argument indicating the field name
@@ -289,6 +293,8 @@ public class SpringValidatorAdapter implements SmartValidator, javax.validation.
 	}
 
 	/**
+	 * 使用给定的字段构建 MessageSourceResolvable
+	 * <p>
 	 * Build a resolvable wrapper for the specified field, allowing to resolve the field's
 	 * name in a {@code MessageSource}.
 	 * <p>The default implementation returns a first argument indicating the field:
@@ -307,6 +313,8 @@ public class SpringValidatorAdapter implements SmartValidator, javax.validation.
 	}
 
 	/**
+	 * 提取违反约束后的拒绝值
+	 *
 	 * Extract the rejected value behind the given constraint violation,
 	 * for exposure through the Spring errors representation.
 	 *

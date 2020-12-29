@@ -16,31 +16,7 @@
 
 package org.springframework.validation.beanvalidation;
 
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.validation.Configuration;
-import javax.validation.ConstraintValidatorFactory;
-import javax.validation.MessageInterpolator;
-import javax.validation.ParameterNameProvider;
-import javax.validation.TraversableResolver;
-import javax.validation.Validation;
-import javax.validation.ValidationException;
-import javax.validation.ValidationProviderResolver;
-import javax.validation.Validator;
-import javax.validation.ValidatorContext;
-import javax.validation.ValidatorFactory;
-import javax.validation.bootstrap.GenericBootstrap;
-import javax.validation.bootstrap.ProviderSpecificBootstrap;
-
 import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator;
-
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -53,6 +29,14 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
+
+import javax.validation.*;
+import javax.validation.bootstrap.GenericBootstrap;
+import javax.validation.bootstrap.ProviderSpecificBootstrap;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * This is the central class for {@code javax.validation} (JSR-303) setup in a Spring
@@ -78,42 +62,72 @@ import org.springframework.util.ReflectionUtils;
  * {@code javax.validation} API being present but no explicit Validator having been configured.
  *
  * @author Juergen Hoeller
- * @since 3.0
  * @see javax.validation.ValidatorFactory
  * @see javax.validation.Validator
  * @see javax.validation.Validation#buildDefaultValidatorFactory()
  * @see javax.validation.ValidatorFactory#getValidator()
+ * @since 3.0
  */
 public class LocalValidatorFactoryBean extends SpringValidatorAdapter
 		implements ValidatorFactory, ApplicationContextAware, InitializingBean, DisposableBean {
 
+	/**
+	 * bean 验证提供者的类
+	 */
 	@SuppressWarnings("rawtypes")
 	@Nullable
 	private Class providerClass;
 
+	/**
+	 * ValidationProvider 的解析器
+	 */
 	@Nullable
 	private ValidationProviderResolver validationProviderResolver;
 
+	/**
+	 * 消息模板转换为消息内容
+	 */
 	@Nullable
 	private MessageInterpolator messageInterpolator;
 
+	/**
+	 * 确定 bean 验证程序是否可访问属性
+	 */
 	@Nullable
 	private TraversableResolver traversableResolver;
 
+	/**
+	 * 约束验证器工厂
+	 */
 	@Nullable
 	private ConstraintValidatorFactory constraintValidatorFactory;
 
+	/**
+	 * 参数名查找器，可以查找方法或构造器中的参数名
+	 */
 	@Nullable
 	private ParameterNameDiscoverer parameterNameDiscoverer = new DefaultParameterNameDiscoverer();
 
+	/**
+	 * bean 验证的 xml 文档位置
+	 */
 	@Nullable
 	private Resource[] mappingLocations;
 
+	/**
+	 * validation 使用的配置属性
+	 */
 	private final Map<String, String> validationPropertyMap = new HashMap<>();
 
+	/**
+	 * Spring 应用上下文
+	 */
 	@Nullable
 	private ApplicationContext applicationContext;
 
+	/**
+	 * 获取 Validator 的工厂
+	 */
 	@Nullable
 	private ValidatorFactory validatorFactory;
 
@@ -121,6 +135,7 @@ public class LocalValidatorFactoryBean extends SpringValidatorAdapter
 	/**
 	 * Specify the desired provider class, if any.
 	 * <p>If not specified, JSR-303's default search mechanism will be used.
+	 *
 	 * @see javax.validation.Validation#byProvider(Class)
 	 * @see javax.validation.Validation#byDefaultProvider()
 	 */
@@ -132,6 +147,7 @@ public class LocalValidatorFactoryBean extends SpringValidatorAdapter
 	/**
 	 * Specify a JSR-303 {@link ValidationProviderResolver} for bootstrapping the
 	 * provider of choice, as an alternative to {@code META-INF} driven resolution.
+	 *
 	 * @since 4.3
 	 */
 	public void setValidationProviderResolver(ValidationProviderResolver validationProviderResolver) {
@@ -147,6 +163,8 @@ public class LocalValidatorFactoryBean extends SpringValidatorAdapter
 	}
 
 	/**
+	 * 使用自定义的 MessageSource 解析验证消息
+	 * <p>
 	 * Specify a custom Spring MessageSource for resolving validation messages,
 	 * instead of relying on JSR-303's default "ValidationMessages.properties" bundle
 	 * in the classpath. This may refer to a Spring context's shared "messageSource" bean,
@@ -163,6 +181,7 @@ public class LocalValidatorFactoryBean extends SpringValidatorAdapter
 	 * In particular, the {@code MessageSource} instance specified here should not apply
 	 * {@link org.springframework.context.support.AbstractMessageSource#setUseCodeAsDefaultMessage
 	 * "useCodeAsDefaultMessage"} behavior. Please double-check your setup accordingly.
+	 *
 	 * @see ResourceBundleMessageInterpolator
 	 */
 	public void setValidationMessageSource(MessageSource messageSource) {
@@ -206,6 +225,7 @@ public class LocalValidatorFactoryBean extends SpringValidatorAdapter
 	 * Specify bean validation properties to be passed to the validation provider.
 	 * <p>Can be populated with a String "value" (parsed via PropertiesEditor)
 	 * or a "props" element in XML bean definitions.
+	 *
 	 * @see javax.validation.Configuration#addProperty(String, String)
 	 */
 	public void setValidationProperties(Properties jpaProperties) {
@@ -215,6 +235,7 @@ public class LocalValidatorFactoryBean extends SpringValidatorAdapter
 	/**
 	 * Specify bean validation properties to be passed to the validation provider as a Map.
 	 * <p>Can be populated with a "map" or "props" element in XML bean definitions.
+	 *
 	 * @see javax.validation.Configuration#addProperty(String, String)
 	 */
 	public void setValidationPropertyMap(@Nullable Map<String, String> validationProperties) {
@@ -248,8 +269,7 @@ public class LocalValidatorFactoryBean extends SpringValidatorAdapter
 				bootstrap = bootstrap.providerResolver(this.validationProviderResolver);
 			}
 			configuration = bootstrap.configure();
-		}
-		else {
+		} else {
 			GenericBootstrap bootstrap = Validation.byDefaultProvider();
 			if (this.validationProviderResolver != null) {
 				bootstrap = bootstrap.providerResolver(this.validationProviderResolver);
@@ -262,8 +282,7 @@ public class LocalValidatorFactoryBean extends SpringValidatorAdapter
 			try {
 				Method eclMethod = configuration.getClass().getMethod("externalClassLoader", ClassLoader.class);
 				ReflectionUtils.invokeMethod(eclMethod, configuration, this.applicationContext.getClassLoader());
-			}
-			catch (NoSuchMethodException ex) {
+			} catch (NoSuchMethodException ex) {
 				// Ignore - no Hibernate Validator 5.2+ or similar provider
 			}
 		}
@@ -295,8 +314,7 @@ public class LocalValidatorFactoryBean extends SpringValidatorAdapter
 			for (Resource location : this.mappingLocations) {
 				try {
 					configuration.addMapping(location.getInputStream());
-				}
-				catch (IOException ex) {
+				} catch (IOException ex) {
 					throw new IllegalStateException("Cannot read mapping resource: " + location);
 				}
 			}
@@ -320,6 +338,7 @@ public class LocalValidatorFactoryBean extends SpringValidatorAdapter
 				return (paramNames != null ? Arrays.asList(paramNames) :
 						defaultProvider.getParameterNames(constructor));
 			}
+
 			@Override
 			public List<String> getParameterNames(Method method) {
 				String[] paramNames = discoverer.getParameterNames(method);
@@ -333,8 +352,9 @@ public class LocalValidatorFactoryBean extends SpringValidatorAdapter
 	 * Post-process the given Bean Validation configuration,
 	 * adding to or overriding any of its settings.
 	 * <p>Invoked right before building the {@link ValidatorFactory}.
+	 *
 	 * @param configuration the Configuration object, pre-populated with
-	 * settings driven by LocalValidatorFactoryBean's properties
+	 *                      settings driven by LocalValidatorFactoryBean's properties
 	 */
 	protected void postProcessConfiguration(Configuration<?> configuration) {
 	}
@@ -395,16 +415,14 @@ public class LocalValidatorFactoryBean extends SpringValidatorAdapter
 		if (type == null || !ValidatorFactory.class.isAssignableFrom(type)) {
 			try {
 				return super.unwrap(type);
-			}
-			catch (ValidationException ex) {
+			} catch (ValidationException ex) {
 				// ignore - we'll try ValidatorFactory unwrapping next
 			}
 		}
 		if (this.validatorFactory != null) {
 			try {
 				return this.validatorFactory.unwrap(type);
-			}
-			catch (ValidationException ex) {
+			} catch (ValidationException ex) {
 				// ignore if just being asked for ValidatorFactory
 				if (ValidatorFactory.class == type) {
 					return (T) this.validatorFactory;
