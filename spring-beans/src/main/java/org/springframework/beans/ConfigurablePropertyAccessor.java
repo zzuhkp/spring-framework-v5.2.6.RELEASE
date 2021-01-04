@@ -20,6 +20,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.lang.Nullable;
 
 /**
+ * 封装 PropertyAccessor 配置方法的接口
+ * <p>
  * Interface that encapsulates configuration methods for a PropertyAccessor.
  * Also extends the PropertyEditorRegistry interface, which defines methods
  * for PropertyEditor management.
@@ -34,12 +36,16 @@ import org.springframework.lang.Nullable;
 public interface ConfigurablePropertyAccessor extends PropertyAccessor, PropertyEditorRegistry, TypeConverter {
 
 	/**
+	 * 设置 ConversionService 转换属性，以替换 PropertyEditor
+	 * <p>
 	 * Specify a Spring 3.0 ConversionService to use for converting
 	 * property values, as an alternative to JavaBeans PropertyEditors.
 	 */
 	void setConversionService(@Nullable ConversionService conversionService);
 
 	/**
+	 * 获取 ConversionService
+	 * <p>
 	 * Return the associated ConversionService, if any.
 	 */
 	@Nullable

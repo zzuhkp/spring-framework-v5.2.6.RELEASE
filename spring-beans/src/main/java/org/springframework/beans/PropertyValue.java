@@ -23,6 +23,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 持有单个 bean 属性的信息和值的对象
+ * <p>
  * Object to hold information and value for an individual bean property.
  * Using an object here, rather than just storing all properties in
  * a map keyed by property name, allows for more flexibility, and the
@@ -42,19 +44,36 @@ import org.springframework.util.ObjectUtils;
 @SuppressWarnings("serial")
 public class PropertyValue extends BeanMetadataAttributeAccessor implements Serializable {
 
+	/**
+	 * 属性的名称
+	 */
 	private final String name;
 
+	/**
+	 * 属性的值
+	 */
 	@Nullable
 	private final Object value;
 
+	/**
+	 * 当前属性是否为可选的，即目标类不存在时将忽略当前属性
+	 */
 	private boolean optional = false;
 
+	/**
+	 * 当前属性是否包含转换后的值
+	 */
 	private boolean converted = false;
 
+	/**
+	 * 经过类型转换处理后的值
+	 */
 	@Nullable
 	private Object convertedValue;
 
 	/**
+	 * 是否需要转换
+	 * <p>
 	 * Package-visible field that indicates whether conversion is necessary.
 	 */
 	@Nullable

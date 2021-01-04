@@ -26,18 +26,21 @@ import java.util.stream.StreamSupport;
 import org.springframework.lang.Nullable;
 
 /**
+ * 持有一个或多个 PropertyValue 的对象
+ * <p>
  * Holder containing one or more {@link PropertyValue} objects,
  * typically comprising one update for a specific target bean.
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since 13 May 2001
  * @see PropertyValue
+ * @since 13 May 2001
  */
 public interface PropertyValues extends Iterable<PropertyValue> {
 
 	/**
 	 * Return an {@link Iterator} over the property values.
+	 *
 	 * @since 5.1
 	 */
 	@Override
@@ -47,6 +50,7 @@ public interface PropertyValues extends Iterable<PropertyValue> {
 
 	/**
 	 * Return a {@link Spliterator} over the property values.
+	 *
 	 * @since 5.1
 	 */
 	@Override
@@ -56,6 +60,7 @@ public interface PropertyValues extends Iterable<PropertyValue> {
 
 	/**
 	 * Return a sequential {@link Stream} containing the property values.
+	 *
 	 * @since 5.1
 	 */
 	default Stream<PropertyValue> stream() {
@@ -63,12 +68,17 @@ public interface PropertyValues extends Iterable<PropertyValue> {
 	}
 
 	/**
+	 * 返回当前对象保存的 PropertyValue 数组
+	 * <p>
 	 * Return an array of the PropertyValue objects held in this object.
 	 */
 	PropertyValue[] getPropertyValues();
 
 	/**
+	 * 返回给定名称的属性值
+	 * <p>
 	 * Return the property value with the given name, if any.
+	 *
 	 * @param propertyName the name to search for
 	 * @return the property value, or {@code null} if none
 	 */
@@ -76,8 +86,11 @@ public interface PropertyValues extends Iterable<PropertyValue> {
 	PropertyValue getPropertyValue(String propertyName);
 
 	/**
+	 * 返回和之前 PropertyValues 相比的改变
+	 * <p>
 	 * Return the changes since the previous PropertyValues.
 	 * Subclasses should also override {@code equals}.
+	 *
 	 * @param old the old property values
 	 * @return the updated or new properties.
 	 * Return empty PropertyValues if there are no changes.
@@ -86,13 +99,18 @@ public interface PropertyValues extends Iterable<PropertyValue> {
 	PropertyValues changesSince(PropertyValues old);
 
 	/**
+	 * 是否包含给定名称的属性值
+	 * <p>
 	 * Is there a property value (or other processing entry) for this property?
+	 *
 	 * @param propertyName the name of the property we're interested in
 	 * @return whether there is a property value for this property
 	 */
 	boolean contains(String propertyName);
 
 	/**
+	 * 是否不包含任何属性值
+	 * <p>
 	 * Does this holder not contain any PropertyValue objects at all?
 	 */
 	boolean isEmpty();

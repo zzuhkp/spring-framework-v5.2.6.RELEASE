@@ -197,7 +197,7 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 	private MessageCodesResolver messageCodesResolver;
 
 	/**
-	 * 错误处理器
+	 * 错误处理器，用于处理字段缺失和进行异常转换
 	 */
 	private BindingErrorProcessor bindingErrorProcessor = new DefaultBindingErrorProcessor();
 

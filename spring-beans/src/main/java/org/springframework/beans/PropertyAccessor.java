@@ -17,6 +17,7 @@
 package org.springframework.beans;
 
 import java.util.Map;
+
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.lang.Nullable;
 
@@ -74,6 +75,8 @@ public interface PropertyAccessor {
 
 
 	/**
+	 * 指定的属性是否可读
+	 * <p>
 	 * Determine whether the specified property is readable.
 	 * <p>Returns {@code false} if the property doesn't exist.
 	 *
@@ -84,6 +87,8 @@ public interface PropertyAccessor {
 	boolean isReadableProperty(String propertyName);
 
 	/**
+	 * 指定的属性是否可写
+	 * <p>
 	 * Determine whether the specified property is writable.
 	 * <p>Returns {@code false} if the property doesn't exist.
 	 *
@@ -94,6 +99,8 @@ public interface PropertyAccessor {
 	boolean isWritableProperty(String propertyName);
 
 	/**
+	 * 获取指定属性的类型
+	 * <p>
 	 * Determine the property type for the specified property,
 	 * either checking the property descriptor or checking the value
 	 * in case of an indexed or mapped element.
@@ -109,6 +116,8 @@ public interface PropertyAccessor {
 	Class<?> getPropertyType(String propertyName) throws BeansException;
 
 	/**
+	 * 返回指定属性的类型描述信息，最好从读方法获取，失败后再从写方法获取
+	 * <p>
 	 * Return a type descriptor for the specified property:
 	 * preferably from the read method, falling back to the write method.
 	 *
@@ -123,6 +132,8 @@ public interface PropertyAccessor {
 	TypeDescriptor getPropertyTypeDescriptor(String propertyName) throws BeansException;
 
 	/**
+	 * 获取指定属性的当前值
+	 * <p>
 	 * Get the current value of the specified property.
 	 *
 	 * @param propertyName the name of the property to get the value of
@@ -137,6 +148,8 @@ public interface PropertyAccessor {
 	Object getPropertyValue(String propertyName) throws BeansException;
 
 	/**
+	 * 将指定的值设置为当前属性值
+	 * <p>
 	 * Set the specified value as current property value.
 	 *
 	 * @param propertyName the name of the property to set the value of
@@ -150,6 +163,8 @@ public interface PropertyAccessor {
 	void setPropertyValue(String propertyName, @Nullable Object value) throws BeansException;
 
 	/**
+	 * 将指定的值设置为当前属性值
+	 * <p>
 	 * Set the specified value as current property value.
 	 *
 	 * @param pv an object containing the new property value
@@ -161,6 +176,8 @@ public interface PropertyAccessor {
 	void setPropertyValue(PropertyValue pv) throws BeansException;
 
 	/**
+	 * 从 Map 中批量设置属性
+	 * <p>
 	 * Perform a batch update from a Map.
 	 * <p>Bulk updates from PropertyValues are more powerful: This method is
 	 * provided for convenience. Behavior will be identical to that of
@@ -178,6 +195,8 @@ public interface PropertyAccessor {
 	void setPropertyValues(Map<?, ?> map) throws BeansException;
 
 	/**
+	 * 批量更新的首选方法，不允许未知字段或无效字段
+	 * <p>
 	 * The preferred way to perform a batch update.
 	 * <p>Note that performing a batch update differs from performing a single update,
 	 * in that an implementation of this class will continue to update properties
@@ -200,6 +219,8 @@ public interface PropertyAccessor {
 	void setPropertyValues(PropertyValues pvs) throws BeansException;
 
 	/**
+	 * 有更多控制行为的批量更新
+	 * <p>
 	 * Perform a batch update with more control over behavior.
 	 * <p>Note that performing a batch update differs from performing a single update,
 	 * in that an implementation of this class will continue to update properties
@@ -223,6 +244,8 @@ public interface PropertyAccessor {
 			throws BeansException;
 
 	/**
+	 * 有全部控制行为的批量更新
+	 * <p>
 	 * Perform a batch update with full control over behavior.
 	 * <p>Note that performing a batch update differs from performing a single update,
 	 * in that an implementation of this class will continue to update properties

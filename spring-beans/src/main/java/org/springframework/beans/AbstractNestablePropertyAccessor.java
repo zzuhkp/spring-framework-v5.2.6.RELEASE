@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.CollectionFactory;
@@ -192,7 +193,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 	 *                   the containing accessor (must not be {@code null})
 	 */
 	protected AbstractNestablePropertyAccessor(Object object, String nestedPath,
-			AbstractNestablePropertyAccessor parent) {
+											   AbstractNestablePropertyAccessor parent) {
 		setWrappedInstance(object, nestedPath, parent.getWrappedInstance());
 		setExtractOldValueForEditor(parent.isExtractOldValueForEditor());
 		setAutoGrowNestedPaths(parent.isAutoGrowNestedPaths());
@@ -393,7 +394,6 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 					Class<?> componentType = propValue.getClass().getComponentType();
 					Object newArray = Array.newInstance(componentType, arrayIndex + 1);
 					System.arraycopy(propValue, 0, newArray, 0, length);
-					// TODO 设置a[1][2]中的a,而不是a[1] ?
 					setPropertyValue(tokens.actualName, newArray);
 					propValue = getPropertyValue(tokens.actualName);
 				}
@@ -498,6 +498,12 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 		return propValue;
 	}
 
+	/**
+	 * 设置不带 key 的属性值
+	 *
+	 * @param tokens
+	 * @param pv
+	 */
 	private void processLocalProperty(PropertyTokenHolder tokens, PropertyValue pv) {
 		PropertyHandler ph = getLocalPropertyHandler(tokens.actualName);
 		if (ph == null || !ph.isWritable()) {
@@ -662,7 +668,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 
 	@Nullable
 	private Object convertIfNecessary(@Nullable String propertyName, @Nullable Object oldValue,
-			@Nullable Object newValue, @Nullable Class<?> requiredType, @Nullable TypeDescriptor td)
+									  @Nullable Object newValue, @Nullable Class<?> requiredType, @Nullable TypeDescriptor td)
 			throws TypeMismatchException {
 
 		Assert.state(this.typeConverterDelegate != null, "No TypeConverterDelegate");
@@ -695,6 +701,13 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 		return nestedPa.getPropertyValue(tokens);
 	}
 
+	/**
+	 * 获取属性值
+	 *
+	 * @param tokens
+	 * @return
+	 * @throws BeansException
+	 */
 	@SuppressWarnings("unchecked")
 	@Nullable
 	protected Object getPropertyValue(PropertyTokenHolder tokens) throws BeansException {
@@ -708,6 +721,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 			Object value = ph.getValue();
 			if (tokens.keys != null) {
 				if (value == null) {
+					// key 不为空，对值进行初始化
 					if (isAutoGrowNestedPaths()) {
 						value = setDefaultValue(new PropertyTokenHolder(tokens.actualName));
 					} else {
@@ -874,7 +888,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 	 * @param nestingLevel
 	 */
 	private void growCollectionIfNecessary(Collection<Object> collection, int index, String name,
-			PropertyHandler ph, int nestingLevel) {
+										   PropertyHandler ph, int nestingLevel) {
 
 		if (!isAutoGrowNestedPaths()) {
 			return;
@@ -1073,6 +1087,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 			int keyStart = propertyName.indexOf(PROPERTY_KEY_PREFIX, searchIndex);
 			searchIndex = -1;
 			if (keyStart != -1) {
+				//存在 key 的前缀 [ ，查找key 的后缀索引位置
 				int keyEnd = getPropertyNameKeyEnd(propertyName, keyStart + PROPERTY_KEY_PREFIX.length());
 				if (keyEnd != -1) {
 					if (actualName == null) {
@@ -1099,6 +1114,13 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 		return tokens;
 	}
 
+	/**
+	 * 获取属性名 key 的结束索引，如 arr[2] 则返回 5
+	 *
+	 * @param propertyName 属性名称，如 arr[2]
+	 * @param startIndex   查找位置,为 key 前缀的后一位的索引，如对于 arr[2] 则为 4
+	 * @return
+	 */
 	private int getPropertyNameKeyEnd(String propertyName, int startIndex) {
 		//没有关闭的前缀，如propertyName值为a[[1]
 		int unclosedPrefixes = 0;
@@ -1138,7 +1160,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 
 	/**
 	 * 指定属性处理器
-	 * AbstractNestablePropertyAccessor中设置和获取属性的方法最终将委托给该类处理
+	 * AbstractNestablePropertyAccessor 中设置和获取属性的方法最终将委托给该类处理
 	 * <p>
 	 * A handler for a specific property.
 	 */
@@ -1194,7 +1216,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 		/**
 		 * 获取属性类型中map的键类型
 		 *
-		 * @param nestingLevel 如List<Map<String,Object>>,参数取值为2可取Map中的String
+		 * @param nestingLevel 如 List<Map<String,Object>>,参数取值为2可取Map中的String
 		 * @return
 		 */
 		@Nullable

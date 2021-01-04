@@ -91,10 +91,11 @@ public abstract class PropertyAccessorUtils {
 	 *
 	 * @param propertyPath the property path to check
 	 * @param last         whether to return the last separator rather than the first
+	 *                     是否返回最后的分隔符而不是第一个
 	 * @return the index of the nested property separator, or -1 if none
 	 */
 	private static int getNestedPropertySeparatorIndex(String propertyPath, boolean last) {
-		//属性分隔符"."是否在"[]"中
+		//当前迭代是否在"[]"中
 		boolean inKey = false;
 		int length = propertyPath.length();
 		int i = (last ? length - 1 : 0);
