@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.CollectionFactory;
@@ -94,28 +95,35 @@ class TypeConverterDelegate {
 	 */
 	@Nullable
 	public <T> T convertIfNecessary(@Nullable String propertyName, @Nullable Object oldValue,
-			Object newValue, @Nullable Class<T> requiredType) throws IllegalArgumentException {
+									Object newValue, @Nullable Class<T> requiredType) throws IllegalArgumentException {
 
 		return convertIfNecessary(propertyName, oldValue, newValue, requiredType, TypeDescriptor.valueOf(requiredType));
 	}
 
 	/**
+	 * 将给定的属性的值转换为所需的类型
+	 * <p>
 	 * Convert the value to the required type (if necessary from a String),
 	 * for the specified property.
 	 *
-	 * @param propertyName   name of the property
-	 * @param oldValue       the previous value, if available (may be {@code null})
-	 * @param newValue       the proposed new value
-	 * @param requiredType   the type we must convert to
+	 * @param propertyName   属性名
+	 *                       name of the property
+	 * @param oldValue       旧的值
+	 *                       the previous value, if available (may be {@code null})
+	 * @param newValue       新的值
+	 *                       the proposed new value
+	 * @param requiredType   新值需要转换为的类型
+	 *                       the type we must convert to
 	 *                       (or {@code null} if not known, for example in case of a collection element)
-	 * @param typeDescriptor the descriptor for the target property or field
+	 * @param typeDescriptor 新值需要转换为的类型的描述信息
+	 *                       the descriptor for the target property or field
 	 * @return the new value, possibly the result of type conversion
 	 * @throws IllegalArgumentException if type conversion failed
 	 */
 	@SuppressWarnings("unchecked")
 	@Nullable
 	public <T> T convertIfNecessary(@Nullable String propertyName, @Nullable Object oldValue, @Nullable Object newValue,
-			@Nullable Class<T> requiredType, @Nullable TypeDescriptor typeDescriptor) throws IllegalArgumentException {
+									@Nullable Class<T> requiredType, @Nullable TypeDescriptor typeDescriptor) throws IllegalArgumentException {
 
 		// Custom editor for this type?
 		PropertyEditor editor = this.propertyEditorRegistry.findCustomEditor(requiredType, propertyName);
@@ -287,7 +295,7 @@ class TypeConverterDelegate {
 	 * @return
 	 */
 	private Object attemptToConvertStringToEnum(Class<?> requiredType, String trimmedValue,
-			Object currentConvertedValue) {
+												Object currentConvertedValue) {
 		Object convertedValue = currentConvertedValue;
 
 		if (Enum.class == requiredType && this.targetObject != null) {
@@ -353,7 +361,7 @@ class TypeConverterDelegate {
 	}
 
 	/**
-	 * 使用给定的PropertyEditor将值转换所需类型
+	 * 使用给定的 PropertyEditor 将值转换所需类型
 	 * <p>
 	 * Convert the value to the required type (if necessary from a String),
 	 * using the given property editor.
@@ -368,7 +376,7 @@ class TypeConverterDelegate {
 	 */
 	@Nullable
 	private Object doConvertValue(@Nullable Object oldValue, @Nullable Object newValue,
-			@Nullable Class<?> requiredType, @Nullable PropertyEditor editor) {
+								  @Nullable Class<?> requiredType, @Nullable PropertyEditor editor) {
 
 		Object convertedValue = newValue;
 
@@ -508,7 +516,7 @@ class TypeConverterDelegate {
 	 */
 	@SuppressWarnings("unchecked")
 	private Collection<?> convertToTypedCollection(Collection<?> original, @Nullable String propertyName,
-			Class<?> requiredType, @Nullable TypeDescriptor typeDescriptor) {
+												   Class<?> requiredType, @Nullable TypeDescriptor typeDescriptor) {
 
 		if (!Collection.class.isAssignableFrom(requiredType)) {
 			return original;
@@ -588,7 +596,7 @@ class TypeConverterDelegate {
 	 */
 	@SuppressWarnings("unchecked")
 	private Map<?, ?> convertToTypedMap(Map<?, ?> original, @Nullable String propertyName,
-			Class<?> requiredType, @Nullable TypeDescriptor typeDescriptor) {
+										Class<?> requiredType, @Nullable TypeDescriptor typeDescriptor) {
 
 		if (!Map.class.isAssignableFrom(requiredType)) {
 			return original;

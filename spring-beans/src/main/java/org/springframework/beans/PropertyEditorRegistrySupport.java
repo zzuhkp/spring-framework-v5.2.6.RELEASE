@@ -317,7 +317,7 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 
 	@Override
 	public void registerCustomEditor(@Nullable Class<?> requiredType, @Nullable String propertyPath,
-			PropertyEditor propertyEditor) {
+									 PropertyEditor propertyEditor) {
 		if (requiredType == null && propertyPath == null) {
 			throw new IllegalArgumentException("Either requiredType or propertyPath is required");
 		}
@@ -364,6 +364,8 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 	}
 
 	/**
+	 * 确定当前注册表中是否包含给定数组/集合元素的自定义编辑器
+	 * <p>
 	 * Determine whether this registry contains a custom editor
 	 * for the specified array/collection element.
 	 *
@@ -458,6 +460,8 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 	}
 
 	/**
+	 * 从自定义的编辑中猜测给定属性的类型
+	 * <p>
 	 * Guess the property type of the specified property from the registered
 	 * custom editors (provided that they were registered for a specific type).
 	 *
@@ -484,6 +488,8 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 	}
 
 	/**
+	 * 将当前实例的自定义编辑器复制到目标注册表
+	 * <p>
 	 * Copy the custom editors registered in this instance to the given target registry.
 	 *
 	 * @param target         the target registry to copy to
@@ -521,6 +527,8 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 
 
 	/**
+	 * 将去除键或索引后的属性路径添加到列表中
+	 * <p>
 	 * Add property paths with all variations of stripped keys and/or indexes.
 	 * Invokes itself recursively with nested paths.
 	 *

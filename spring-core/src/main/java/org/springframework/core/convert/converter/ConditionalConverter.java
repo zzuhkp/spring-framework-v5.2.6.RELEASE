@@ -19,6 +19,8 @@ package org.springframework.core.convert.converter;
 import org.springframework.core.convert.TypeDescriptor;
 
 /**
+ * 转换条件，用于确认源类型能否转换为目标类型
+ * <p>
  * Allows a {@link Converter}, {@link GenericConverter} or {@link ConverterFactory} to
  * conditionally execute based on attributes of the {@code source} and {@code target}
  * {@link TypeDescriptor}.
@@ -34,17 +36,18 @@ import org.springframework.core.convert.TypeDescriptor;
  *
  * @author Phillip Webb
  * @author Keith Donald
- * @since 3.2
  * @see Converter
  * @see GenericConverter
  * @see ConverterFactory
  * @see ConditionalGenericConverter
+ * @since 3.2
  */
 public interface ConditionalConverter {
 
 	/**
 	 * Should the conversion from {@code sourceType} to {@code targetType} currently under
 	 * consideration be selected?
+	 *
 	 * @param sourceType the type descriptor of the field we are converting from
 	 * @param targetType the type descriptor of the field we are converting to
 	 * @return true if conversion should be performed, false otherwise
