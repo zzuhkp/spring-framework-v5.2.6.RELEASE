@@ -21,10 +21,16 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 import org.springframework.context.ApplicationEvent;
 import org.springframework.core.annotation.AliasFor;
 
 /**
+ * 将方法标记为应用事件监听器的注解，
+ * 方法的返回值将作为新的事件发布，
+ * 支持异步可以在方法上添加 @Async 注解，此时方法的返回值不会作为事件发布，
+ * 支持事件监听器执行的顺序可以在方法上添加 @Order 注解
+ * <p>
  * Annotation that marks a method as a listener for application events.
  *
  * <p>If an annotated method supports a single event type, the method may

@@ -20,6 +20,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 
 /**
+ * 应用上下文事件
+ * <p>
  * Base class for events raised for an {@code ApplicationContext}.
  *
  * @author Juergen Hoeller
@@ -30,14 +32,16 @@ public abstract class ApplicationContextEvent extends ApplicationEvent {
 
 	/**
 	 * Create a new ContextStartedEvent.
+	 *
 	 * @param source the {@code ApplicationContext} that the event is raised for
-	 * (must not be {@code null})
+	 *               (must not be {@code null})
 	 */
 	public ApplicationContextEvent(ApplicationContext source) {
 		super(source);
 	}
 
-	/**ApplicationListener
+	/**
+	 * ApplicationListener
 	 * Get the {@code ApplicationContext} that the event was raised for.
 	 */
 	public final ApplicationContext getApplicationContext() {

@@ -19,6 +19,8 @@ package org.springframework.context;
 import java.util.EventListener;
 
 /**
+ * 应用事件监听器接口
+ * <p>
  * Interface to be implemented by application event listeners.
  *
  * <p>Based on the standard {@code java.util.EventListener} interface
@@ -29,9 +31,9 @@ import java.util.EventListener;
  * {@code ApplicationContext}, events will be filtered accordingly, with the
  * listener getting invoked for matching event objects only.
  *
+ * @param <E> the specific {@code ApplicationEvent} subclass to listen to
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @param <E> the specific {@code ApplicationEvent} subclass to listen to
  * @see org.springframework.context.ApplicationEvent
  * @see org.springframework.context.event.ApplicationEventMulticaster
  * @see org.springframework.context.event.EventListener
@@ -41,6 +43,7 @@ public interface ApplicationListener<E extends ApplicationEvent> extends EventLi
 
 	/**
 	 * Handle an application event.
+	 *
 	 * @param event the event to respond to
 	 */
 	void onApplicationEvent(E event);
