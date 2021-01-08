@@ -27,7 +27,7 @@ import org.springframework.core.annotation.MergedAnnotations.SearchStrategy;
 
 /**
  * 访问特定类的注解的接口，不需要进行类加载
- *
+ * <p>
  * Interface that defines abstract access to the annotations of a specific
  * class, in a form that does not require that class to be loaded yet.
  *
@@ -35,16 +35,19 @@ import org.springframework.core.annotation.MergedAnnotations.SearchStrategy;
  * @author Mark Fisher
  * @author Phillip Webb
  * @author Sam Brannen
- * @since 2.5
  * @see StandardAnnotationMetadata
  * @see org.springframework.core.type.classreading.MetadataReader#getAnnotationMetadata()
  * @see AnnotatedTypeMetadata
+ * @since 2.5
  */
 public interface AnnotationMetadata extends ClassMetadata, AnnotatedTypeMetadata {
 
 	/**
+	 * 获取类上存在的注解类型名称
+	 * <p>
 	 * Get the fully qualified class names of all annotation types that
 	 * are <em>present</em> on the underlying class.
+	 *
 	 * @return the annotation type names
 	 */
 	default Set<String> getAnnotationTypes() {
@@ -55,10 +58,13 @@ public interface AnnotationMetadata extends ClassMetadata, AnnotatedTypeMetadata
 	}
 
 	/**
+	 * 获取给定注解的元注解类型列表
+	 * <p>
 	 * Get the fully qualified class names of all meta-annotation types that
 	 * are <em>present</em> on the given annotation type on the underlying class.
+	 *
 	 * @param annotationName the fully qualified class name of the meta-annotation
-	 * type to look for
+	 *                       type to look for
 	 * @return the meta-annotation type names, or an empty set if none found
 	 */
 	default Set<String> getMetaAnnotationTypes(String annotationName) {
@@ -72,10 +78,13 @@ public interface AnnotationMetadata extends ClassMetadata, AnnotatedTypeMetadata
 	}
 
 	/**
+	 * 类上是否存在给定的注解
+	 * <p>
 	 * Determine whether an annotation of the given type is <em>present</em> on
 	 * the underlying class.
+	 *
 	 * @param annotationName the fully qualified class name of the annotation
-	 * type to look for
+	 *                       type to look for
 	 * @return {@code true} if a matching annotation is present
 	 */
 	default boolean hasAnnotation(String annotationName) {
@@ -83,10 +92,13 @@ public interface AnnotationMetadata extends ClassMetadata, AnnotatedTypeMetadata
 	}
 
 	/**
+	 * 类上是否存在给定注解名称的元注解
+	 * <p>
 	 * Determine whether the underlying class has an annotation that is itself
 	 * annotated with the meta-annotation of the given type.
+	 *
 	 * @param metaAnnotationName the fully qualified class name of the
-	 * meta-annotation type to look for
+	 *                           meta-annotation type to look for
 	 * @return {@code true} if a matching meta-annotation is present
 	 */
 	default boolean hasMetaAnnotation(String metaAnnotationName) {
@@ -95,22 +107,28 @@ public interface AnnotationMetadata extends ClassMetadata, AnnotatedTypeMetadata
 	}
 
 	/**
+	 * 是否存在被给定注解标注或元标注的方法
+	 * <p>
 	 * Determine whether the underlying class has any methods that are
 	 * annotated (or meta-annotated) with the given annotation type.
+	 *
 	 * @param annotationName the fully qualified class name of the annotation
-	 * type to look for
+	 *                       type to look for
 	 */
 	default boolean hasAnnotatedMethods(String annotationName) {
 		return !getAnnotatedMethods(annotationName).isEmpty();
 	}
 
 	/**
+	 * 检索被给定注解名称标注或元标注的方法的元数据
+	 * <p>
 	 * Retrieve the method metadata for all methods that are annotated
 	 * (or meta-annotated) with the given annotation type.
 	 * <p>For any returned method, {@link MethodMetadata#isAnnotated} will
 	 * return {@code true} for the given annotation type.
+	 *
 	 * @param annotationName the fully qualified class name of the annotation
-	 * type to look for
+	 *                       type to look for
 	 * @return a set of {@link MethodMetadata} for methods that have a matching
 	 * annotation. The return value will be an empty set if no methods match
 	 * the annotation type.
@@ -119,8 +137,11 @@ public interface AnnotationMetadata extends ClassMetadata, AnnotatedTypeMetadata
 
 
 	/**
+	 * 使用给定的类型创建 AnnotationMetadata
+	 * <p>
 	 * Factory method to create a new {@link AnnotationMetadata} instance
 	 * for the given class using standard reflection.
+	 *
 	 * @param type the class to introspect
 	 * @return a new {@link AnnotationMetadata} instance
 	 * @since 5.2

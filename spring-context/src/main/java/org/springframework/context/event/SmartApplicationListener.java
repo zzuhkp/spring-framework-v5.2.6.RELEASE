@@ -22,6 +22,8 @@ import org.springframework.core.Ordered;
 import org.springframework.lang.Nullable;
 
 /**
+ * ApplicationListener 接口的扩展
+ * <p>
  * Extended variant of the standard {@link ApplicationListener} interface,
  * exposing further metadata such as the supported event and source type.
  *
@@ -29,21 +31,27 @@ import org.springframework.lang.Nullable;
  * the {@link GenericApplicationListener} interface instead.
  *
  * @author Juergen Hoeller
- * @since 3.0
  * @see GenericApplicationListener
  * @see GenericApplicationListenerAdapter
+ * @since 3.0
  */
 public interface SmartApplicationListener extends ApplicationListener<ApplicationEvent>, Ordered {
 
 	/**
+	 * 是否支持给定的事件类型
+	 * <p>
 	 * Determine whether this listener actually supports the given event type.
+	 *
 	 * @param eventType the event type (never {@code null})
 	 */
 	boolean supportsEventType(Class<? extends ApplicationEvent> eventType);
 
 	/**
+	 * 是否支持给定的事件源类型
+	 * <p>
 	 * Determine whether this listener actually supports the given source type.
 	 * <p>The default implementation always returns {@code true}.
+	 *
 	 * @param sourceType the source type, or {@code null} if no source
 	 */
 	default boolean supportsSourceType(@Nullable Class<?> sourceType) {
@@ -51,6 +59,8 @@ public interface SmartApplicationListener extends ApplicationListener<Applicatio
 	}
 
 	/**
+	 * 支持相同类型事件的监听器的执行顺序
+	 * <p>
 	 * Determine this listener's order in a set of listeners for the same event.
 	 * <p>The default implementation returns {@link #LOWEST_PRECEDENCE}.
 	 */

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.BeanFactory;
@@ -162,6 +163,8 @@ public abstract class AbstractApplicationEventMulticaster
 	}
 
 	/**
+	 * 获取和给定事件类型匹配的监听器列表
+	 * <p>
 	 * Return a Collection of ApplicationListeners matching the given
 	 * event type. Non-matching listeners get excluded early.
 	 *
@@ -206,6 +209,8 @@ public abstract class AbstractApplicationEventMulticaster
 	}
 
 	/**
+	 * 检索给定的事件类型及事件源类型的监听器
+	 * <p>
 	 * Actually retrieve the application listeners for the given event and source type.
 	 *
 	 * @param eventType  the event type
@@ -280,6 +285,8 @@ public abstract class AbstractApplicationEventMulticaster
 	}
 
 	/**
+	 * 实例化事件监听器的 bean 之前判断事件监听器是否支持给定的事件类型
+	 * <p>
 	 * Filter a bean-defined listener early through checking its generically declared
 	 * event type before trying to instantiate it.
 	 * <p>If this method returns {@code true} for a given listener as a first pass,
@@ -333,15 +340,20 @@ public abstract class AbstractApplicationEventMulticaster
 	}
 
 	/**
+	 * 确定给定的事件监听器是否支持给定的事件类型
+	 * <p>
 	 * Determine whether the given listener supports the given event.
 	 * <p>The default implementation detects the {@link SmartApplicationListener}
 	 * and {@link GenericApplicationListener} interfaces. In case of a standard
 	 * {@link ApplicationListener}, a {@link GenericApplicationListenerAdapter}
 	 * will be used to introspect the generically declared type of the target listener.
 	 *
-	 * @param listener   the target listener to check
-	 * @param eventType  the event type to check against
-	 * @param sourceType the source type to check against
+	 * @param listener   要检查的监听器
+	 *                   the target listener to check
+	 * @param eventType  事件类型
+	 *                   the event type to check against
+	 * @param sourceType 事件源类型
+	 *                   the source type to check against
 	 * @return whether the given listener should be included in the candidates
 	 * for the given event type
 	 */

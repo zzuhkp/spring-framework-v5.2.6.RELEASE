@@ -37,8 +37,14 @@ import org.springframework.util.Assert;
  */
 public class ScopeMetadata {
 
+	/**
+	 * 作用域名称
+	 */
 	private String scopeName = BeanDefinition.SCOPE_SINGLETON;
 
+	/**
+	 * 代理模式
+	 */
 	private ScopedProxyMode scopedProxyMode = ScopedProxyMode.NO;
 
 
