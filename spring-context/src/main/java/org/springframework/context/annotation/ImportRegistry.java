@@ -27,9 +27,20 @@ import org.springframework.lang.Nullable;
  */
 interface ImportRegistry {
 
+	/**
+	 * 获取给定类对应的注解元数据
+	 *
+	 * @param importedClass
+	 * @return
+	 */
 	@Nullable
 	AnnotationMetadata getImportingClassFor(String importedClass);
 
+	/**
+	 * 移除给定的类
+	 *
+	 * @param importingClass
+	 */
 	void removeImportingClass(String importingClass);
 
 }

@@ -137,7 +137,8 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	/**
 	 * Create a ClassPathScanningCandidateComponentProvider with the given {@link Environment}.
 	 *
-	 * @param useDefaultFilters whether to register the default filters for the
+	 * @param useDefaultFilters 是否注册默认的过滤器
+	 *                          whether to register the default filters for the
 	 *                          {@link Component @Component}, {@link Repository @Repository},
 	 *                          {@link Service @Service}, and {@link Controller @Controller}
 	 *                          stereotype annotations
@@ -197,6 +198,8 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	}
 
 	/**
+	 * 为 @Component 注册默认的过滤器
+	 * <p>
 	 * Register the default filter for {@link Component @Component}.
 	 * <p>This will implicitly register all annotations that have the
 	 * {@link Component @Component} meta-annotation including the
@@ -307,6 +310,8 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 
 
 	/**
+	 * 从类路径中扫描候选组件
+	 * <p>
 	 * Scan the class path for candidate components.
 	 *
 	 * @param basePackage the package to check for annotated classes
@@ -321,6 +326,8 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	}
 
 	/**
+	 * 确定当前实例是否可以使用索引
+	 * <p>
 	 * Determine if the index can be used by this instance.
 	 *
 	 * @return {@code true} if the index is available and the configuration of this
@@ -378,6 +385,13 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 		return null;
 	}
 
+	/**
+	 * 从索引中添加候选组件
+	 *
+	 * @param index
+	 * @param basePackage
+	 * @return
+	 */
 	private Set<BeanDefinition> addCandidateComponentsFromIndex(CandidateComponentsIndex index, String basePackage) {
 		Set<BeanDefinition> candidates = new LinkedHashSet<>();
 		try {
@@ -492,6 +506,8 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	}
 
 	/**
+	 * 确定给定的类是否为候选组件
+	 * <p>
 	 * Determine whether the given class does not match any exclude filter
 	 * and does match at least one include filter.
 	 *
@@ -513,6 +529,8 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	}
 
 	/**
+	 * 通过 @Conditional 确定给定的类是否为候选组件
+	 * <p>
 	 * Determine whether the given class is a candidate component based on any
 	 * {@code @Conditional} annotations.
 	 *
@@ -528,6 +546,8 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 	}
 
 	/**
+	 * 确定给定的 BeanDefinition 为候选 bean
+	 * <p>
 	 * Determine whether the given bean definition qualifies as candidate.
 	 * <p>The default implementation checks whether the class is not an interface
 	 * and not dependent on an enclosing class.

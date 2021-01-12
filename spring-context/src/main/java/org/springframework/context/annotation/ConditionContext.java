@@ -33,7 +33,8 @@ import org.springframework.lang.Nullable;
 public interface ConditionContext {
 
 	/**
-	 *
+	 * 返回持有应该被进行条件评估的 BeanDefinition 的注册中心
+	 * <p>
 	 * Return the {@link BeanDefinitionRegistry} that will hold the bean definition
 	 * should the condition match.
 	 *
@@ -43,6 +44,8 @@ public interface ConditionContext {
 	BeanDefinitionRegistry getRegistry();
 
 	/**
+	 * 返回持有应该被进行条件评估的 BeanDefinition 的 ConfigurableListableBeanFactory
+	 * <p>
 	 * Return the {@link ConfigurableListableBeanFactory} that will hold the bean
 	 * definition should the condition match, or {@code null} if the bean factory is
 	 * not available (or not downcastable to {@code ConfigurableListableBeanFactory}).
@@ -51,16 +54,22 @@ public interface ConditionContext {
 	ConfigurableListableBeanFactory getBeanFactory();
 
 	/**
+	 * 获取当前应用正在运行的环境变量
+	 * <p>
 	 * Return the {@link Environment} for which the current application is running.
 	 */
 	Environment getEnvironment();
 
 	/**
+	 * 获取当前使用的资源加载器
+	 * <p>
 	 * Return the {@link ResourceLoader} currently being used.
 	 */
 	ResourceLoader getResourceLoader();
 
 	/**
+	 * 获取加载附加的类的类加载器
+	 * <p>
 	 * Return the {@link ClassLoader} that should be used to load additional classes
 	 * (only {@code null} if even the system ClassLoader isn't accessible).
 	 *

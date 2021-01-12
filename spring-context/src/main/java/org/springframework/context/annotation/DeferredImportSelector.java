@@ -20,6 +20,8 @@ import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.lang.Nullable;
 
 /**
+ * ImportSelector 的变体，所有的配置 bean 被处理后运行
+ * <p>
  * A variation of {@link ImportSelector} that runs after all {@code @Configuration} beans
  * have been processed. This type of selector can be particularly useful when the selected
  * imports are {@code @Conditional}.
@@ -40,6 +42,7 @@ public interface DeferredImportSelector extends ImportSelector {
 	/**
 	 * Return a specific import group.
 	 * <p>The default implementations return {@code null} for no grouping required.
+	 *
 	 * @return the import group class, or {@code null} if none
 	 * @since 5.0
 	 */
@@ -52,17 +55,22 @@ public interface DeferredImportSelector extends ImportSelector {
 	/**
 	 * 给不同 import selectors 分组的接口
 	 * Interface used to group results from different import selectors.
+	 *
 	 * @since 5.0
 	 */
 	interface Group {
 
 		/**
+		 * 使用指定的 DeferredImportSelector 处理配置类的注解元数据
+		 * <p>
 		 * Process the {@link AnnotationMetadata} of the importing @{@link Configuration}
 		 * class using the specified {@link DeferredImportSelector}.
 		 */
 		void process(AnnotationMetadata metadata, DeferredImportSelector selector);
 
 		/**
+		 * 返回应该为当前分组导入哪些类的 Entry
+		 * <p>
 		 * Return the {@link Entry entries} of which class(es) should be imported
 		 * for this group.
 		 */
@@ -75,8 +83,14 @@ public interface DeferredImportSelector extends ImportSelector {
 		 */
 		class Entry {
 
+			/**
+			 * 正在导入的配置类的注解元数据
+			 */
 			private final AnnotationMetadata metadata;
 
+			/**
+			 * 要导入的类的完全限定符
+			 */
 			private final String importClassName;
 
 			public Entry(AnnotationMetadata metadata, String importClassName) {

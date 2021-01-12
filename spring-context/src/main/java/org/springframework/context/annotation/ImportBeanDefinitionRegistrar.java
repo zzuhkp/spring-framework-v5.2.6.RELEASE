@@ -84,7 +84,7 @@ public interface ImportBeanDefinitionRegistrar {
 	 * @since 5.2
 	 */
 	default void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry,
-			BeanNameGenerator importBeanNameGenerator) {
+										 BeanNameGenerator importBeanNameGenerator) {
 
 		registerBeanDefinitions(importingClassMetadata, registry);
 	}
@@ -97,7 +97,8 @@ public interface ImportBeanDefinitionRegistrar {
 	 * class processing.
 	 * <p>The default implementation is empty.
 	 *
-	 * @param importingClassMetadata annotation metadata of the importing class
+	 * @param importingClassMetadata 要导入的配置类的注解元数据
+	 *                               annotation metadata of the importing class
 	 * @param registry               current bean definition registry
 	 */
 	default void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {

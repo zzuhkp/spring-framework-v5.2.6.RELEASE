@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+
 import org.springframework.beans.factory.parsing.Location;
 import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.beans.factory.parsing.ProblemReporter;
@@ -49,10 +50,19 @@ import org.springframework.util.ClassUtils;
  */
 final class ConfigurationClass {
 
+	/**
+	 * 配置类的注解元数据
+	 */
 	private final AnnotationMetadata metadata;
 
+	/**
+	 * 表示配置类文件的资源
+	 */
 	private final Resource resource;
 
+	/**
+	 * 配置类的 bean 名称
+	 */
 	@Nullable
 	private String beanName;
 
@@ -61,6 +71,9 @@ final class ConfigurationClass {
 	 */
 	private final Set<ConfigurationClass> importedBy = new LinkedHashSet<>(1);
 
+	/**
+	 * 配置类的 @Bean 方法
+	 */
 	private final Set<BeanMethod> beanMethods = new LinkedHashSet<>();
 
 	/**
@@ -171,6 +184,8 @@ final class ConfigurationClass {
 	}
 
 	/**
+	 * 表示当前配置类是否被 @Import 引入或嵌套在其他配置类中
+	 * <p>
 	 * Return whether this configuration class was registered via @{@link Import} or
 	 * automatically registered due to being nested within another configuration class.
 	 *
@@ -214,7 +229,7 @@ final class ConfigurationClass {
 	}
 
 	public void addImportBeanDefinitionRegistrar(ImportBeanDefinitionRegistrar registrar,
-			AnnotationMetadata importingClassMetadata) {
+												 AnnotationMetadata importingClassMetadata) {
 		this.importBeanDefinitionRegistrars.put(registrar, importingClassMetadata);
 	}
 

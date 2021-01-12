@@ -20,6 +20,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
 /**
+ * 默认的 BeanDefinition 属性持有者
+ * <p>
  * A simple holder for {@code BeanDefinition} property defaults.
  *
  * @author Mark Fisher
@@ -54,6 +56,7 @@ public class BeanDefinitionDefaults {
 	/**
 	 * Return whether beans should be lazily initialized by default, i.e. not
 	 * eagerly instantiated on startup. Only applicable to singleton beans.
+	 *
 	 * @return whether to apply lazy-init semantics ({@code false} by default)
 	 */
 	public boolean isLazyInit() {
@@ -63,6 +66,7 @@ public class BeanDefinitionDefaults {
 	/**
 	 * Return whether beans should be lazily initialized by default, i.e. not
 	 * eagerly instantiated on startup. Only applicable to singleton beans.
+	 *
 	 * @return the lazy-init flag if explicitly set, or {@code null} otherwise
 	 * @since 5.2
 	 */
@@ -76,8 +80,9 @@ public class BeanDefinitionDefaults {
 	 * and setting of bean references will happen. Default is AUTOWIRE_NO
 	 * which means there won't be convention-based autowiring by name or type
 	 * (however, there may still be explicit annotation-driven autowiring).
+	 *
 	 * @param autowireMode the autowire mode to set.
-	 * Must be one of the constants defined in {@link AbstractBeanDefinition}.
+	 *                     Must be one of the constants defined in {@link AbstractBeanDefinition}.
 	 */
 	public void setAutowireMode(int autowireMode) {
 		this.autowireMode = autowireMode;
@@ -92,8 +97,9 @@ public class BeanDefinitionDefaults {
 
 	/**
 	 * Set the dependency check code.
+	 *
 	 * @param dependencyCheck the code to set.
-	 * Must be one of the constants defined in {@link AbstractBeanDefinition}.
+	 *                        Must be one of the constants defined in {@link AbstractBeanDefinition}.
 	 */
 	public void setDependencyCheck(int dependencyCheck) {
 		this.dependencyCheck = dependencyCheck;

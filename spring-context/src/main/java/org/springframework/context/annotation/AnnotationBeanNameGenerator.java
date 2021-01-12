@@ -70,6 +70,9 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 
 	private static final String COMPONENT_ANNOTATION_CLASSNAME = "org.springframework.stereotype.Component";
 
+	/**
+	 * 类上的直接注解的名称->类上直接注解上的注解
+	 */
 	private final Map<String, Set<String>> metaAnnotationTypesCache = new ConcurrentHashMap<>();
 
 
@@ -85,17 +88,21 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	@Override
 	public String generateBeanName(BeanDefinition definition, BeanDefinitionRegistry registry) {
 		if (definition instanceof AnnotatedBeanDefinition) {
+			// 优先尝试通过注解确认 bean 的名称
 			String beanName = determineBeanNameFromAnnotation((AnnotatedBeanDefinition) definition);
 			if (StringUtils.hasText(beanName)) {
 				// Explicit bean name found.
 				return beanName;
 			}
 		}
+		// 最后再获取默认的 bean 名称
 		// Fallback: generate a unique default bean name.
 		return buildDefaultBeanName(definition, registry);
 	}
 
 	/**
+	 * 从类上的注解中获取 bean 的名称
+	 * <p>
 	 * Derive a bean name from one of the annotations on the class.
 	 *
 	 * @param annotatedDef the annotation-aware bean definition
@@ -140,14 +147,17 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	 * Check whether the given annotation is a stereotype that is allowed to suggest a component name through its
 	 * annotation {@code value()}.
 	 *
-	 * @param annotationType      the name of the annotation class to check
-	 * @param metaAnnotationTypes the names of meta-annotations on the given annotation
-	 * @param attributes          the map of attributes for the given annotation
+	 * @param annotationType      注解类型名称
+	 *                            the name of the annotation class to check
+	 * @param metaAnnotationTypes 注解上的注解名称
+	 *                            the names of meta-annotations on the given annotation
+	 * @param attributes          注解的属性
+	 *                            the map of attributes for the given annotation
 	 * @return whether the annotation qualifies as a stereotype with component name
 	 */
 	protected boolean isStereotypeWithNameValue(String annotationType,
-			Set<String> metaAnnotationTypes, @Nullable Map<String, Object> attributes) {
-
+												Set<String> metaAnnotationTypes, @Nullable Map<String, Object> attributes) {
+		// 类上的注解类型为 Component/ManagedBean/Named 或元注解类型为 Component
 		boolean isStereotype = annotationType.equals(COMPONENT_ANNOTATION_CLASSNAME) ||
 				metaAnnotationTypes.contains(COMPONENT_ANNOTATION_CLASSNAME) ||
 				annotationType.equals("javax.annotation.ManagedBean") ||
@@ -171,8 +181,8 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 	}
 
 	/**
-	 * 构建默认的 bean 名称，为类名的简单名称，如 "mypackage.MyJdbcDao" -> "myJdbcDao"， 有内部类的情况下会存在 "outerClassName.InnerClassName"
-	 * 形式的名称。
+	 * 构建默认的 bean 名称，为类名的简单名称，如 "mypackage.MyJdbcDao" -> "myJdbcDao"，
+	 * 有内部类的情况下会存在 "outerClassName.InnerClassName" 形式的名称。
 	 * <p>
 	 * Derive a default bean name from the given bean definition.
 	 * <p>The default implementation simply builds a decapitalized version

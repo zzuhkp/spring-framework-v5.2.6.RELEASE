@@ -46,8 +46,14 @@ import org.springframework.util.ClassUtils;
  */
 public class AnnotationTypeFilter extends AbstractTypeHierarchyTraversingFilter {
 
+	/**
+	 * 注解类型
+	 */
 	private final Class<? extends Annotation> annotationType;
 
+	/**
+	 * 是否考虑元注解
+	 */
 	private final boolean considerMetaAnnotations;
 
 
