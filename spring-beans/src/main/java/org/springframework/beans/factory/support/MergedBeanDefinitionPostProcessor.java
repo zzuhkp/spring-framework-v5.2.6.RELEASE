@@ -19,6 +19,8 @@ package org.springframework.beans.factory.support;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
 /**
+ * 合并 BeanDefinition 的后处理器
+ * <p>
  * Post-processor callback interface for <i>merged</i> bean definitions at runtime.
  * {@link BeanPostProcessor} implementations may implement this sub-interface in order
  * to post-process the merged bean definition (a processed copy of the original bean
@@ -32,27 +34,33 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
  * {@link RootBeanDefinition} itself but not to the properties of its base classes.
  *
  * @author Juergen Hoeller
- * @since 2.5
  * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#getMergedBeanDefinition
+ * @since 2.5
  */
 public interface MergedBeanDefinitionPostProcessor extends BeanPostProcessor {
 
 	/**
+	 * 合并 BeanDefinition
+	 * <p>
 	 * Post-process the given merged bean definition for the specified bean.
+	 *
 	 * @param beanDefinition the merged bean definition for the bean
-	 * @param beanType the actual type of the managed bean instance
-	 * @param beanName the name of the bean
+	 * @param beanType       the actual type of the managed bean instance
+	 * @param beanName       the name of the bean
 	 * @see AbstractAutowireCapableBeanFactory#applyMergedBeanDefinitionPostProcessors
 	 */
 	void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName);
 
 	/**
+	 * 指定的 bean 的 BeanDefinition 已经被重置的通知
+	 * <p>
 	 * A notification that the bean definition for the specified name has been reset,
 	 * and that this post-processor should clear any metadata for the affected bean.
 	 * <p>The default implementation is empty.
+	 *
 	 * @param beanName the name of the bean
-	 * @since 5.1
 	 * @see DefaultListableBeanFactory#resetBeanDefinition
+	 * @since 5.1
 	 */
 	default void resetBeanDefinition(String beanName) {
 	}

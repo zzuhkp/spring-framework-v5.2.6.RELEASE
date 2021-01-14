@@ -78,7 +78,6 @@ public interface BeanPostProcessor {
 	 * 将此BeanPostProcessor应用于给定的新bean实例。
 	 * bean已经填充了属性值。返回的bean实例可以是原始实例的包装器。 默认实现按原样返回给定的bean。
 	 * <p>
-	 * <p>
 	 * Apply this {@code BeanPostProcessor} to the given new bean instance <i>before</i> any bean
 	 * initialization callbacks (like InitializingBean's {@code afterPropertiesSet}
 	 * or a custom init-method). The bean will already be populated with property values.
