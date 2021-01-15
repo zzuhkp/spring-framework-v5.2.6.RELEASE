@@ -54,7 +54,7 @@ import java.util.Map;
  * MockPropertySource mockEnvVars = new MockPropertySource().withProperty("xyz", "myValue");
  * propertySources.replace(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME, mockEnvVars);
  * </pre>
- *
+ * <p>
  * When an {@link Environment} is being used by an {@code ApplicationContext}, it is
  * important that any such {@code PropertySource} manipulations be performed
  * <em>before</em> the context's {@link
@@ -65,19 +65,22 @@ import java.util.Map;
  * placeholder configurers}.
  *
  * @author Chris Beams
- * @since 3.1
  * @see StandardEnvironment
  * @see org.springframework.context.ConfigurableApplicationContext#getEnvironment
+ * @since 3.1
  */
 public interface ConfigurableEnvironment extends Environment, ConfigurablePropertyResolver {
 
 	/**
+	 * 设置激活的 profile
+	 * <p>
 	 * Specify the set of profiles active for this {@code Environment}. Profiles are
 	 * evaluated during container bootstrap to determine whether bean definitions
 	 * should be registered with the container.
 	 * <p>Any existing active profiles will be replaced with the given arguments; call
 	 * with zero arguments to clear the current set of active profiles. Use
 	 * {@link #addActiveProfile} to add a profile while preserving the existing set.
+	 *
 	 * @throws IllegalArgumentException if any profile is null, empty or whitespace-only
 	 * @see #addActiveProfile
 	 * @see #setDefaultProfiles
@@ -87,21 +90,29 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	void setActiveProfiles(String... profiles);
 
 	/**
+	 * 添加激活的 profile
+	 * <p>
 	 * Add a profile to the current set of active profiles.
+	 *
 	 * @throws IllegalArgumentException if the profile is null, empty or whitespace-only
 	 * @see #setActiveProfiles
 	 */
 	void addActiveProfile(String profile);
 
 	/**
+	 * 设置默认的 profile
+	 * <p>
 	 * Specify the set of profiles to be made active by default if no other profiles
 	 * are explicitly made active through {@link #setActiveProfiles}.
+	 *
 	 * @throws IllegalArgumentException if any profile is null, empty or whitespace-only
 	 * @see AbstractEnvironment#DEFAULT_PROFILES_PROPERTY_NAME
 	 */
 	void setDefaultProfiles(String... profiles);
 
 	/**
+	 * 获取属性源
+	 * <p>
 	 * Return the {@link PropertySources} for this {@code Environment} in mutable form,
 	 * allowing for manipulation of the set of {@link PropertySource} objects that should
 	 * be searched when resolving properties against this {@code Environment} object.
@@ -114,11 +125,16 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	 * certain user-defined property sources have search precedence over default property
 	 * sources such as the set of system properties or the set of system environment
 	 * variables.
+	 *
 	 * @see AbstractEnvironment#customizePropertySources
 	 */
 	MutablePropertySources getPropertySources();
 
 	/**
+	 * 如果安全管理器允许则返回 System#getProperties()，否则返回调用 System#getProperty(String) 的实现，
+	 * 大多数 Environment 实现都将系统属性作为搜索的 PropertySource，因此不建议直接调用该方法。
+	 *
+	 * <p>
 	 * Return the value of {@link System#getProperties()} if allowed by the current
 	 * {@link SecurityManager}, otherwise return a map implementation that will attempt
 	 * to access individual keys using calls to {@link System#getProperty(String)}.
@@ -134,6 +150,9 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	Map<String, Object> getSystemProperties();
 
 	/**
+	 * 如果安全管理器允许则返回 System#getenv() 的值，否则返回通过调用 System#getenv(String) 实现的对象，
+	 * 大多数 Environment 的实现都将环境变量作为搜索的 PropertySource，因此不建议直接调用该方法。
+	 * <p>
 	 * Return the value of {@link System#getenv()} if allowed by the current
 	 * {@link SecurityManager}, otherwise return a map implementation that will attempt
 	 * to access individual keys using calls to {@link System#getenv(String)}.
@@ -149,6 +168,8 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	Map<String, Object> getSystemEnvironment();
 
 	/**
+	 * 将父环境中激活的 profile、默认的 profile 以及属性源合并到当前环境
+	 * <p>
 	 * Append the given parent environment's active profiles, default profiles and
 	 * property sources to this (child) environment's respective collections of each.
 	 * <p>For any identically-named {@code PropertySource} instance existing in both
@@ -162,9 +183,10 @@ public interface ConfigurableEnvironment extends Environment, ConfigurableProper
 	 * the parent environment occurring after the call to {@code merge} will not be
 	 * reflected in the child. Therefore, care should be taken to configure parent
 	 * property sources and profile information prior to calling {@code merge}.
+	 *
 	 * @param parent the environment to merge with
-	 * @since 3.1.2
 	 * @see org.springframework.context.support.AbstractApplicationContext#setParent
+	 * @since 3.1.2
 	 */
 	void merge(ConfigurableEnvironment parent);
 

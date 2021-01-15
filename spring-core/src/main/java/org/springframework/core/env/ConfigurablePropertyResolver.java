@@ -31,6 +31,8 @@ import org.springframework.lang.Nullable;
 public interface ConfigurablePropertyResolver extends PropertyResolver {
 
 	/**
+	 * 获取对属性进行类型转换的 ConfigurableConversionService
+	 * <p>
 	 * Return the {@link ConfigurableConversionService} used when performing type
 	 * conversions on properties.
 	 * <p>The configurable nature of the returned conversion service allows for
@@ -39,18 +41,22 @@ public interface ConfigurablePropertyResolver extends PropertyResolver {
 	 * ConfigurableConversionService cs = env.getConversionService();
 	 * cs.addConverter(new FooConverter());
 	 * </pre>
+	 *
 	 * @see PropertyResolver#getProperty(String, Class)
 	 * @see org.springframework.core.convert.converter.ConverterRegistry#addConverter
 	 */
 	ConfigurableConversionService getConversionService();
 
 	/**
+	 * 设置对属性类型进行转换的 ConfigurableConversionService
+	 * <p>
 	 * Set the {@link ConfigurableConversionService} to be used when performing type
 	 * conversions on properties.
 	 * <p><strong>Note:</strong> as an alternative to fully replacing the
 	 * {@code ConversionService}, consider adding or removing individual
 	 * {@code Converter} instances by drilling into {@link #getConversionService()}
 	 * and calling methods such as {@code #addConverter}.
+	 *
 	 * @see PropertyResolver#getProperty(String, Class)
 	 * @see #getConversionService()
 	 * @see org.springframework.core.convert.converter.ConverterRegistry#addConverter
@@ -58,11 +64,15 @@ public interface ConfigurablePropertyResolver extends PropertyResolver {
 	void setConversionService(ConfigurableConversionService conversionService);
 
 	/**
+	 * 设置占位符的前缀
+	 * <p>
 	 * Set the prefix that placeholders replaced by this resolver must begin with.
 	 */
 	void setPlaceholderPrefix(String placeholderPrefix);
 
 	/**
+	 * 设置占位符的后缀
+	 * <p>
 	 * Set the suffix that placeholders replaced by this resolver must end with.
 	 */
 	void setPlaceholderSuffix(String placeholderSuffix);
@@ -75,6 +85,8 @@ public interface ConfigurablePropertyResolver extends PropertyResolver {
 	void setValueSeparator(@Nullable String valueSeparator);
 
 	/**
+	 * 设置是否忽略无法解析的嵌套占位符
+	 * <p>
 	 * Set whether to throw an exception when encountering an unresolvable placeholder
 	 * nested within the value of a given property. A {@code false} value indicates strict
 	 * resolution, i.e. that an exception will be thrown. A {@code true} value indicates
@@ -83,22 +95,28 @@ public interface ConfigurablePropertyResolver extends PropertyResolver {
 	 * <p>Implementations of {@link #getProperty(String)} and its variants must inspect
 	 * the value set here to determine correct behavior when property values contain
 	 * unresolvable placeholders.
+	 *
 	 * @since 3.2
 	 */
 	void setIgnoreUnresolvableNestedPlaceholders(boolean ignoreUnresolvableNestedPlaceholders);
 
 	/**
+	 * 设置必须存在哪些属性
+	 * <p>
 	 * Specify which properties must be present, to be verified by
 	 * {@link #validateRequiredProperties()}.
 	 */
 	void setRequiredProperties(String... requiredProperties);
 
 	/**
+	 * 验证必须存在的属性
+	 * <p>
 	 * Validate that each of the properties specified by
 	 * {@link #setRequiredProperties} is present and resolves to a
 	 * non-{@code null} value.
+	 *
 	 * @throws MissingRequiredPropertiesException if any of the required
-	 * properties are not resolvable.
+	 *                                            properties are not resolvable.
 	 */
 	void validateRequiredProperties() throws MissingRequiredPropertiesException;
 
