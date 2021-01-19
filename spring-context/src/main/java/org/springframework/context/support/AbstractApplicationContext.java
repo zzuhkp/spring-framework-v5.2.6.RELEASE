@@ -549,40 +549,51 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
+			// 应用上下文刷新准备
 			// Prepare this context for refreshing.
 			prepareRefresh();
 
+			// BeanFactory 创建
 			// Tell the subclass to refresh the internal bean factory.
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
+			// BeanFactory 准备
 			// Prepare the bean factory for use in this context.
 			prepareBeanFactory(beanFactory);
 
 			try {
+				// BeanFactory 后处理
 				// Allows post-processing of the bean factory in context subclasses.
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
 				invokeBeanFactoryPostProcessors(beanFactory);
 
+				// 注册 BeanPostProcessor
 				// Register bean processors that intercept bean creation.
 				registerBeanPostProcessors(beanFactory);
 
+				// 初始化 MessageSource
 				// Initialize message source for this context.
 				initMessageSource();
 
+				// 初始化事件广播器
 				// Initialize event multicaster for this context.
 				initApplicationEventMulticaster();
 
+				// 上下文刷新
 				// Initialize other special beans in specific context subclasses.
 				onRefresh();
 
+				// 注册事件监听器
 				// Check for listener beans and register them.
 				registerListeners();
 
+				// 初始化完成，实例化所有非延迟初始化的单例 bean
 				// Instantiate all remaining (non-lazy-init) singletons.
 				finishBeanFactoryInitialization(beanFactory);
 
+				// 刷新完成
 				// Last step: publish corresponding event.
 				finishRefresh();
 			} catch (BeansException ex) {
@@ -643,6 +654,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			this.applicationListeners.addAll(this.earlyApplicationListeners);
 		}
 
+		// 收集事件，待广播器有效时发布
 		// Allow for the collection of early ApplicationEvents,
 		// to be published once the multicaster is available...
 		this.earlyApplicationEvents = new LinkedHashSet<>();
