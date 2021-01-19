@@ -17,6 +17,8 @@
 package org.springframework.context;
 
 /**
+ * 表示启动/停止生命周期控制的通用接口
+ * <p>
  * A common interface defining methods for start/stop lifecycle control.
  * The typical use case for this is to control asynchronous processing.
  * <b>NOTE: This interface does not imply specific auto-startup semantics.
@@ -41,24 +43,29 @@ package org.springframework.context;
  * application context's startup and shutdown phases.
  *
  * @author Juergen Hoeller
- * @since 2.0
  * @see SmartLifecycle
  * @see ConfigurableApplicationContext
  * @see org.springframework.jms.listener.AbstractMessageListenerContainer
  * @see org.springframework.scheduling.quartz.SchedulerFactoryBean
+ * @since 2.0
  */
 public interface Lifecycle {
 
 	/**
+	 * 启动组件，如果组件已经在运行不应该抛出异常
+	 * <p>
 	 * Start this component.
 	 * <p>Should not throw an exception if the component is already running.
 	 * <p>In the case of a container, this will propagate the start signal to all
 	 * components that apply.
+	 *
 	 * @see SmartLifecycle#isAutoStartup()
 	 */
 	void start();
 
 	/**
+	 * 停止当期组件，通常以同步的方式。
+	 * <p>
 	 * Stop this component, typically in a synchronous fashion, such that the component is
 	 * fully stopped upon return of this method. Consider implementing {@link SmartLifecycle}
 	 * and its {@code stop(Runnable)} variant when asynchronous stop behavior is necessary.
@@ -70,15 +77,19 @@ public interface Lifecycle {
 	 * <p>Should not throw an exception if the component is not running (not started yet).
 	 * <p>In the case of a container, this will propagate the stop signal to all components
 	 * that apply.
+	 *
 	 * @see SmartLifecycle#stop(Runnable)
 	 * @see org.springframework.beans.factory.DisposableBean#destroy()
 	 */
 	void stop();
 
 	/**
+	 * 当前组件是否正在运行
+	 * <p>
 	 * Check whether this component is currently running.
 	 * <p>In the case of a container, this will return {@code true} only if <i>all</i>
 	 * components that apply are currently running.
+	 *
 	 * @return whether the component is currently running
 	 */
 	boolean isRunning();

@@ -44,6 +44,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import javax.inject.Provider;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.TypeConverter;
@@ -145,6 +146,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	private String serializationId;
 
 	/**
+	 * 是否允许重复定义 BeanDefinition
+	 * <p>
 	 * Whether to allow re-registration of a different definition with the same name.
 	 */
 	private boolean allowBeanDefinitionOverriding = true;
@@ -174,7 +177,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 	/**
 	 * 保存 bean 定义的顺序，key 为 bean 的名称
-	 *
+	 * <p>
 	 * Map of bean definition objects, keyed by bean name.
 	 */
 	private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>(256);
@@ -196,7 +199,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 	/**
 	 * BeanDefinition 的名称列表，用来保存 bean 定义的顺序
-	 *
+	 * <p>
 	 * List of bean definition names, in registration order.
 	 */
 	private volatile List<String> beanDefinitionNames = new ArrayList<>(256);
@@ -669,7 +672,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> Map<String, T> getBeansOfType(@Nullable Class<T> type, boolean includeNonSingletons,
-			boolean allowEagerInit)
+											 boolean allowEagerInit)
 			throws BeansException {
 
 		String[] beanNames = getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
@@ -813,7 +816,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 * @return whether the bean should be considered as autowire candidate
 	 */
 	protected boolean isAutowireCandidate(String beanName, DependencyDescriptor descriptor,
-			AutowireCandidateResolver resolver)
+										  AutowireCandidateResolver resolver)
 			throws NoSuchBeanDefinitionException {
 
 		String beanDefinitionName = BeanFactoryUtils.transformedBeanName(beanName);
@@ -849,7 +852,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 * @return whether the bean should be considered as autowire candidate
 	 */
 	protected boolean isAutowireCandidate(String beanName, RootBeanDefinition mbd,
-			DependencyDescriptor descriptor, AutowireCandidateResolver resolver) {
+										  DependencyDescriptor descriptor, AutowireCandidateResolver resolver) {
 
 		String beanDefinitionName = BeanFactoryUtils.transformedBeanName(beanName);
 		resolveBeanClass(mbd, beanDefinitionName);
@@ -1260,7 +1263,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	@Override
 	@Nullable
 	public Object resolveDependency(DependencyDescriptor descriptor, @Nullable String requestingBeanName,
-			@Nullable Set<String> autowiredBeanNames, @Nullable TypeConverter typeConverter) throws BeansException {
+									@Nullable Set<String> autowiredBeanNames, @Nullable TypeConverter typeConverter) throws BeansException {
 
 		descriptor.initParameterNameDiscovery(getParameterNameDiscoverer());
 		if (Optional.class == descriptor.getDependencyType()) {
@@ -1297,7 +1300,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 */
 	@Nullable
 	public Object doResolveDependency(DependencyDescriptor descriptor, @Nullable String beanName,
-			@Nullable Set<String> autowiredBeanNames, @Nullable TypeConverter typeConverter) throws BeansException {
+									  @Nullable Set<String> autowiredBeanNames, @Nullable TypeConverter typeConverter) throws BeansException {
 
 		InjectionPoint previousInjectionPoint = ConstructorResolver.setCurrentInjectionPoint(descriptor);
 		try {
@@ -1395,7 +1398,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 	@Nullable
 	private Object resolveMultipleBeans(DependencyDescriptor descriptor, @Nullable String beanName,
-			@Nullable Set<String> autowiredBeanNames, @Nullable TypeConverter typeConverter) {
+										@Nullable Set<String> autowiredBeanNames, @Nullable TypeConverter typeConverter) {
 
 		final Class<?> type = descriptor.getDependencyType();
 
@@ -1596,7 +1599,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 * initialization ahead of primary candidate selection.
 	 */
 	private void addCandidateEntry(Map<String, Object> candidates, String candidateName,
-			DependencyDescriptor descriptor, Class<?> requiredType) {
+								   DependencyDescriptor descriptor, Class<?> requiredType) {
 
 		if (descriptor instanceof MultiElementDescriptor) {
 			Object beanInstance = descriptor.resolveCandidate(candidateName, requiredType, this);

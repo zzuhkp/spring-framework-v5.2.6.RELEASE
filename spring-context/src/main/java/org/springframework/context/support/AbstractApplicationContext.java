@@ -241,7 +241,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	private final Set<ApplicationListener<?>> applicationListeners = new LinkedHashSet<>();
 
 	/**
-	 * 刷新当前应用上下文注册的事件监听器
+	 * 刷新当前应用上下文前注册的事件监听器
 	 *
 	 * Local listeners registered before refresh.
 	 */
@@ -249,7 +249,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	private Set<ApplicationListener<?>> earlyApplicationListeners;
 
 	/**
-	 * 当前应用上下文刷新添加添加的事件
+	 * 当前应用上下文刷新前添加的事件
 	 *
 	 * ApplicationEvents published before the multicaster setup.
 	 */
