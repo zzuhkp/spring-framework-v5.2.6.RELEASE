@@ -33,11 +33,14 @@ import org.springframework.aop.interceptor.ExposeInvocationInterceptor;
 public abstract class AspectJProxyUtils {
 
 	/**
+	 * 如果有必要，在 Advisor 链中添加 ExposeInvocationInterceptor.ADVISOR
+	 * <p>
 	 * Add special advisors if necessary to work with a proxy chain that contains AspectJ advisors:
 	 * concretely, {@link ExposeInvocationInterceptor} at the beginning of the list.
 	 * <p>This will expose the current Spring AOP invocation (necessary for some AspectJ pointcut
 	 * matching) and make available the current AspectJ JoinPoint. The call will have no effect
 	 * if there are no AspectJ advisors in the advisor chain.
+	 *
 	 * @param advisors the advisors available
 	 * @return {@code true} if an {@link ExposeInvocationInterceptor} was added to the list,
 	 * otherwise {@code false}
@@ -63,7 +66,10 @@ public abstract class AspectJProxyUtils {
 	}
 
 	/**
+	 * 给定的 Advisor 是否包含 AspectJ Advice
+	 * <p>
 	 * Determine whether the given Advisor contains an AspectJ advice.
+	 *
 	 * @param advisor the Advisor to check
 	 */
 	private static boolean isAspectJAdvice(Advisor advisor) {

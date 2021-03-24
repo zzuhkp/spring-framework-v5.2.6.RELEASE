@@ -37,9 +37,12 @@ package org.springframework.core;
 public interface DecoratingProxy {
 
 	/**
+	 * 获取被当前代理装饰的类，AOP 代理的情况下为最终的目标类，而不是直接目标类(多个嵌套代理的情况)
+	 * <p>
 	 * Return the (ultimate) decorated class behind this proxy.
 	 * <p>In case of an AOP proxy, this will be the ultimate target class,
 	 * not just the immediate target (in case of multiple nested proxies).
+	 *
 	 * @return the decorated class (never {@code null})
 	 */
 	Class<?> getDecoratedClass();

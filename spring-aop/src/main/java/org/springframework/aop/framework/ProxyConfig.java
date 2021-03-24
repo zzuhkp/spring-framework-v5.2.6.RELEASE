@@ -21,6 +21,8 @@ import java.io.Serializable;
 import org.springframework.util.Assert;
 
 /**
+ * 用于创建代理的配置
+ * <p>
  * Convenience superclass for configuration used in creating proxies,
  * to ensure that all proxy creators have consistent properties.
  *
@@ -30,22 +32,40 @@ import org.springframework.util.Assert;
  */
 public class ProxyConfig implements Serializable {
 
-	/** use serialVersionUID from Spring 1.2 for interoperability. */
+	/**
+	 * use serialVersionUID from Spring 1.2 for interoperability.
+	 */
 	private static final long serialVersionUID = -8409359707199703185L;
 
-
+	/**
+	 * 是否直接代理目标类
+	 */
 	private boolean proxyTargetClass = false;
 
+	/**
+	 * 代理是否执行优化
+	 */
 	private boolean optimize = false;
 
+	/**
+	 * 通过当前配置创建的代理是否应避免强制转换为 Advised
+	 */
 	boolean opaque = false;
 
+	/**
+	 * AOP 代理是否应该将代理公开为 ThreadLocal，以便通过 AopContext 类进行检索
+	 */
 	boolean exposeProxy = false;
 
+	/**
+	 * 当前配置是否被冻结
+	 */
 	private boolean frozen = false;
 
 
 	/**
+	 * 设置是否直接代理目标类
+	 * <p>
 	 * Set whether to proxy the target class directly, instead of just proxying
 	 * specific interfaces. Default is "false".
 	 * <p>Set this to "true" to force proxying for the TargetSource's exposed
@@ -55,6 +75,7 @@ public class ProxyConfig implements Serializable {
 	 * <p>Note: Depending on the configuration of the concrete proxy factory,
 	 * the proxy-target-class behavior will also be applied if no interfaces
 	 * have been specified (and no interface autodetection is activated).
+	 *
 	 * @see org.springframework.aop.TargetSource#getTargetClass()
 	 */
 	public void setProxyTargetClass(boolean proxyTargetClass) {
@@ -62,6 +83,8 @@ public class ProxyConfig implements Serializable {
 	}
 
 	/**
+	 * 是否直接代理目标类
+	 * <p>
 	 * Return whether to proxy the target class directly as well as any interfaces.
 	 */
 	public boolean isProxyTargetClass() {
@@ -69,6 +92,8 @@ public class ProxyConfig implements Serializable {
 	}
 
 	/**
+	 * 设置代理是否执行优化
+	 * <p>
 	 * Set whether proxies should perform aggressive optimizations.
 	 * The exact meaning of "aggressive optimizations" will differ
 	 * between proxies, but there is usually some tradeoff.
@@ -84,6 +109,8 @@ public class ProxyConfig implements Serializable {
 	}
 
 	/**
+	 * 代理是否执行优化
+	 * <p>
 	 * Return whether proxies should perform aggressive optimizations.
 	 */
 	public boolean isOptimize() {
@@ -91,6 +118,8 @@ public class ProxyConfig implements Serializable {
 	}
 
 	/**
+	 * 设置通过当前配置创建的代理是否应避免强制转换为 Advised
+	 * <p>
 	 * Set whether proxies created by this configuration should be prevented
 	 * from being cast to {@link Advised} to query proxy status.
 	 * <p>Default is "false", meaning that any AOP proxy can be cast to
@@ -101,6 +130,8 @@ public class ProxyConfig implements Serializable {
 	}
 
 	/**
+	 * 通过当前配置创建的代理不实现接口 Advised？
+	 * <p>
 	 * Return whether proxies created by this configuration should be
 	 * prevented from being cast to {@link Advised}.
 	 */
@@ -109,6 +140,8 @@ public class ProxyConfig implements Serializable {
 	}
 
 	/**
+	 * 设置 AOP 代理是否应该将代理公开为 ThreadLocal，以便通过 AopContext 类进行检索
+	 * <p>
 	 * Set whether the proxy should be exposed by the AOP framework as a
 	 * ThreadLocal for retrieval via the AopContext class. This is useful
 	 * if an advised object needs to call another advised method on itself.
@@ -122,6 +155,8 @@ public class ProxyConfig implements Serializable {
 	}
 
 	/**
+	 * AOP 代理是否应该将代理公开为 ThreadLocal，以便通过 AopContext 类进行检索
+	 * <p>
 	 * Return whether the AOP proxy will expose the AOP proxy for
 	 * each invocation.
 	 */
@@ -130,6 +165,8 @@ public class ProxyConfig implements Serializable {
 	}
 
 	/**
+	 * 设置此配置是否被冻结，冻结时 Advice 不能被改变
+	 * <p>
 	 * Set whether this config should be frozen.
 	 * <p>When a config is frozen, no advice changes can be made. This is
 	 * useful for optimization, and useful when we don't want callers to
@@ -140,6 +177,8 @@ public class ProxyConfig implements Serializable {
 	}
 
 	/**
+	 * 此配置是否被冻结
+	 * <p>
 	 * Return whether the config is frozen, and no advice changes can be made.
 	 */
 	public boolean isFrozen() {
@@ -148,7 +187,10 @@ public class ProxyConfig implements Serializable {
 
 
 	/**
+	 * 复制另一个配置到当前配置
+	 * <p>
 	 * Copy configuration from the other config object.
+	 *
 	 * @param other object to copy configuration from
 	 */
 	public void copyFrom(ProxyConfig other) {

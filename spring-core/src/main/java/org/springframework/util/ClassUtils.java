@@ -91,6 +91,8 @@ public abstract class ClassUtils {
 	private static final char INNER_CLASS_SEPARATOR = '$';
 
 	/**
+	 * CGLIB 类的分隔符
+	 * <p>
 	 * The CGLIB class separator: {@code "$$"}.
 	 */
 	public static final String CGLIB_CLASS_SEPARATOR = "$$";
@@ -1206,7 +1208,7 @@ public abstract class ClassUtils {
 
 	/**
 	 * 获取给定方法名称在类中的数量
-	 *
+	 * <p>
 	 * Return the number of methods with a given name (with any argument types), for the given class and/or its
 	 * superclasses. Includes non-public methods.
 	 *

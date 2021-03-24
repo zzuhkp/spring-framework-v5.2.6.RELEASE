@@ -17,6 +17,8 @@
 package org.springframework.aop;
 
 /**
+ * AOP 代理的标记接口，
+ *
  * Marker for AOP proxy interfaces (in particular: introduction interfaces)
  * that explicitly intend to return the raw target object (which would normally
  * get replaced with the proxy object when returned from a method invocation).

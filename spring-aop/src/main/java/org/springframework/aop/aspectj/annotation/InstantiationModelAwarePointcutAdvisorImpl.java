@@ -45,29 +45,62 @@ import org.springframework.lang.Nullable;
 final class InstantiationModelAwarePointcutAdvisorImpl
 		implements InstantiationModelAwarePointcutAdvisor, AspectJPrecedenceInformation, Serializable {
 
-	private static final Advice EMPTY_ADVICE = new Advice() {};
+	private static final Advice EMPTY_ADVICE = new Advice() {
+	};
 
-
+	/**
+	 * 切点
+	 */
 	private final AspectJExpressionPointcut declaredPointcut;
 
+	/**
+	 * Advice 方法所在的类
+	 */
 	private final Class<?> declaringClass;
 
+	/**
+	 * Advice 方法名
+	 */
 	private final String methodName;
 
+	/**
+	 * Advice 方法参数类型
+	 */
 	private final Class<?>[] parameterTypes;
 
+	/**
+	 * Advice 方法
+	 */
 	private transient Method aspectJAdviceMethod;
 
+	/**
+	 * Advisor 工厂
+	 */
 	private final AspectJAdvisorFactory aspectJAdvisorFactory;
 
+	/**
+	 * Aspect 实例工厂
+	 */
 	private final MetadataAwareAspectInstanceFactory aspectInstanceFactory;
 
+	/**
+	 * 通过反射获取到的 Advice 方法的索引
+	 */
 	private final int declarationOrder;
 
+	/**
+	 * Aspect 名称
+	 */
 	private final String aspectName;
 
+	/**
+	 * 切点
+	 */
 	private final Pointcut pointcut;
 
+	/**
+	 * 是否延迟初始化 Advice
+	 */
 	private final boolean lazy;
 
 	@Nullable
@@ -81,8 +114,8 @@ final class InstantiationModelAwarePointcutAdvisorImpl
 
 
 	public InstantiationModelAwarePointcutAdvisorImpl(AspectJExpressionPointcut declaredPointcut,
-			Method aspectJAdviceMethod, AspectJAdvisorFactory aspectJAdvisorFactory,
-			MetadataAwareAspectInstanceFactory aspectInstanceFactory, int declarationOrder, String aspectName) {
+													  Method aspectJAdviceMethod, AspectJAdvisorFactory aspectJAdvisorFactory,
+													  MetadataAwareAspectInstanceFactory aspectInstanceFactory, int declarationOrder, String aspectName) {
 
 		this.declaredPointcut = declaredPointcut;
 		this.declaringClass = aspectJAdviceMethod.getDeclaringClass();
@@ -105,8 +138,7 @@ final class InstantiationModelAwarePointcutAdvisorImpl
 			this.pointcut = new PerTargetInstantiationModelPointcut(
 					this.declaredPointcut, preInstantiationPointcut, aspectInstanceFactory);
 			this.lazy = true;
-		}
-		else {
+		} else {
 			// A singleton aspect.
 			this.pointcut = this.declaredPointcut;
 			this.lazy = false;
@@ -145,6 +177,12 @@ final class InstantiationModelAwarePointcutAdvisorImpl
 		return this.instantiatedAdvice;
 	}
 
+	/**
+	 * 实例化 Advice
+	 *
+	 * @param pointcut
+	 * @return
+	 */
 	private Advice instantiateAdvice(AspectJExpressionPointcut pointcut) {
 		Advice advice = this.aspectJAdvisorFactory.getAdvice(this.aspectJAdviceMethod, pointcut,
 				this.aspectInstanceFactory, this.declarationOrder, this.aspectName);
@@ -208,6 +246,8 @@ final class InstantiationModelAwarePointcutAdvisorImpl
 	}
 
 	/**
+	 * 确定 Advice 的类型
+	 *
 	 * Duplicates some logic from getAdvice, but importantly does not force
 	 * creation of the advice.
 	 */
@@ -217,8 +257,7 @@ final class InstantiationModelAwarePointcutAdvisorImpl
 		if (aspectJAnnotation == null) {
 			this.isBeforeAdvice = false;
 			this.isAfterAdvice = false;
-		}
-		else {
+		} else {
 			switch (aspectJAnnotation.getAnnotationType()) {
 				case AtPointcut:
 				case AtAround:
@@ -244,8 +283,7 @@ final class InstantiationModelAwarePointcutAdvisorImpl
 		inputStream.defaultReadObject();
 		try {
 			this.aspectJAdviceMethod = this.declaringClass.getMethod(this.methodName, this.parameterTypes);
-		}
-		catch (NoSuchMethodException ex) {
+		} catch (NoSuchMethodException ex) {
 			throw new IllegalStateException("Failed to find advice method on deserialization", ex);
 		}
 	}
@@ -259,6 +297,8 @@ final class InstantiationModelAwarePointcutAdvisorImpl
 
 
 	/**
+	 * 动态切点
+	 * <p>
 	 * Pointcut implementation that changes its behaviour when the advice is instantiated.
 	 * Note that this is a <i>dynamic</i> pointcut; otherwise it might be optimized out
 	 * if it does not at first match statically.
@@ -273,7 +313,7 @@ final class InstantiationModelAwarePointcutAdvisorImpl
 		private LazySingletonAspectInstanceFactoryDecorator aspectInstanceFactory;
 
 		public PerTargetInstantiationModelPointcut(AspectJExpressionPointcut declaredPointcut,
-				Pointcut preInstantiationPointcut, MetadataAwareAspectInstanceFactory aspectInstanceFactory) {
+												   Pointcut preInstantiationPointcut, MetadataAwareAspectInstanceFactory aspectInstanceFactory) {
 
 			this.declaredPointcut = declaredPointcut;
 			this.preInstantiationPointcut = preInstantiationPointcut;

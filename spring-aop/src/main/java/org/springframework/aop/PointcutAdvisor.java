@@ -17,6 +17,8 @@
 package org.springframework.aop;
 
 /**
+ * 所有 Pointcut 驱动的 Advisor 的父接口
+ * <p>
  * Superinterface for all Advisors that are driven by a pointcut.
  * This covers nearly all advisors except introduction advisors,
  * for which method-level matching doesn't apply.
@@ -26,6 +28,8 @@ package org.springframework.aop;
 public interface PointcutAdvisor extends Advisor {
 
 	/**
+	 * 获取 Pointcut
+	 * <p>
 	 * Get the Pointcut that drives this advisor.
 	 */
 	Pointcut getPointcut();

@@ -23,6 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 支持 @Aspect 注解标注的 Spring 组件
+ * <p>
  * Enables support for handling components marked with AspectJ's {@code @Aspect} annotation,
  * similar to functionality found in Spring's {@code <aop:aspectj-autoproxy>} XML element.
  * To be used on @{@link Configuration} classes as follows:
@@ -42,7 +44,7 @@ import java.lang.annotation.Target;
  *         return new MyAspect();
  *     }
  * }</pre>
- *
+ * <p>
  * Where {@code FooService} is a typical POJO component and {@code MyAspect} is an
  * {@code @Aspect}-style aspect:
  *
@@ -61,7 +63,7 @@ import java.lang.annotation.Target;
  *         // advise FooService methods as appropriate
  *     }
  * }</pre>
- *
+ * <p>
  * In the scenario above, {@code @EnableAspectJAutoProxy} ensures that {@code MyAspect}
  * will be properly processed and that {@code FooService} will be proxied mixing in the
  * advice that it contributes.
@@ -89,7 +91,7 @@ import java.lang.annotation.Target;
  * &#064;Aspect
  * &#064;Component
  * public class MyAspect { ... }</pre>
- *
+ * <p>
  * Then use the @{@link ComponentScan} annotation to pick both up:
  *
  * <pre class="code">
@@ -113,8 +115,8 @@ import java.lang.annotation.Target;
  *
  * @author Chris Beams
  * @author Juergen Hoeller
- * @since 3.1
  * @see org.aspectj.lang.annotation.Aspect
+ * @since 3.1
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -123,15 +125,20 @@ import java.lang.annotation.Target;
 public @interface EnableAspectJAutoProxy {
 
 	/**
+	 * 是否使用 CGLIB 创建代理
+	 * <p>
 	 * Indicate whether subclass-based (CGLIB) proxies are to be created as opposed
 	 * to standard Java interface-based proxies. The default is {@code false}.
 	 */
 	boolean proxyTargetClass() default false;
 
 	/**
+	 * 代理是否暴露在 ThreadLocal 中，以便通过 AopContext 获取
+	 * <p>
 	 * Indicate that the proxy should be exposed by the AOP framework as a {@code ThreadLocal}
 	 * for retrieval via the {@link org.springframework.aop.framework.AopContext} class.
 	 * Off by default, i.e. no guarantees that {@code AopContext} access will work.
+	 *
 	 * @since 4.3.1
 	 */
 	boolean exposeProxy() default false;

@@ -48,9 +48,9 @@ import org.springframework.util.ReflectionUtils;
  *
  * @author Adrian Colyer
  * @author Juergen Hoeller
- * @since 2.0
  * @see #suppressInterface
  * @see DelegatingIntroductionInterceptor
+ * @since 2.0
  */
 @SuppressWarnings("serial")
 public class DelegatePerTargetObjectIntroductionInterceptor extends IntroductionInfoSupport
@@ -108,6 +108,8 @@ public class DelegatePerTargetObjectIntroductionInterceptor extends Introduction
 	}
 
 	/**
+	 * 获取 Introduction 的代理
+	 * <p>
 	 * Proceed with the supplied {@link org.aopalliance.intercept.MethodInterceptor}.
 	 * Subclasses can override this method to intercept method invocations on the
 	 * target object which is useful when an introduction needs to monitor the object
@@ -123,8 +125,7 @@ public class DelegatePerTargetObjectIntroductionInterceptor extends Introduction
 		synchronized (this.delegateMap) {
 			if (this.delegateMap.containsKey(targetObject)) {
 				return this.delegateMap.get(targetObject);
-			}
-			else {
+			} else {
 				Object delegate = createNewDelegate();
 				this.delegateMap.put(targetObject, delegate);
 				return delegate;
@@ -132,11 +133,15 @@ public class DelegatePerTargetObjectIntroductionInterceptor extends Introduction
 		}
 	}
 
+	/**
+	 * 创建代理
+	 *
+	 * @return
+	 */
 	private Object createNewDelegate() {
 		try {
 			return ReflectionUtils.accessibleConstructor(this.defaultImplType).newInstance();
-		}
-		catch (Throwable ex) {
+		} catch (Throwable ex) {
 			throw new IllegalArgumentException("Cannot create default implementation for '" +
 					this.interfaceType.getName() + "' mixin (" + this.defaultImplType.getName() + "): " + ex);
 		}

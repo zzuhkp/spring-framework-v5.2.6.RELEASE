@@ -19,6 +19,8 @@ package org.aopalliance.intercept;
 import java.lang.reflect.AccessibleObject;
 
 /**
+ * 通用的运行时 JoinPoint
+ * <p>
  * This interface represents a generic runtime joinpoint (in the AOP
  * terminology).
  *
@@ -40,22 +42,30 @@ import java.lang.reflect.AccessibleObject;
 public interface Joinpoint {
 
 	/**
+	 * 转到链中的下一个拦截器
+	 * <p>
 	 * Proceed to the next interceptor in the chain.
 	 * <p>The implementation and the semantics of this method depends
 	 * on the actual joinpoint type (see the children interfaces).
+	 *
 	 * @return see the children interfaces' proceed definition
 	 * @throws Throwable if the joinpoint throws an exception
 	 */
 	Object proceed() throws Throwable;
 
 	/**
+	 * 获取持有当前 JoinPoint 静态部分的对象，如调用的目标对象
+	 * <p>
 	 * Return the object that holds the current joinpoint's static part.
 	 * <p>For instance, the target object for an invocation.
+	 *
 	 * @return the object (can be null if the accessible object is static)
 	 */
 	Object getThis();
 
 	/**
+	 * 返回此 JointPoint 的静态部分
+	 * <p>
 	 * Return the static part of this joinpoint.
 	 * <p>The static part is an accessible object on which a chain of
 	 * interceptors are installed.

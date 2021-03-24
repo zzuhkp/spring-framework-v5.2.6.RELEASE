@@ -17,6 +17,8 @@
 package org.springframework.cglib.core;
 
 /**
+ * CGLIB GeneratorStrategy 的变体，生成类时将 ClassLoader 公开为当前类的上下文 ClassLoader
+ *
  * CGLIB GeneratorStrategy variant which exposes the application ClassLoader
  * as current thread context ClassLoader for the time of class generation.
  * The ASM ClassWriter in Spring's ASM variant will pick it up when doing

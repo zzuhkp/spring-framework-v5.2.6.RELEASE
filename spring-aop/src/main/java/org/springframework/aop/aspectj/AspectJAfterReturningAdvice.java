@@ -27,6 +27,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.TypeUtils;
 
 /**
+ * 包装 AspectJ 的 Spring AOP Advice，方法正常返回时调用
+ * <p>
  * Spring AOP advice wrapping an AspectJ after-returning advice method.
  *
  * @author Rod Johnson
@@ -69,10 +71,13 @@ public class AspectJAfterReturningAdvice extends AbstractAspectJAdvice
 
 
 	/**
+	 * 是否应该在方法正常返回时调用 Advice 方法，方法的返回值类型和 Advice 方法参数类型匹配时才调用
+	 * <p>
 	 * Following AspectJ semantics, if a returning clause was specified, then the
 	 * advice is only invoked if the returned value is an instance of the given
 	 * returning type and generic type parameters, if any, match the assignment
 	 * rules. If the returning type is Object, the advice is *always* invoked.
+	 *
 	 * @param returnValue the return value of the target method
 	 * @return whether to invoke the advice method for the given return value
 	 */
@@ -86,23 +91,24 @@ public class AspectJAfterReturningAdvice extends AbstractAspectJAdvice
 	}
 
 	/**
+	 * 方法的返回值类型是否匹配 Advice 方法参数类型
+	 * <p>
 	 * Following AspectJ semantics, if a return value is null (or return type is void),
 	 * then the return type of target method should be used to determine whether advice
 	 * is invoked or not. Also, even if the return type is void, if the type of argument
 	 * declared in the advice method is Object, then the advice must still get invoked.
-	 * @param type the type of argument declared in advice method
-	 * @param method the advice method
+	 *
+	 * @param type        the type of argument declared in advice method
+	 * @param method      the advice method
 	 * @param returnValue the return value of the target method
 	 * @return whether to invoke the advice method for the given return value and type
 	 */
 	private boolean matchesReturnValue(Class<?> type, Method method, @Nullable Object returnValue) {
 		if (returnValue != null) {
 			return ClassUtils.isAssignableValue(type, returnValue);
-		}
-		else if (Object.class == type && void.class == method.getReturnType()) {
+		} else if (Object.class == type && void.class == method.getReturnType()) {
 			return true;
-		}
-		else {
+		} else {
 			return ClassUtils.isAssignable(type, method.getReturnType());
 		}
 	}

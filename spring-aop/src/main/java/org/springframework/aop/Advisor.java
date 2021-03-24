@@ -19,6 +19,8 @@ package org.springframework.aop;
 import org.aopalliance.aop.Advice;
 
 /**
+ * 持有 Advice 的接口，允许不同类型的 Advice，如 before、after，这些 Advice 不需要 Interceptor 实现
+ * <p>
  * Base interface holding AOP <b>advice</b> (action to take at a joinpoint)
  * and a filter determining the applicability of the advice (such as
  * a pointcut). <i>This interface is not for use by Spring users, but to
@@ -38,14 +40,19 @@ public interface Advisor {
 	/**
 	 * Common placeholder for an empty {@code Advice} to be returned from
 	 * {@link #getAdvice()} if no proper advice has been configured (yet).
+	 *
 	 * @since 5.0
 	 */
-	Advice EMPTY_ADVICE = new Advice() {};
+	Advice EMPTY_ADVICE = new Advice() {
+	};
 
 
 	/**
+	 * 获取 Advice，可能是 before、after、interceptor 等等
+	 * <p>
 	 * Return the advice part of this aspect. An advice may be an
 	 * interceptor, a before advice, a throws advice, etc.
+	 *
 	 * @return the advice that should apply if the pointcut matches
 	 * @see org.aopalliance.intercept.MethodInterceptor
 	 * @see BeforeAdvice
@@ -55,6 +62,8 @@ public interface Advisor {
 	Advice getAdvice();
 
 	/**
+	 * 当前 Advice 是否与特定的实例关联
+	 * <p>
 	 * Return whether this advice is associated with a particular instance
 	 * (for example, creating a mixin) or shared with all instances of
 	 * the advised class obtained from the same Spring bean factory.
@@ -62,6 +71,7 @@ public interface Advisor {
 	 * Typical Advisor implementations always return {@code true}.
 	 * Use singleton/prototype bean definitions or appropriate programmatic
 	 * proxy creation to ensure that Advisors have the correct lifecycle model.
+	 *
 	 * @return whether this advice is associated with a particular target instance
 	 */
 	boolean isPerInstance();

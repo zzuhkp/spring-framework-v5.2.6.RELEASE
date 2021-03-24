@@ -25,6 +25,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 /**
+ * AspectInstanceFactory 实现，每次都会创建新的实例
+ * <p>
  * Implementation of {@link AspectInstanceFactory} that creates a new instance
  * of the specified aspect class for every {@link #getAspectInstance()} call.
  *
@@ -38,6 +40,7 @@ public class SimpleAspectInstanceFactory implements AspectInstanceFactory {
 
 	/**
 	 * Create a new SimpleAspectInstanceFactory for the given aspect class.
+	 *
 	 * @param aspectClass the aspect class
 	 */
 	public SimpleAspectInstanceFactory(Class<?> aspectClass) {
@@ -57,20 +60,16 @@ public class SimpleAspectInstanceFactory implements AspectInstanceFactory {
 	public final Object getAspectInstance() {
 		try {
 			return ReflectionUtils.accessibleConstructor(this.aspectClass).newInstance();
-		}
-		catch (NoSuchMethodException ex) {
+		} catch (NoSuchMethodException ex) {
 			throw new AopConfigException(
 					"No default constructor on aspect class: " + this.aspectClass.getName(), ex);
-		}
-		catch (InstantiationException ex) {
+		} catch (InstantiationException ex) {
 			throw new AopConfigException(
 					"Unable to instantiate aspect class: " + this.aspectClass.getName(), ex);
-		}
-		catch (IllegalAccessException ex) {
+		} catch (IllegalAccessException ex) {
 			throw new AopConfigException(
 					"Could not access aspect constructor: " + this.aspectClass.getName(), ex);
-		}
-		catch (InvocationTargetException ex) {
+		} catch (InvocationTargetException ex) {
 			throw new AopConfigException(
 					"Failed to invoke aspect constructor: " + this.aspectClass.getName(), ex.getTargetException());
 		}
@@ -87,6 +86,7 @@ public class SimpleAspectInstanceFactory implements AspectInstanceFactory {
 	 * either an instance-specific order expressed through implementing
 	 * the {@link org.springframework.core.Ordered} interface,
 	 * or a fallback order.
+	 *
 	 * @see org.springframework.core.Ordered
 	 * @see #getOrderForAspectClass
 	 */
@@ -100,6 +100,7 @@ public class SimpleAspectInstanceFactory implements AspectInstanceFactory {
 	 * does not express an instance-specific order through implementing
 	 * the {@link org.springframework.core.Ordered} interface.
 	 * <p>The default implementation simply returns {@code Ordered.LOWEST_PRECEDENCE}.
+	 *
 	 * @param aspectClass the aspect class
 	 */
 	protected int getOrderForAspectClass(Class<?> aspectClass) {

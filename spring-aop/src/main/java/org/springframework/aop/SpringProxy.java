@@ -17,12 +17,14 @@
 package org.springframework.aop;
 
 /**
+ * 所有 AOP 代理生成的标记接口，用于确定对象是否为 Spring 生成的代理
+ * <p>
  * Marker interface implemented by all AOP proxies. Used to detect
  * whether or not objects are Spring-generated proxies.
  *
  * @author Rob Harrop
- * @since 2.0.1
  * @see org.springframework.aop.support.AopUtils#isAopProxy(Object)
+ * @since 2.0.1
  */
 public interface SpringProxy {
 

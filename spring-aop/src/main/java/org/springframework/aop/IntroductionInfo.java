@@ -17,6 +17,8 @@
 package org.springframework.aop;
 
 /**
+ * 提供描述 Introduction 所需信息的接口
+ * <p>
  * Interface supplying the information necessary to describe an introduction.
  *
  * <p>{@link IntroductionAdvisor IntroductionAdvisors} must implement this
@@ -31,7 +33,10 @@ package org.springframework.aop;
 public interface IntroductionInfo {
 
 	/**
+	 * 获取当前 Advisor 或 Advice 引入的其他接口
+	 * <p>
 	 * Return the additional interfaces introduced by this Advisor or Advice.
+	 *
 	 * @return the introduced interfaces
 	 */
 	Class<?>[] getInterfaces();

@@ -20,6 +20,8 @@ import org.springframework.core.Ordered;
 import org.springframework.lang.Nullable;
 
 /**
+ * AspectJ Aspect 实例的工厂
+ * <p>
  * Interface implemented to provide an instance of an AspectJ aspect.
  * Decouples from Spring's bean factory.
  *
@@ -28,19 +30,25 @@ import org.springframework.lang.Nullable;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since 2.0
  * @see org.springframework.beans.factory.BeanFactory#getBean
+ * @since 2.0
  */
 public interface AspectInstanceFactory extends Ordered {
 
 	/**
+	 * 创建 Aspect 实例
+	 * <p>
 	 * Create an instance of this factory's aspect.
+	 *
 	 * @return the aspect instance (never {@code null})
 	 */
 	Object getAspectInstance();
 
 	/**
+	 * 获取当前工厂使用的 ClassLoader
+	 * <p>
 	 * Expose the aspect class loader that this factory uses.
+	 *
 	 * @return the aspect class loader (or {@code null} for the bootstrap loader)
 	 * @see org.springframework.util.ClassUtils#getDefaultClassLoader()
 	 */

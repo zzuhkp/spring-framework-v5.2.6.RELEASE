@@ -23,6 +23,8 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.OrderUtils;
 
 /**
+ * 支持单例的 MetadataAwareAspectInstanceFactory 实现
+ *
  * Implementation of {@link MetadataAwareAspectInstanceFactory} that is backed
  * by a specified singleton object, returning the same instance for every
  * {@link #getAspectInstance()} call.

@@ -25,6 +25,8 @@ import org.springframework.aop.Advisor;
 import org.springframework.aop.AfterReturningAdvice;
 
 /**
+ * 使 AfterReturningAdvice 可以在 Spring AOP 框架内部使用的 Adapter
+ * <p>
  * Adapter to enable {@link org.springframework.aop.AfterReturningAdvice}
  * to be used in the Spring AOP framework.
  *

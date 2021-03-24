@@ -32,6 +32,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
+ * 基于 AspectJ 的代理工厂，允许通过编程的方式创建 AspectJ Aspect
+ * <p>
  * AspectJ-based proxy factory, allowing for programmatic building
  * of proxies which include AspectJ aspects (code style as well
  * Java 5 annotation style).
@@ -39,17 +41,19 @@ import org.springframework.util.ClassUtils;
  * @author Rob Harrop
  * @author Juergen Hoeller
  * @author Ramnivas Laddad
- * @since 2.0
  * @see #addAspect(Object)
  * @see #addAspect(Class)
  * @see #getProxy()
  * @see #getProxy(ClassLoader)
  * @see org.springframework.aop.framework.ProxyFactory
+ * @since 2.0
  */
 @SuppressWarnings("serial")
 public class AspectJProxyFactory extends ProxyCreatorSupport {
 
-	/** Cache for singleton aspect instances. */
+	/**
+	 * Cache for singleton aspect instances.
+	 */
 	private static final Map<Class<?>, Object> aspectCache = new ConcurrentHashMap<>();
 
 	private final AspectJAdvisorFactory aspectFactory = new ReflectiveAspectJAdvisorFactory();
@@ -64,6 +68,7 @@ public class AspectJProxyFactory extends ProxyCreatorSupport {
 	/**
 	 * Create a new AspectJProxyFactory.
 	 * <p>Will proxy all interfaces that the given target implements.
+	 *
 	 * @param target the target object to be proxied
 	 */
 	public AspectJProxyFactory(Object target) {
@@ -82,10 +87,13 @@ public class AspectJProxyFactory extends ProxyCreatorSupport {
 
 
 	/**
+	 * 从 Aspect 中添加支持目标类的 Advisor
+	 * <p>
 	 * Add the supplied aspect instance to the chain. The type of the aspect instance
 	 * supplied must be a singleton aspect. True singleton lifecycle is not honoured when
 	 * using this method - the caller is responsible for managing the lifecycle of any
 	 * aspects added in this way.
+	 *
 	 * @param aspectInstance the AspectJ aspect instance
 	 */
 	public void addAspect(Object aspectInstance) {
@@ -101,7 +109,10 @@ public class AspectJProxyFactory extends ProxyCreatorSupport {
 	}
 
 	/**
+	 * 从 Aspect 中添加支持目标类的 Advisor
+	 *
 	 * Add an aspect of the supplied type to the end of the advice chain.
+	 *
 	 * @param aspectClass the AspectJ aspect class
 	 */
 	public void addAspect(Class<?> aspectClass) {
@@ -113,8 +124,11 @@ public class AspectJProxyFactory extends ProxyCreatorSupport {
 
 
 	/**
+	 * 添加支持目标类的 Advisor
+	 * <p>
 	 * Add all {@link Advisor Advisors} from the supplied {@link MetadataAwareAspectInstanceFactory}
 	 * to the current chain. Exposes any special purpose {@link Advisor Advisors} if needed.
+	 *
 	 * @see AspectJProxyUtils#makeAdvisorChainAspectJCapableIfNecessary(List)
 	 */
 	private void addAdvisorsFromAspectInstanceFactory(MetadataAwareAspectInstanceFactory instanceFactory) {
@@ -128,6 +142,8 @@ public class AspectJProxyFactory extends ProxyCreatorSupport {
 	}
 
 	/**
+	 * 创建 AspectJ 元数据
+	 * <p>
 	 * Create an {@link AspectMetadata} instance for the supplied aspect type.
 	 */
 	private AspectMetadata createAspectMetadata(Class<?> aspectClass, String aspectName) {
@@ -139,6 +155,8 @@ public class AspectJProxyFactory extends ProxyCreatorSupport {
 	}
 
 	/**
+	 * 创建 MetadataAwareAspectInstanceFactory
+	 * <p>
 	 * Create a {@link MetadataAwareAspectInstanceFactory} for the supplied aspect type. If the aspect type
 	 * has no per clause, then a {@link SingletonMetadataAwareAspectInstanceFactory} is returned, otherwise
 	 * a {@link PrototypeAspectInstanceFactory} is returned.
@@ -151,8 +169,7 @@ public class AspectJProxyFactory extends ProxyCreatorSupport {
 			// Create a shared aspect instance.
 			Object instance = getSingletonAspectInstance(aspectClass);
 			instanceFactory = new SingletonMetadataAwareAspectInstanceFactory(instance, aspectName);
-		}
-		else {
+		} else {
 			// Create a factory for independent aspect instances.
 			instanceFactory = new SimpleMetadataAwareAspectInstanceFactory(aspectClass, aspectName);
 		}
@@ -160,6 +177,8 @@ public class AspectJProxyFactory extends ProxyCreatorSupport {
 	}
 
 	/**
+	 * 获取 AspectJ Aspect 实例
+	 * <p>
 	 * Get the singleton aspect instance for the supplied aspect type. An instance
 	 * is created if one cannot be found in the instance cache.
 	 */
@@ -186,6 +205,7 @@ public class AspectJProxyFactory extends ProxyCreatorSupport {
 	 * or removed interfaces. Can add and remove interceptors.
 	 * <p>Uses a default class loader: Usually, the thread context class loader
 	 * (if necessary for proxy creation).
+	 *
 	 * @return the new proxy
 	 */
 	@SuppressWarnings("unchecked")
@@ -198,6 +218,7 @@ public class AspectJProxyFactory extends ProxyCreatorSupport {
 	 * <p>Can be called repeatedly. Effect will vary if we've added
 	 * or removed interfaces. Can add and remove interceptors.
 	 * <p>Uses the given class loader (if necessary for proxy creation).
+	 *
 	 * @param classLoader the class loader to create the proxy with
 	 * @return the new proxy
 	 */

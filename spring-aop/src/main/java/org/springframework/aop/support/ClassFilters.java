@@ -31,14 +31,17 @@ import org.springframework.util.ObjectUtils;
  * @author Rob Harrop
  * @author Juergen Hoeller
  * @author Sam Brannen
- * @since 11.11.2003
  * @see MethodMatchers
  * @see Pointcuts
+ * @since 11.11.2003
  */
 public abstract class ClassFilters {
 
 	/**
+	 * 任意一个 ClassFilter 匹配则匹配
+	 * <p>
 	 * Match all classes that <i>either</i> (or both) of the given ClassFilters matches.
+	 *
 	 * @param cf1 the first ClassFilter
 	 * @param cf2 the second ClassFilter
 	 * @return a distinct ClassFilter that matches all classes that either
@@ -47,11 +50,14 @@ public abstract class ClassFilters {
 	public static ClassFilter union(ClassFilter cf1, ClassFilter cf2) {
 		Assert.notNull(cf1, "First ClassFilter must not be null");
 		Assert.notNull(cf2, "Second ClassFilter must not be null");
-		return new UnionClassFilter(new ClassFilter[] {cf1, cf2});
+		return new UnionClassFilter(new ClassFilter[]{cf1, cf2});
 	}
 
 	/**
+	 * 任意一个 ClassFilter 匹配即匹配
+	 * <p>
 	 * Match all classes that <i>either</i> (or all) of the given ClassFilters matches.
+	 *
 	 * @param classFilters the ClassFilters to match
 	 * @return a distinct ClassFilter that matches all classes that either
 	 * of the given ClassFilter matches
@@ -62,7 +68,10 @@ public abstract class ClassFilters {
 	}
 
 	/**
+	 * 所有的 ClassFilter 匹配才匹配
+	 * <p>
 	 * Match all classes that <i>both</i> of the given ClassFilters match.
+	 *
 	 * @param cf1 the first ClassFilter
 	 * @param cf2 the second ClassFilter
 	 * @return a distinct ClassFilter that matches all classes that both
@@ -71,11 +80,12 @@ public abstract class ClassFilters {
 	public static ClassFilter intersection(ClassFilter cf1, ClassFilter cf2) {
 		Assert.notNull(cf1, "First ClassFilter must not be null");
 		Assert.notNull(cf2, "Second ClassFilter must not be null");
-		return new IntersectionClassFilter(new ClassFilter[] {cf1, cf2});
+		return new IntersectionClassFilter(new ClassFilter[]{cf1, cf2});
 	}
 
 	/**
 	 * Match all classes that <i>all</i> of the given ClassFilters match.
+	 *
 	 * @param classFilters the ClassFilters to match
 	 * @return a distinct ClassFilter that matches all classes that both
 	 * of the given ClassFilter match
@@ -87,6 +97,8 @@ public abstract class ClassFilters {
 
 
 	/**
+	 * 任意一个 ClassFilter 匹配即匹配
+	 * <p>
 	 * ClassFilter implementation for a union of the given ClassFilters.
 	 */
 	@SuppressWarnings("serial")
@@ -128,6 +140,8 @@ public abstract class ClassFilters {
 
 
 	/**
+	 * 所有的 ClassFilter 都匹配才匹配
+	 * <p>
 	 * ClassFilter implementation for an intersection of the given ClassFilters.
 	 */
 	@SuppressWarnings("serial")

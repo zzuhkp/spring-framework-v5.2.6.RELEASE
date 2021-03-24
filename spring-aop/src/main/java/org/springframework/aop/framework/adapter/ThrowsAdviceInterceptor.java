@@ -31,11 +31,13 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 包装 After Throwing Advice 的 Interceptor
+ * <p>
  * Interceptor to wrap an after-throwing advice.
  *
  * <p>The signatures on handler methods on the {@code ThrowsAdvice}
  * implementation method argument must be of the form:<br>
- *
+ * <p>
  * {@code void afterThrowing([Method, args, target], ThrowableSubclass);}
  *
  * <p>Only the last argument is required.
@@ -60,17 +62,27 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 
 	private static final Log logger = LogFactory.getLog(ThrowsAdviceInterceptor.class);
 
-
+	/**
+	 * ThrowsAdvice 的实例
+	 */
 	private final Object throwsAdvice;
 
-	/** Methods on throws advice, keyed by exception class. */
+	/**
+	 * 异常类型 -> 方法
+	 * <p>
+	 * Methods on throws advice, keyed by exception class.
+	 */
 	private final Map<Class<?>, Method> exceptionHandlerMap = new HashMap<>();
 
 
 	/**
+	 * 使用给定的 ThrowsAdvice 实例化
+	 * <p>
 	 * Create a new ThrowsAdviceInterceptor for the given ThrowsAdvice.
-	 * @param throwsAdvice the advice object that defines the exception handler methods
-	 * (usually a {@link org.springframework.aop.ThrowsAdvice} implementation)
+	 *
+	 * @param throwsAdvice ThrowsAdvice 的实现，定义了异常处理器
+	 *                     the advice object that defines the exception handler methods
+	 *                     (usually a {@link org.springframework.aop.ThrowsAdvice} implementation)
 	 */
 	public ThrowsAdviceInterceptor(Object throwsAdvice) {
 		Assert.notNull(throwsAdvice, "Advice must not be null");
@@ -110,8 +122,7 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 	public Object invoke(MethodInvocation mi) throws Throwable {
 		try {
 			return mi.proceed();
-		}
-		catch (Throwable ex) {
+		} catch (Throwable ex) {
 			Method handlerMethod = getExceptionHandler(ex);
 			if (handlerMethod != null) {
 				invokeHandlerMethod(mi, ex, handlerMethod);
@@ -121,7 +132,10 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 	}
 
 	/**
+	 * 获取异常处理方法
+	 * <p>
 	 * Determine the exception handle method for the given exception.
+	 *
 	 * @param exception the exception thrown
 	 * @return a handler for the given exception type, or {@code null} if none found
 	 */
@@ -142,18 +156,24 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 		return handler;
 	}
 
+	/**
+	 * 调用异常处理方法
+	 *
+	 * @param mi
+	 * @param ex
+	 * @param method
+	 * @throws Throwable
+	 */
 	private void invokeHandlerMethod(MethodInvocation mi, Throwable ex, Method method) throws Throwable {
 		Object[] handlerArgs;
 		if (method.getParameterCount() == 1) {
-			handlerArgs = new Object[] {ex};
-		}
-		else {
-			handlerArgs = new Object[] {mi.getMethod(), mi.getArguments(), mi.getThis(), ex};
+			handlerArgs = new Object[]{ex};
+		} else {
+			handlerArgs = new Object[]{mi.getMethod(), mi.getArguments(), mi.getThis(), ex};
 		}
 		try {
 			method.invoke(this.throwsAdvice, handlerArgs);
-		}
-		catch (InvocationTargetException targetEx) {
+		} catch (InvocationTargetException targetEx) {
 			throw targetEx.getTargetException();
 		}
 	}

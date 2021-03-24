@@ -19,6 +19,8 @@ package org.springframework.aop;
 import org.springframework.lang.Nullable;
 
 /**
+ * 用于获取当前 target 的类
+ * <p>
  * A {@code TargetSource} is used to obtain the current "target" of
  * an AOP invocation, which will be invoked via reflection if no around
  * advice chooses to end the interceptor chain itself.
@@ -36,9 +38,12 @@ import org.springframework.lang.Nullable;
 public interface TargetSource extends TargetClassAware {
 
 	/**
+	 * 获取目标类型
+	 * <p>
 	 * Return the type of targets returned by this {@link TargetSource}.
 	 * <p>Can return {@code null}, although certain usages of a {@code TargetSource}
 	 * might just work with a predetermined target class.
+	 *
 	 * @return the type of targets returned by this {@link TargetSource}
 	 */
 	@Override
@@ -46,17 +51,23 @@ public interface TargetSource extends TargetClassAware {
 	Class<?> getTargetClass();
 
 	/**
+	 * 是否每次调用 #getTarget 返回相同的对象
+	 * <p>
 	 * Will all calls to {@link #getTarget()} return the same object?
 	 * <p>In that case, there will be no need to invoke {@link #releaseTarget(Object)},
 	 * and the AOP framework can cache the return value of {@link #getTarget()}.
+	 *
 	 * @return {@code true} if the target is immutable
 	 * @see #getTarget
 	 */
 	boolean isStatic();
 
 	/**
+	 * 获取目标实例
+	 * <p>
 	 * Return a target instance. Invoked immediately before the
 	 * AOP framework calls the "target" of an AOP method invocation.
+	 *
 	 * @return the target object which contains the joinpoint,
 	 * or {@code null} if there is no actual target instance
 	 * @throws Exception if the target object can't be resolved
@@ -65,8 +76,11 @@ public interface TargetSource extends TargetClassAware {
 	Object getTarget() throws Exception;
 
 	/**
+	 * 释放从 #getTarget 方法获取到的目标对象
+	 * <p>
 	 * Release the given target object obtained from the
 	 * {@link #getTarget()} method, if any.
+	 *
 	 * @param target object obtained from a call to {@link #getTarget()}
 	 * @throws Exception if the object can't be released
 	 */

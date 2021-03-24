@@ -20,6 +20,8 @@ import org.springframework.aop.Pointcut;
 import org.springframework.lang.Nullable;
 
 /**
+ * 使用字符串表达式实现的 Pointcut 接口
+ * <p>
  * Interface to be implemented by pointcuts that use String expressions.
  *
  * @author Rob Harrop
@@ -28,6 +30,8 @@ import org.springframework.lang.Nullable;
 public interface ExpressionPointcut extends Pointcut {
 
 	/**
+	 * 获取 Pointcut 的字符串表达式
+	 * <p>
 	 * Return the String expression for this pointcut.
 	 */
 	@Nullable
