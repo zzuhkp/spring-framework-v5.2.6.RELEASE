@@ -31,6 +31,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
+ * TransactionAttributeSource 的实现，
+ * 处理 Spring @Transactional 注解、javax.transaction.Transactional 注解、javax.ejb.TransactionAttribute 注解
  * Implementation of the
  * {@link org.springframework.transaction.interceptor.TransactionAttributeSource}
  * interface for working with transaction metadata in JDK 1.5+ annotation format.
@@ -66,6 +68,9 @@ public class AnnotationTransactionAttributeSource extends AbstractFallbackTransa
 		ejb3Present = ClassUtils.isPresent("javax.ejb.TransactionAttribute", classLoader);
 	}
 
+	/**
+	 * 是否仅从公共方法查找事务属性
+	 */
 	private final boolean publicMethodsOnly;
 
 	private final Set<TransactionAnnotationParser> annotationParsers;
@@ -160,6 +165,8 @@ public class AnnotationTransactionAttributeSource extends AbstractFallbackTransa
 	}
 
 	/**
+	 * 确定事务属性
+	 *
 	 * Determine the transaction attribute for the given method or class.
 	 * <p>This implementation delegates to configured
 	 * {@link TransactionAnnotationParser TransactionAnnotationParsers}

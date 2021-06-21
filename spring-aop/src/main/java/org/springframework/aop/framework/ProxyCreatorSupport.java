@@ -16,13 +16,13 @@
 
 package org.springframework.aop.framework;
 
+import org.springframework.util.Assert;
+
 import java.util.LinkedList;
 import java.util.List;
 
-import org.springframework.util.Assert;
-
 /**
- * 代理工厂的基类，提供对 AopProxyFactory 的访问
+ * 代理工厂的基类，提供了获取 AopProxyFactory 及 AopProxy 的能力
  * <p>
  * Base class for proxy factories.
  * Provides convenient access to a configurable AopProxyFactory.
@@ -36,9 +36,14 @@ public class ProxyCreatorSupport extends AdvisedSupport {
 
 	private AopProxyFactory aopProxyFactory;
 
+	/**
+	 * AdvisedSupport 的监听器，在 AdvisedSupport 中 Advice 发生变化时收到通知
+	 */
 	private final List<AdvisedSupportListener> listeners = new LinkedList<>();
 
 	/**
+	 * AopProxy 第一次被创建时设置为 true
+	 * <p>
 	 * Set to true when the first AOP proxy has been created.
 	 */
 	private boolean active = false;

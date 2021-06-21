@@ -21,7 +21,7 @@ import java.io.Serializable;
 import org.springframework.lang.Nullable;
 
 /**
- * ExpressionPointcut 的抽象实现，提供了 location 和 expression 属性
+ * ExpressionPointcut 的抽象实现，提供了 location 和 expression 属性。
  * <p>
  * Abstract superclass for expression pointcuts,
  * offering location and expression properties.

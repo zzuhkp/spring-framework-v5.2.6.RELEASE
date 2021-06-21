@@ -76,7 +76,7 @@ public abstract class BeanFactoryUtils {
 
 	/**
 	 * 返回删除 name 前缀 & 的值
-	 *
+	 * <p>
 	 * Return the actual bean name, stripping out the factory dereference
 	 * prefix (if any, also stripping repeated factory prefixes if found).
 	 *
@@ -222,6 +222,8 @@ public abstract class BeanFactoryUtils {
 	}
 
 	/**
+	 * 从 ListBeanFactory 中获取给定类型的 bean 的名称数组
+	 * <p>
 	 * Get all bean names for the given type, including those defined in ancestor
 	 * factories. Will return unique names in case of overridden bean definitions.
 	 * <p>Does consider objects created by FactoryBeans, which means that FactoryBeans
@@ -537,6 +539,8 @@ public abstract class BeanFactoryUtils {
 
 
 	/**
+	 * 合并数组
+	 * <p>
 	 * Merge the given bean names result with the given parent result.
 	 *
 	 * @param result       the local bean name result

@@ -22,6 +22,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 按照给定类的顺序进行排序
+ * <p>
  * Compares objects based on an arbitrary class order. Allows objects to be sorted based
  * on the types of class that they inherit, for example: this comparator can be used to
  * sort a list {@code Number}s such that {@code Long}s occur before {@code Integer}s.
@@ -31,10 +33,10 @@ import org.springframework.util.Assert;
  * {@code 0}. Consider combining with {@link Comparator#thenComparing(Comparator)}
  * if additional sorting is required.
  *
- * @author Phillip Webb
- * @since 3.2
  * @param <T> the type of objects that may be compared by this comparator
+ * @author Phillip Webb
  * @see Comparator#thenComparing(Comparator)
+ * @since 3.2
  */
 public class InstanceComparator<T> implements Comparator<T> {
 
@@ -43,8 +45,9 @@ public class InstanceComparator<T> implements Comparator<T> {
 
 	/**
 	 * Create a new {@link InstanceComparator} instance.
+	 *
 	 * @param instanceOrder the ordered list of classes that should be used when comparing
-	 * objects. Classes earlier in the list will be given a higher priority.
+	 *                      objects. Classes earlier in the list will be given a higher priority.
 	 */
 	public InstanceComparator(Class<?>... instanceOrder) {
 		Assert.notNull(instanceOrder, "'instanceOrder' array must not be null");

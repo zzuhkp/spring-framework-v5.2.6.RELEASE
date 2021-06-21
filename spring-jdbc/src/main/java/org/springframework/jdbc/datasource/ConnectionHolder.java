@@ -25,6 +25,8 @@ import org.springframework.transaction.support.ResourceHolderSupport;
 import org.springframework.util.Assert;
 
 /**
+ * 包装 JDBC Connection 的资源持有者
+ * <p>
  * Resource holder wrapping a JDBC {@link Connection}.
  * {@link DataSourceTransactionManager} binds instances of this class
  * to the thread, for a specific {@link javax.sql.DataSource}.
@@ -35,34 +37,48 @@ import org.springframework.util.Assert;
  * <p>Note: This is an SPI class, not intended to be used by applications.
  *
  * @author Juergen Hoeller
- * @since 06.05.2003
  * @see DataSourceTransactionManager
  * @see DataSourceUtils
+ * @since 06.05.2003
  */
 public class ConnectionHolder extends ResourceHolderSupport {
 
 	/**
+	 * 保存点前缀
+	 *
 	 * Prefix for savepoint names.
 	 */
 	public static final String SAVEPOINT_NAME_PREFIX = "SAVEPOINT_";
 
-
+	/**
+	 * Connection 句柄
+	 */
 	@Nullable
 	private ConnectionHandle connectionHandle;
 
+	/**
+	 * 从 connectionHandle 获取的连接
+	 */
 	@Nullable
 	private Connection currentConnection;
 
+	/**
+	 * 给定的 JDBC Connection 是否表示正在活动的事务
+	 */
 	private boolean transactionActive = false;
 
 	@Nullable
 	private Boolean savepointsSupported;
 
+	/**
+	 * 保存点数量
+	 */
 	private int savepointCounter = 0;
 
 
 	/**
 	 * Create a new ConnectionHolder for the given ConnectionHandle.
+	 *
 	 * @param connectionHandle the ConnectionHandle to hold
 	 */
 	public ConnectionHolder(ConnectionHandle connectionHandle) {
@@ -74,6 +90,7 @@ public class ConnectionHolder extends ResourceHolderSupport {
 	 * Create a new ConnectionHolder for the given JDBC Connection,
 	 * wrapping it with a {@link SimpleConnectionHandle},
 	 * assuming that there is no ongoing transaction.
+	 *
 	 * @param connection the JDBC Connection to hold
 	 * @see SimpleConnectionHandle
 	 * @see #ConnectionHolder(java.sql.Connection, boolean)
@@ -85,9 +102,10 @@ public class ConnectionHolder extends ResourceHolderSupport {
 	/**
 	 * Create a new ConnectionHolder for the given JDBC Connection,
 	 * wrapping it with a {@link SimpleConnectionHandle}.
-	 * @param connection the JDBC Connection to hold
+	 *
+	 * @param connection        the JDBC Connection to hold
 	 * @param transactionActive whether the given Connection is involved
-	 * in an ongoing transaction
+	 *                          in an ongoing transaction
 	 * @see SimpleConnectionHandle
 	 */
 	public ConnectionHolder(Connection connection, boolean transactionActive) {
@@ -113,6 +131,7 @@ public class ConnectionHolder extends ResourceHolderSupport {
 
 	/**
 	 * Set whether this holder represents an active, JDBC-managed transaction.
+	 *
 	 * @see DataSourceTransactionManager
 	 */
 	protected void setTransactionActive(boolean transactionActive) {
@@ -128,6 +147,8 @@ public class ConnectionHolder extends ResourceHolderSupport {
 
 
 	/**
+	 * 设置 Connection
+	 * <p>
 	 * Override the existing Connection handle with the given Connection.
 	 * Reset the handle if given {@code null}.
 	 * <p>Used for releasing the Connection on suspend (with a {@code null}
@@ -136,23 +157,26 @@ public class ConnectionHolder extends ResourceHolderSupport {
 	protected void setConnection(@Nullable Connection connection) {
 		if (this.currentConnection != null) {
 			if (this.connectionHandle != null) {
+				// 先释放当前连接
 				this.connectionHandle.releaseConnection(this.currentConnection);
 			}
 			this.currentConnection = null;
 		}
 		if (connection != null) {
 			this.connectionHandle = new SimpleConnectionHandle(connection);
-		}
-		else {
+		} else {
 			this.connectionHandle = null;
 		}
 	}
 
 	/**
+	 * 获取连接
+	 * <p>
 	 * Return the current Connection held by this ConnectionHolder.
 	 * <p>This will be the same Connection until {@code released}
 	 * gets called on the ConnectionHolder, which will reset the
 	 * held Connection, fetching a new Connection on demand.
+	 *
 	 * @see ConnectionHandle#getConnection()
 	 * @see #released()
 	 */
@@ -165,8 +189,11 @@ public class ConnectionHolder extends ResourceHolderSupport {
 	}
 
 	/**
+	 * Connection 是否支持保存点
+	 * <p>
 	 * Return whether JDBC 3.0 Savepoints are supported.
 	 * Caches the flag for the lifetime of this ConnectionHolder.
+	 *
 	 * @throws SQLException if thrown by the JDBC driver
 	 */
 	public boolean supportsSavepoints() throws SQLException {
@@ -177,8 +204,11 @@ public class ConnectionHolder extends ResourceHolderSupport {
 	}
 
 	/**
+	 * 使用当前 Connection 创建保存点
+	 *
 	 * Create a new JDBC 3.0 Savepoint for the current Connection,
 	 * using generated savepoint names that are unique for the Connection.
+	 *
 	 * @return the new Savepoint
 	 * @throws SQLException if thrown by the JDBC driver
 	 */
@@ -188,6 +218,8 @@ public class ConnectionHolder extends ResourceHolderSupport {
 	}
 
 	/**
+	 * 释放连接
+	 *
 	 * Releases the current Connection held by this ConnectionHolder.
 	 * <p>This is necessary for ConnectionHandles that expect "Connection borrowing",
 	 * where each returned Connection is only temporarily leased and needs to be
@@ -197,6 +229,7 @@ public class ConnectionHolder extends ResourceHolderSupport {
 	@Override
 	public void released() {
 		super.released();
+		// 没有外部引用持有 Connection 才释放
 		if (!isOpen() && this.currentConnection != null) {
 			if (this.connectionHandle != null) {
 				this.connectionHandle.releaseConnection(this.currentConnection);

@@ -19,7 +19,7 @@ package org.springframework.aop.aspectj;
 import org.springframework.core.Ordered;
 
 /**
- * AspectJ 优先级信息，实现提供按照 AspectJ 的优先级规则排序 Advice/Advisor 的信息
+ * AspectJ 优先级信息，实现提供按照 AspectJ 的优先级规则排序 Advice/Advisor 的信息。
  * <p>
  * Interface to be implemented by types that can supply the information
  * needed to sort advice/advisors by AspectJ's precedence rules.

@@ -19,6 +19,8 @@ package org.springframework.transaction.annotation;
 import org.springframework.transaction.TransactionManager;
 
 /**
+ * 用于标注了 @EnableTransactionManagement 的 @Configuration 类实现的接口，用于显式的指定注解驱动的事务使用的 TransactionManager
+ * <p>
  * Interface to be implemented by @{@link org.springframework.context.annotation.Configuration
  * Configuration} classes annotated with @{@link EnableTransactionManagement} that wish to
  * (or need to) explicitly specify the default {@code PlatformTransactionManager} bean
@@ -39,11 +41,11 @@ import org.springframework.transaction.TransactionManager;
  * of the {@code TransactionManager} bean.
  *
  * @author Chris Beams
- * @since 3.1
  * @see EnableTransactionManagement
  * @see org.springframework.context.annotation.Primary
  * @see org.springframework.transaction.PlatformTransactionManager
  * @see org.springframework.transaction.ReactiveTransactionManager
+ * @since 3.1
  */
 public interface TransactionManagementConfigurer {
 
@@ -81,6 +83,7 @@ public interface TransactionManagementConfigurer {
 	 * of Spring lifecycle callbacks such as {@code InitializingBean} and
 	 * {@code BeanFactoryAware}. Note that the same guidelines apply to
 	 * {@code ReactiveTransactionManager} beans.
+	 *
 	 * @return a {@link org.springframework.transaction.PlatformTransactionManager} or
 	 * {@link org.springframework.transaction.ReactiveTransactionManager} implementation
 	 */

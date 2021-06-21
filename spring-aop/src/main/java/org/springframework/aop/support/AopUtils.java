@@ -16,6 +16,14 @@
 
 package org.springframework.aop.support;
 
+import org.springframework.aop.*;
+import org.springframework.core.BridgeMethodResolver;
+import org.springframework.core.MethodIntrospector;
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ReflectionUtils;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -24,22 +32,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.springframework.aop.Advisor;
-import org.springframework.aop.AopInvocationException;
-import org.springframework.aop.IntroductionAdvisor;
-import org.springframework.aop.IntroductionAwareMethodMatcher;
-import org.springframework.aop.MethodMatcher;
-import org.springframework.aop.Pointcut;
-import org.springframework.aop.PointcutAdvisor;
-import org.springframework.aop.SpringProxy;
-import org.springframework.aop.TargetClassAware;
-import org.springframework.core.BridgeMethodResolver;
-import org.springframework.core.MethodIntrospector;
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * Utility methods for AOP support code.
@@ -101,6 +93,8 @@ public abstract class AopUtils {
 	}
 
 	/**
+	 * 确定代理的目标类
+	 * <p>
 	 * Determine the target class of the given bean instance which might be an AOP proxy.
 	 * <p>Returns the target class for an AOP proxy or the plain class otherwise.
 	 *
@@ -195,6 +189,8 @@ public abstract class AopUtils {
 	}
 
 	/**
+	 * 获取特定的目标方法
+	 * <p>
 	 * Given a method, which may come from an interface, and a target class used
 	 * in the current AOP invocation, find the corresponding target method if there
 	 * is one. E.g. the method may be {@code IFoo.bar()} and the target class
@@ -204,8 +200,10 @@ public abstract class AopUtils {
 	 * this method resolves Java 5 bridge methods in order to retrieve attributes
 	 * from the <i>original</i> method definition.
 	 *
-	 * @param method      the method to be invoked, which may come from an interface
-	 * @param targetClass the target class for the current invocation.
+	 * @param method      被调用的方法，可能来自接口
+	 *                    the method to be invoked, which may come from an interface
+	 * @param targetClass 调用方法的目标类
+	 *                    the target class for the current invocation.
 	 *                    May be {@code null} or may not even implement the method.
 	 * @return the specific target method, or the original method if the
 	 * {@code targetClass} doesn't implement it or is {@code null}
@@ -232,7 +230,8 @@ public abstract class AopUtils {
 	}
 
 	/**
-	 * 给定的 Pointcut 是否满足目标类
+	 * 给定的 Pointcut 是否满足目标类，
+	 * 类必须满足，方法满足一个即可
 	 * <p>
 	 * Can the given pointcut apply at all on the given class?
 	 * <p>This is an important test as it can be used to optimize
@@ -283,7 +282,7 @@ public abstract class AopUtils {
 	}
 
 	/**
-	 * 给定的 Advisor 能够应用到目标类
+	 * 给定的 Advisor 能否应用到目标类
 	 * <p>
 	 * Can the given advisor apply at all on the given class?
 	 * This is an important test as it can be used to optimize
@@ -306,7 +305,8 @@ public abstract class AopUtils {
 	 *
 	 * @param advisor          the advisor to check
 	 * @param targetClass      class we're testing
-	 * @param hasIntroductions whether or not the advisor chain for this bean includes
+	 * @param hasIntroductions 给定的 Advisor 列表中是否包含 IntroductionAdvisor
+	 *                         whether or not the advisor chain for this bean includes
 	 *                         any introductions
 	 * @return whether the pointcut can apply on any method
 	 */

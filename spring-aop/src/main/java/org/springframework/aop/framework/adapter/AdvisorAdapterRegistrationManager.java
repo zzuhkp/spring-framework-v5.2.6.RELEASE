@@ -20,6 +20,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
 /**
+ * BeanPostProcessor 的扩展，向全局注册中心注册 AdvisorAdapter 类型的 bean
+ * <p>
  * BeanPostProcessor that registers {@link AdvisorAdapter} beans in the BeanFactory with
  * an {@link AdvisorAdapterRegistry} (by default the {@link GlobalAdvisorAdapterRegistry}).
  *
@@ -29,9 +31,9 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
  *
  * @author Dmitriy Kopylenko
  * @author Juergen Hoeller
- * @since 27.02.2004
  * @see #setAdvisorAdapterRegistry
  * @see AdvisorAdapter
+ * @since 27.02.2004
  */
 public class AdvisorAdapterRegistrationManager implements BeanPostProcessor {
 
@@ -41,6 +43,7 @@ public class AdvisorAdapterRegistrationManager implements BeanPostProcessor {
 	/**
 	 * Specify the AdvisorAdapterRegistry to register AdvisorAdapter beans with.
 	 * Default is the global AdvisorAdapterRegistry.
+	 *
 	 * @see GlobalAdvisorAdapterRegistry
 	 */
 	public void setAdvisorAdapterRegistry(AdvisorAdapterRegistry advisorAdapterRegistry) {
@@ -55,7 +58,7 @@ public class AdvisorAdapterRegistrationManager implements BeanPostProcessor {
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-		if (bean instanceof AdvisorAdapter){
+		if (bean instanceof AdvisorAdapter) {
 			this.advisorAdapterRegistry.registerAdvisorAdapter((AdvisorAdapter) bean);
 		}
 		return bean;

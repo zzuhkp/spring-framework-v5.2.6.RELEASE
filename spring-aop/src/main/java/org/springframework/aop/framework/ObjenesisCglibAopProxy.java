@@ -16,18 +16,19 @@
 
 package org.springframework.aop.framework;
 
-import java.lang.reflect.Constructor;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.cglib.proxy.Callback;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.Factory;
 import org.springframework.objenesis.SpringObjenesis;
 import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Constructor;
+
 /**
+ * CglibAopProxy 的扩展，可不直接调用构造方法创建对象
+ * <p>
  * Objenesis-based extension of {@link CglibAopProxy} to create proxy instances
  * without invoking the constructor of the class. Used by default as of Spring 4.
  *
@@ -45,6 +46,7 @@ class ObjenesisCglibAopProxy extends CglibAopProxy {
 
 	/**
 	 * Create a new ObjenesisCglibAopProxy for the given AOP configuration.
+	 *
 	 * @param config the AOP configuration as AdvisedSupport object
 	 */
 	public ObjenesisCglibAopProxy(AdvisedSupport config) {
@@ -60,14 +62,14 @@ class ObjenesisCglibAopProxy extends CglibAopProxy {
 		if (objenesis.isWorthTrying()) {
 			try {
 				proxyInstance = objenesis.newInstance(proxyClass, enhancer.getUseCache());
-			}
-			catch (Throwable ex) {
+			} catch (Throwable ex) {
 				logger.debug("Unable to instantiate proxy using Objenesis, " +
 						"falling back to regular proxy construction", ex);
 			}
 		}
 
 		if (proxyInstance == null) {
+			// 使用默认的方式创建代理对象
 			// Regular instantiation via default constructor...
 			try {
 				Constructor<?> ctor = (this.constructorArgs != null ?
@@ -76,8 +78,7 @@ class ObjenesisCglibAopProxy extends CglibAopProxy {
 				ReflectionUtils.makeAccessible(ctor);
 				proxyInstance = (this.constructorArgs != null ?
 						ctor.newInstance(this.constructorArgs) : ctor.newInstance());
-			}
-			catch (Throwable ex) {
+			} catch (Throwable ex) {
 				throw new AopConfigException("Unable to instantiate proxy using Objenesis, " +
 						"and regular proxy instantiation via default constructor fails as well", ex);
 			}

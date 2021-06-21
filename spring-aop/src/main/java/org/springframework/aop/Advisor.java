@@ -64,6 +64,8 @@ public interface Advisor {
 	/**
 	 * 当前 Advice 是否与特定的实例关联
 	 * <p>
+	 * 框架当前未使用该方法
+	 * <p>
 	 * Return whether this advice is associated with a particular instance
 	 * (for example, creating a mixin) or shared with all instances of
 	 * the advised class obtained from the same Spring bean factory.

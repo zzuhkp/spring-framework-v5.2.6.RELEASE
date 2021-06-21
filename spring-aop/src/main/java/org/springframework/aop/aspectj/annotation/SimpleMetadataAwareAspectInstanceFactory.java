@@ -21,7 +21,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.OrderUtils;
 
 /**
- * 每次调用 #getAspectInstance 方法获取新的实例的 MetadataAwareAspectInstanceFactory
+ * 每次调用 #getAspectInstance 方法获取新的实例的 MetadataAwareAspectInstanceFactory。
  * <p>
  * Implementation of {@link MetadataAwareAspectInstanceFactory} that
  * creates a new instance of the specified aspect class for every

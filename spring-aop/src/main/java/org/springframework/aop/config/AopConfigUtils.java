@@ -58,8 +58,12 @@ public abstract class AopConfigUtils {
 
 	static {
 		// Set up the escalation list...
+		// 三个 AbstractAdvisorAutoProxyCreator 能力依次增强
+		// Advisor 类型，role 为 ROLE_INFRASTRUCTURE 的 bean 作为候选 Advisor
 		APC_PRIORITY_LIST.add(InfrastructureAdvisorAutoProxyCreator.class);
+		// Advisor 类型的 bean 作为候选 Advisor，如果存在 AspectJ 的 Advisor，还会向 Advisor 列表前添加 ExposeInvocationInterceptor.ADVISOR
 		APC_PRIORITY_LIST.add(AspectJAwareAdvisorAutoProxyCreator.class);
+		// 从添加了 @Aspect 注解的 bean 中查找 Advisor
 		APC_PRIORITY_LIST.add(AnnotationAwareAspectJAutoProxyCreator.class);
 	}
 
@@ -81,6 +85,13 @@ public abstract class AopConfigUtils {
 		return registerAspectJAutoProxyCreatorIfNecessary(registry, null);
 	}
 
+	/**
+	 * 如果有必要，注册 AspectJAutoProxyCreator 作为 bean
+	 *
+	 * @param registry
+	 * @param source
+	 * @return
+	 */
 	@Nullable
 	public static BeanDefinition registerAspectJAutoProxyCreatorIfNecessary(
 			BeanDefinitionRegistry registry, @Nullable Object source) {
@@ -157,6 +168,7 @@ public abstract class AopConfigUtils {
 				int currentPriority = findPriorityForClass(apcDefinition.getBeanClassName());
 				int requiredPriority = findPriorityForClass(cls);
 				if (currentPriority < requiredPriority) {
+					// 如果之前注册的 bean 索引小于当前注册的 bean 的索引，则以当前注册的 bean 为准
 					apcDefinition.setBeanClassName(cls.getName());
 				}
 			}

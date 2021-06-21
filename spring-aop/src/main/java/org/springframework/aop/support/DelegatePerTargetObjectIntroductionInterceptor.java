@@ -61,8 +61,14 @@ public class DelegatePerTargetObjectIntroductionInterceptor extends Introduction
 	 */
 	private final Map<Object, Object> delegateMap = new WeakHashMap<>();
 
+	/**
+	 * 接口默认的实现类
+	 */
 	private Class<?> defaultImplType;
 
+	/**
+	 * introduction 指定的接口
+	 */
 	private Class<?> interfaceType;
 
 
@@ -134,7 +140,7 @@ public class DelegatePerTargetObjectIntroductionInterceptor extends Introduction
 	}
 
 	/**
-	 * 创建代理
+	 * 创建对象
 	 *
 	 * @return
 	 */

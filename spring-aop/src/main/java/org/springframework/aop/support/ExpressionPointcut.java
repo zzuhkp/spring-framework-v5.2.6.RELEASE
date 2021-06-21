@@ -20,7 +20,7 @@ import org.springframework.aop.Pointcut;
 import org.springframework.lang.Nullable;
 
 /**
- * 使用字符串表达式实现的 Pointcut 接口
+ * 使用字符串表达式实现的 Pointcut 接口。
  * <p>
  * Interface to be implemented by pointcuts that use String expressions.
  *

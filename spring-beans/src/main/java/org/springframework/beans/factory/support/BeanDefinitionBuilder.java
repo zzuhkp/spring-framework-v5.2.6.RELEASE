@@ -43,7 +43,7 @@ public final class BeanDefinitionBuilder {
 	public static BeanDefinitionBuilder genericBeanDefinition() {
 		return new BeanDefinitionBuilder(new GenericBeanDefinition());
 	}
-0
+
 	/**
 	 * Create a new {@code BeanDefinitionBuilder} used to construct a {@link GenericBeanDefinition}.
 	 * @param beanClassName the class name for the bean that the definition is being created for

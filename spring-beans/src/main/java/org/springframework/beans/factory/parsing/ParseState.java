@@ -16,12 +16,13 @@
 
 package org.springframework.beans.factory.parsing;
 
-import java.util.LinkedList;
 import org.springframework.lang.Nullable;
+
+import java.util.LinkedList;
 
 /**
  * 解析阶段
- *
+ * <p>
  * Simple {@link LinkedList}-based structure for tracking the logical position during
  * a parsing process. {@link Entry entries} are added to the LinkedList at
  * each point during the parse phase in a reader-specific manner.

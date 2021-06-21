@@ -21,6 +21,8 @@ import java.lang.reflect.Method;
 import org.springframework.lang.Nullable;
 
 /**
+ * 用于 TransactionInterceptor 检索事务元数据的接口
+ * <p>
  * Strategy interface used by {@link TransactionInterceptor} for metadata retrieval.
  *
  * <p>Implementations know how to source transaction attributes, whether from configuration,
@@ -28,14 +30,16 @@ import org.springframework.lang.Nullable;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since 15.04.2003
  * @see TransactionInterceptor#setTransactionAttributeSource
  * @see TransactionProxyFactoryBean#setTransactionAttributeSource
  * @see org.springframework.transaction.annotation.AnnotationTransactionAttributeSource
+ * @since 15.04.2003
  */
 public interface TransactionAttributeSource {
 
 	/**
+	 * 给定类是否为候选的类
+	 * <p>
 	 * Determine whether the given class is a candidate for transaction attributes
 	 * in the metadata format of this {@code TransactionAttributeSource}.
 	 * <p>If this method returns {@code false}, the methods on the given class
@@ -43,6 +47,7 @@ public interface TransactionAttributeSource {
 	 * Returning {@code false} is therefore an optimization for non-affected
 	 * classes, whereas {@code true} simply means that the class needs to get
 	 * fully introspected for each method on the given class individually.
+	 *
 	 * @param targetClass the class to introspect
 	 * @return {@code false} if the class is known to have no transaction
 	 * attributes at class or method level; {@code true} otherwise. The default
@@ -54,11 +59,14 @@ public interface TransactionAttributeSource {
 	}
 
 	/**
+	 * 从候选类的方法上获取事务属性
+	 * <p>
 	 * Return the transaction attribute for the given method,
 	 * or {@code null} if the method is non-transactional.
-	 * @param method the method to introspect
+	 *
+	 * @param method      the method to introspect
 	 * @param targetClass the target class (may be {@code null},
-	 * in which case the declaring class of the method must be used)
+	 *                    in which case the declaring class of the method must be used)
 	 * @return the matching transaction attribute, or {@code null} if none found
 	 */
 	@Nullable

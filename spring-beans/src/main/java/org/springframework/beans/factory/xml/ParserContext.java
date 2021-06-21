@@ -16,9 +16,6 @@
 
 package org.springframework.beans.factory.xml;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.parsing.BeanComponentDefinition;
 import org.springframework.beans.factory.parsing.ComponentDefinition;
@@ -27,16 +24,21 @@ import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.lang.Nullable;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 /**
+ * xml 中解析 bean 的上下文
+ * <p>
  * Context that gets passed along a bean definition parsing process,
  * encapsulating all relevant configuration as well as state.
  * Nested inside an {@link XmlReaderContext}.
  *
  * @author Rob Harrop
  * @author Juergen Hoeller
- * @since 2.0
  * @see XmlReaderContext
  * @see BeanDefinitionParserDelegate
+ * @since 2.0
  */
 public final class ParserContext {
 
@@ -56,7 +58,7 @@ public final class ParserContext {
 	}
 
 	public ParserContext(XmlReaderContext readerContext, BeanDefinitionParserDelegate delegate,
-			@Nullable BeanDefinition containingBeanDefinition) {
+						 @Nullable BeanDefinition containingBeanDefinition) {
 
 		this.readerContext = readerContext;
 		this.delegate = delegate;
@@ -94,29 +96,51 @@ public final class ParserContext {
 		return this.readerContext.extractSource(sourceCandidate);
 	}
 
+	/**
+	 * 解析中 get
+	 *
+	 * @return
+	 */
 	@Nullable
 	public CompositeComponentDefinition getContainingComponent() {
 		return this.containingComponents.peek();
 	}
 
+	/**
+	 * 解析前 push
+	 *
+	 * @param containingComponent
+	 */
 	public void pushContainingComponent(CompositeComponentDefinition containingComponent) {
 		this.containingComponents.push(containingComponent);
 	}
 
+	/**
+	 * 解析后 pop
+	 *
+	 * @return
+	 */
 	public CompositeComponentDefinition popContainingComponent() {
 		return this.containingComponents.pop();
 	}
 
+	/**
+	 * pop 并注册
+	 */
 	public void popAndRegisterContainingComponent() {
 		registerComponent(popContainingComponent());
 	}
 
+	/**
+	 * 注册
+	 *
+	 * @param component
+	 */
 	public void registerComponent(ComponentDefinition component) {
 		CompositeComponentDefinition containingComponent = getContainingComponent();
 		if (containingComponent != null) {
 			containingComponent.addNestedComponent(component);
-		}
-		else {
+		} else {
 			this.readerContext.fireComponentRegistered(component);
 		}
 	}

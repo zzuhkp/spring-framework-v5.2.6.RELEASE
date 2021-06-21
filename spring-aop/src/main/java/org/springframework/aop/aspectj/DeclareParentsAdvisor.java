@@ -35,19 +35,31 @@ import org.springframework.aop.support.DelegatingIntroductionInterceptor;
  */
 public class DeclareParentsAdvisor implements IntroductionAdvisor {
 
+	/**
+	 * Advisor 中的 Advice
+	 */
 	private final Advice advice;
 
+	/**
+	 * Introduction 指定的接口
+	 */
 	private final Class<?> introducedInterface;
 
+	/**
+	 * 类过滤器
+	 */
 	private final ClassFilter typePatternClassFilter;
 
 
 	/**
 	 * Create a new advisor for this DeclareParents field.
 	 *
-	 * @param interfaceType static field defining the introduction
-	 * @param typePattern   type pattern the introduction is restricted to
-	 * @param defaultImpl   the default implementation class
+	 * @param interfaceType Introduction 指定的接口
+	 *                      static field defining the introduction
+	 * @param typePattern   类需要满足的模式
+	 *                      type pattern the introduction is restricted to
+	 * @param defaultImpl   接口的默认实现
+	 *                      the default implementation class
 	 */
 	public DeclareParentsAdvisor(Class<?> interfaceType, String typePattern, Class<?> defaultImpl) {
 		this(interfaceType, typePattern,
@@ -79,8 +91,11 @@ public class DeclareParentsAdvisor implements IntroductionAdvisor {
 		this.advice = interceptor;
 		this.introducedInterface = interfaceType;
 
+
 		// Excludes methods implemented.
+		// 类需要满足给定的模式
 		ClassFilter typePatternFilter = new TypePatternClassFilter(typePattern);
+		// 类必须实现给定的接口
 		ClassFilter exclusion = (clazz -> !this.introducedInterface.isAssignableFrom(clazz));
 		this.typePatternClassFilter = ClassFilters.intersection(typePatternFilter, exclusion);
 	}

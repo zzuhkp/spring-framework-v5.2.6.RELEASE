@@ -23,7 +23,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
- * Spring AOP 框架使用的 TargetSource 接口的默认实现，持有给定的对象
+ * Spring AOP 框架使用的 TargetSource 接口的默认实现，持有给定的对象。
  * <p>
  * Implementation of the {@link TargetSource} interface
  * that holds a given object. This is the default implementation of the TargetSource

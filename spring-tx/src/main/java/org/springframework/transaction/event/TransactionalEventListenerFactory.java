@@ -16,14 +16,16 @@
 
 package org.springframework.transaction.event;
 
-import java.lang.reflect.Method;
-
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListenerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 
+import java.lang.reflect.Method;
+
 /**
+ * 支持 @TransactionalEventListener 注解的 EventListenerFactory
+ * <p>
  * {@link EventListenerFactory} implementation that handles {@link TransactionalEventListener}
  * annotated methods.
  *

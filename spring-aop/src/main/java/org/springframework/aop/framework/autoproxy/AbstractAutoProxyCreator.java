@@ -16,19 +16,9 @@
 
 package org.springframework.aop.framework.autoproxy;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.aopalliance.aop.Advice;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.aop.Advisor;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.TargetSource;
@@ -50,7 +40,15 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.lang.reflect.Constructor;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
+ * BeanPostProcessor 的实现，使用 AOP 代理包装每个合格的 bean，在调用 bean 本身之前委派给特定的 interceptor。
+ * <p>
+ * 由子类确定应用到 bean 的 advice，因此无需继承 ProxyCreatorSupport
+ * <p>
  * {@link org.springframework.beans.factory.config.BeanPostProcessor} implementation
  * that wraps each eligible bean with an AOP proxy, delegating to specified interceptors
  * before invoking the bean itself.
@@ -94,6 +92,8 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		implements SmartInstantiationAwareBeanPostProcessor, BeanFactoryAware {
 
 	/**
+	 * 不为 bean 创建代理的标识
+	 * <p>
 	 * Convenience constant for subclasses: Return value for "do not proxy".
 	 *
 	 * @see #getAdvicesAndAdvisorsForBean
@@ -102,6 +102,8 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	protected static final Object[] DO_NOT_PROXY = null;
 
 	/**
+	 * 仅为 bean 创建通用的代理
+	 * <p>
 	 * Convenience constant for subclasses: Return value for
 	 * "proxy without additional interceptors, just the common ones".
 	 *
@@ -116,12 +118,14 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	/**
+	 * AdvisorAdapter 注册中心
+	 * <p>
 	 * Default is global AdvisorAdapterRegistry.
 	 */
 	private AdvisorAdapterRegistry advisorAdapterRegistry = GlobalAdvisorAdapterRegistry.getInstance();
 
 	/**
-	 * 是否冻结配置
+	 * 配置是否被冻结
 	 * <p>
 	 * Indicates whether or not the proxy should be frozen. Overridden from super
 	 * to prevent the configuration from becoming frozen too early.
@@ -129,6 +133,8 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	private boolean freezeProxy = false;
 
 	/**
+	 * 应用到 bean 的拦截器的 bean 名称
+	 * <p>
 	 * Default is no common interceptors.
 	 */
 	private String[] interceptorNames = new String[0];
@@ -138,6 +144,9 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 */
 	private boolean applyCommonInterceptorsFirst = true;
 
+	/**
+	 * TargetSource 创建工具
+	 */
 	@Nullable
 	private TargetSourceCreator[] customTargetSourceCreators;
 
@@ -147,17 +156,23 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	@Nullable
 	private BeanFactory beanFactory;
 
+	/**
+	 * 代理的目标 bean 名称
+	 */
 	private final Set<String> targetSourcedBeans = Collections.newSetFromMap(new ConcurrentHashMap<>(16));
 
+	/**
+	 * CacheKey->原始 bean 对象
+	 */
 	private final Map<Object, Object> earlyProxyReferences = new ConcurrentHashMap<>(16);
 
 	/**
-	 * bean 实例 -> bean 的代理类
+	 * bean 对应的 class 或名称 -> bean 的代理类
 	 */
 	private final Map<Object, Class<?>> proxyTypes = new ConcurrentHashMap<>(16);
 
 	/**
-	 * bean 实例 -> 是否被代理
+	 * bean 对应的 class 或名称 -> 是否被代理
 	 */
 	private final Map<Object, Boolean> advisedBeans = new ConcurrentHashMap<>(256);
 
@@ -250,6 +265,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			return null;
 		}
 		Object cacheKey = getCacheKey(beanClass, beanName);
+		// 返回 bean 的代理类的类型
 		return this.proxyTypes.get(cacheKey);
 	}
 
@@ -285,6 +301,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		// The TargetSource will handle target instances in a custom fashion.
 		TargetSource targetSource = getCustomTargetSource(beanClass, beanName);
 		if (targetSource != null) {
+			// TargetSource 不为空才创建代理
 			if (StringUtils.hasLength(beanName)) {
 				this.targetSourcedBeans.add(beanName);
 			}
@@ -323,6 +340,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		if (bean != null) {
 			Object cacheKey = getCacheKey(bean.getClass(), beanName);
 			if (this.earlyProxyReferences.remove(cacheKey) != bean) {
+				// 原始 bean 和当前 bean 不是同一个 bean
 				return wrapIfNecessary(bean, beanName, cacheKey);
 			}
 		}
@@ -354,7 +372,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	}
 
 	/**
-	 * 如果有必要，包装给定的 bean
+	 * 如果有必要，将给定的 bean 包装为代理对象
 	 * <p>
 	 * Wrap the given bean if necessary, i.e. if it is eligible for being proxied.
 	 *
@@ -365,13 +383,16 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 */
 	protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {
 		if (StringUtils.hasLength(beanName) && this.targetSourcedBeans.contains(beanName)) {
+			// 给定 bean 已经被包装为代理，无需再次包装
 			return bean;
 		}
 		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
+			// 给定 bean 无需被代理，不再包装
 			return bean;
 		}
 		if (isInfrastructureClass(bean.getClass()) || shouldSkip(bean.getClass(), beanName)) {
 			this.advisedBeans.put(cacheKey, Boolean.FALSE);
+			// 给定 bean 无需被代理，不再包装
 			return bean;
 		}
 
@@ -494,6 +515,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		proxyFactory.copyFrom(this);
 
 		if (!proxyFactory.isProxyTargetClass()) {
+			// 再次确认是否代理目标类
 			if (shouldProxyTargetClass(beanClass, beanName)) {
 				proxyFactory.setProxyTargetClass(true);
 			} else {
@@ -549,7 +571,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	}
 
 	/**
-	 * 确定给定 bean 的 Advisor 包括特定的 Interceptor 和通用的 Interceptor
+	 * 确定给定 bean 的 Advisor ，包括特定的 Interceptor 和通用的 Interceptor
 	 * <p>
 	 * Determine the advisors for the given bean, including the specific interceptors
 	 * as well as the common interceptor, all adapted to the Advisor interface.
@@ -623,7 +645,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 
 
 	/**
-	 * 返回给定的 bean 是否被代理，应用哪些附加的 Advice 和 Advisor
+	 * 返回适用给定的 bean 的附加 Advice 和 Advisor
 	 * <p>
 	 * Return whether the given bean is to be proxied, what additional
 	 * advices (e.g. AOP Alliance interceptors) and advisors to apply.

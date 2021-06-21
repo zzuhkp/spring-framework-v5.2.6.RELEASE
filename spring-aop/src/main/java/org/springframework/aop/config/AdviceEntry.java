@@ -26,11 +26,15 @@ import org.springframework.beans.factory.parsing.ParseState;
  */
 public class AdviceEntry implements ParseState.Entry {
 
+	/**
+	 * Advice 的类型，如 before、after..
+	 */
 	private final String kind;
 
 
 	/**
 	 * Creates a new instance of the {@link AdviceEntry} class.
+	 *
 	 * @param kind the kind of advice represented by this entry (before, after, around, etc.)
 	 */
 	public AdviceEntry(String kind) {

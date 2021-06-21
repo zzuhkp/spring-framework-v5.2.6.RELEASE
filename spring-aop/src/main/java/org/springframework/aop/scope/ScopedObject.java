@@ -27,16 +27,19 @@ import org.springframework.aop.RawTargetAccess;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since 2.0
  * @see ScopedProxyFactoryBean
+ * @since 2.0
  */
 public interface ScopedObject extends RawTargetAccess {
 
 	/**
+	 * 获取目标对象
+	 * <p>
 	 * Return the current target object behind this scoped object proxy,
 	 * in its raw form (as stored in the target scope).
 	 * <p>The raw target object can for example be passed to persistence
 	 * providers which would not be able to handle the scoped proxy object.
+	 *
 	 * @return the current target object behind this scoped object proxy
 	 */
 	Object getTargetObject();

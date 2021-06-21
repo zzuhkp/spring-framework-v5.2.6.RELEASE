@@ -20,13 +20,15 @@ import org.springframework.lang.Nullable;
 import org.springframework.transaction.TransactionStatus;
 
 /**
+ * 不需要结果的回调
+ * <p>
  * Simple convenience class for TransactionCallback implementation.
  * Allows for implementing a doInTransaction version without result,
  * i.e. without the need for a return statement.
  *
  * @author Juergen Hoeller
- * @since 28.03.2003
  * @see TransactionTemplate
+ * @since 28.03.2003
  */
 public abstract class TransactionCallbackWithoutResult implements TransactionCallback<Object> {
 
@@ -48,6 +50,7 @@ public abstract class TransactionCallbackWithoutResult implements TransactionCal
 	 * <p>Note when using JTA: JTA transactions only work with transactional
 	 * JNDI resources, so implementations need to use such resources if they
 	 * want transaction support.
+	 *
 	 * @param status associated transaction status
 	 * @see TransactionTemplate#execute
 	 */

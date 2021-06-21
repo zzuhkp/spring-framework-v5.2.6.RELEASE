@@ -16,10 +16,6 @@
 
 package org.springframework.aop.support;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.Pointcut;
@@ -27,7 +23,13 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
+ * 控制流 Pointcut，给定类和方法名存在于调用栈中则匹配
+ * <p>
  * Pointcut and method matcher for use in simple <b>cflow</b>-style pointcut.
  * Note that evaluating such pointcuts is 10-15 times slower than evaluating
  * normal pointcuts, but they are useful in some cases.
@@ -40,16 +42,26 @@ import org.springframework.util.ObjectUtils;
 @SuppressWarnings("serial")
 public class ControlFlowPointcut implements Pointcut, ClassFilter, MethodMatcher, Serializable {
 
+	/**
+	 * 控制流中的类
+	 */
 	private final Class<?> clazz;
 
+	/**
+	 * 控制流中的方法名
+	 */
 	@Nullable
 	private final String methodName;
 
+	/**
+	 * 匹配的次数
+	 */
 	private final AtomicInteger evaluations = new AtomicInteger(0);
 
 
 	/**
 	 * Construct a new pointcut that matches all control flows below that class.
+	 *
 	 * @param clazz the clazz
 	 */
 	public ControlFlowPointcut(Class<?> clazz) {
@@ -60,7 +72,8 @@ public class ControlFlowPointcut implements Pointcut, ClassFilter, MethodMatcher
 	 * Construct a new pointcut that matches all calls below the given method
 	 * in the given class. If no method name is given, matches all control flows
 	 * below the given class.
-	 * @param clazz the clazz
+	 *
+	 * @param clazz      the clazz
 	 * @param methodName the name of the method (may be {@code null})
 	 */
 	public ControlFlowPointcut(Class<?> clazz, @Nullable String methodName) {
@@ -98,6 +111,7 @@ public class ControlFlowPointcut implements Pointcut, ClassFilter, MethodMatcher
 		for (StackTraceElement element : new Throwable().getStackTrace()) {
 			if (element.getClassName().equals(this.clazz.getName()) &&
 					(this.methodName == null || element.getMethodName().equals(this.methodName))) {
+				// 给定的类和方法名称存在于调用栈中则匹配
 				return true;
 			}
 		}

@@ -28,6 +28,8 @@ import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 import org.springframework.transaction.interceptor.TransactionAttribute;
 
 /**
+ * javax.ejb.TransactionAttribute 注解解析
+ * <p>
  * Strategy implementation for parsing EJB3's {@link javax.ejb.TransactionAttribute}
  * annotation.
  *
@@ -48,12 +50,17 @@ public class Ejb3TransactionAnnotationParser implements TransactionAnnotationPar
 		javax.ejb.TransactionAttribute ann = element.getAnnotation(javax.ejb.TransactionAttribute.class);
 		if (ann != null) {
 			return parseTransactionAnnotation(ann);
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
 
+	/**
+	 * 解析注解
+	 *
+	 * @param ann
+	 * @return
+	 */
 	public TransactionAttribute parseTransactionAnnotation(javax.ejb.TransactionAttribute ann) {
 		return new Ejb3TransactionAttribute(ann.value());
 	}
@@ -82,6 +89,7 @@ public class Ejb3TransactionAnnotationParser implements TransactionAnnotationPar
 
 		@Override
 		public boolean rollbackOn(Throwable ex) {
+			// 优先根据 ApplicationException 判断是否回滚
 			ApplicationException ann = ex.getClass().getAnnotation(ApplicationException.class);
 			return (ann != null ? ann.rollback() : super.rollbackOn(ex));
 		}

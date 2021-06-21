@@ -33,7 +33,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
- * AspectJ ProceedingJoinPoint 接口的实现，包装了 AOP 联盟 MethodInvocation
+ * AspectJ ProceedingJoinPoint 接口的实现，包装了 AOP 联盟 MethodInvocation。
  * <p>
  * An implementation of the AspectJ {@link ProceedingJoinPoint} interface
  * wrapping an AOP Alliance {@link org.aopalliance.intercept.MethodInvocation}.

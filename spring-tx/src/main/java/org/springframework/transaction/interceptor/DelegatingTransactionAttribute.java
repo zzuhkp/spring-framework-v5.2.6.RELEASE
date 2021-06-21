@@ -22,6 +22,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.transaction.support.DelegatingTransactionDefinition;
 
 /**
+ * TransactionAttribute 代理，委托给底层的 TransactionAttribute 判断是否回滚
+ * <p>
  * {@link TransactionAttribute} implementation that delegates all calls to a given target
  * {@link TransactionAttribute} instance. Abstract because it is meant to be subclassed,
  * with subclasses overriding specific methods that are not supposed to simply delegate
@@ -39,6 +41,7 @@ public abstract class DelegatingTransactionAttribute extends DelegatingTransacti
 
 	/**
 	 * Create a DelegatingTransactionAttribute for the given target attribute.
+	 *
 	 * @param targetAttribute the target TransactionAttribute to delegate to
 	 */
 	public DelegatingTransactionAttribute(TransactionAttribute targetAttribute) {

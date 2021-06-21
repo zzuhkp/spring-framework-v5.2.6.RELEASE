@@ -34,6 +34,7 @@ public interface MethodInvocation extends Invocation {
 
 	/**
 	 * 获取当前正在被调用的方法
+	 * #getStaticPart 方法的友好实现(返回相同结果)
 	 * <p>
 	 * Get the method being called.
 	 * <p>This method is a friendly implementation of the

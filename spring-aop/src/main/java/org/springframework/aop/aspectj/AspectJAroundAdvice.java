@@ -27,7 +27,7 @@ import org.aspectj.weaver.tools.JoinPointMatch;
 import org.springframework.aop.ProxyMethodInvocation;
 
 /**
- * 包装了 AspectJ 的 Spring AOP Advice，即 MethodInterceptor
+ * 包装了 AspectJ 的 Spring AOP Advice，即 MethodInterceptor。
  * <p>
  * Spring AOP around advice (MethodInterceptor) that wraps
  * an AspectJ advice method. Exposes ProceedingJoinPoint.
@@ -66,6 +66,7 @@ public class AspectJAroundAdvice extends AbstractAspectJAdvice implements Method
 		if (!(mi instanceof ProxyMethodInvocation)) {
 			throw new IllegalStateException("MethodInvocation is not a Spring ProxyMethodInvocation: " + mi);
 		}
+		// 直接调用 Advice 方法，由 Advice 方法决定在什么时候调用原始方法
 		ProxyMethodInvocation pmi = (ProxyMethodInvocation) mi;
 		ProceedingJoinPoint pjp = lazyGetProceedingJoinPoint(pmi);
 		JoinPointMatch jpm = getJoinPointMatch(pmi);

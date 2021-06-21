@@ -21,6 +21,8 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
+ * xml aop 命名空间处理器
+ * <p>
  * {@code NamespaceHandler} for the {@code aop} namespace.
  *
  * <p>Provides a {@link org.springframework.beans.factory.xml.BeanDefinitionParser} for the

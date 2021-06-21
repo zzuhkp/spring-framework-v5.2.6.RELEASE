@@ -22,6 +22,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.transaction.interceptor.TransactionAttribute;
 
 /**
+ * 事务注解解析
+ * <p>
  * Strategy interface for parsing known transaction annotation types.
  * {@link AnnotationTransactionAttributeSource} delegates to such
  * parsers for supporting specific annotation types such as Spring's own
@@ -29,15 +31,17 @@ import org.springframework.transaction.interceptor.TransactionAttribute;
  * or EJB3's {@link javax.ejb.TransactionAttribute}.
  *
  * @author Juergen Hoeller
- * @since 2.5
  * @see AnnotationTransactionAttributeSource
  * @see SpringTransactionAnnotationParser
  * @see Ejb3TransactionAnnotationParser
  * @see JtaTransactionAnnotationParser
+ * @since 2.5
  */
 public interface TransactionAnnotationParser {
 
 	/**
+	 * 给定类是否为候选者
+	 * <p>
 	 * Determine whether the given class is a candidate for transaction attributes
 	 * in the annotation format of this {@code TransactionAnnotationParser}.
 	 * <p>If this method returns {@code false}, the methods on the given class
@@ -45,6 +49,7 @@ public interface TransactionAnnotationParser {
 	 * Returning {@code false} is therefore an optimization for non-affected
 	 * classes, whereas {@code true} simply means that the class needs to get
 	 * fully introspected for each method on the given class individually.
+	 *
 	 * @param targetClass the class to introspect
 	 * @return {@code false} if the class is known to have no transaction
 	 * annotations at class or method level; {@code true} otherwise. The default
@@ -56,10 +61,13 @@ public interface TransactionAnnotationParser {
 	}
 
 	/**
+	 * 解析事务注解
+	 * <p>
 	 * Parse the transaction attribute for the given method or class,
 	 * based on an annotation type understood by this parser.
 	 * <p>This essentially parses a known transaction annotation into Spring's metadata
 	 * attribute class. Returns {@code null} if the method/class is not transactional.
+	 *
 	 * @param element the annotated method or class
 	 * @return the configured transaction attribute, or {@code null} if none found
 	 * @see AnnotationTransactionAttributeSource#determineTransactionAttribute

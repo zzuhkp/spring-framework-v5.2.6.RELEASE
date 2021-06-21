@@ -23,8 +23,7 @@ import org.springframework.aop.TargetClassAware;
 import org.springframework.aop.TargetSource;
 
 /**
- * 由持有 AOP Proxy 的工厂的配置的类实现。
- * 当前配置包含 Interceptor、其他 Advice、Advisor、Proxy 接口。
+ * 配置类，作为 ProxyConfig 配置类的补充，包含 Advisor 的管理、代理的接口的获取等
  * <p>
  * Interface to be implemented by classes that hold the configuration
  * of a factory of AOP proxies. This configuration includes the
@@ -90,7 +89,7 @@ public interface Advised extends TargetClassAware {
 	TargetSource getTargetSource();
 
 	/**
-	 * 设置 AOP 框架是否应该将代理公开为 ThreadLocal,以便通过 AopContext 可以检索
+	 * 设置 AOP 框架是否应该将代理公开到 ThreadLocal,以便通过 AopContext 可以检索
 	 * <p>
 	 * Set whether the proxy should be exposed by the AOP framework as a
 	 * {@link ThreadLocal} for retrieval via the {@link AopContext} class.
@@ -267,7 +266,7 @@ public interface Advised extends TargetClassAware {
 
 	/**
 	 * 获取 Advice 的索引位置
-	 *
+	 * <p>
 	 * Return the index (from 0) of the given AOP Alliance Advice,
 	 * or -1 if no such advice is an advice for this proxy.
 	 * <p>The return value of this method can be used to index into

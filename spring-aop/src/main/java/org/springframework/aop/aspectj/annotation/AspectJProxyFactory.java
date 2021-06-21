@@ -33,6 +33,8 @@ import org.springframework.util.ClassUtils;
 
 /**
  * 基于 AspectJ 的代理工厂，允许通过编程的方式创建 AspectJ Aspect
+ *
+ * 可以从给定的 Aspect 实例中添加 Advice
  * <p>
  * AspectJ-based proxy factory, allowing for programmatic building
  * of proxies which include AspectJ aspects (code style as well
@@ -110,7 +112,7 @@ public class AspectJProxyFactory extends ProxyCreatorSupport {
 
 	/**
 	 * 从 Aspect 中添加支持目标类的 Advisor
-	 *
+	 * <p>
 	 * Add an aspect of the supplied type to the end of the advice chain.
 	 *
 	 * @param aspectClass the AspectJ aspect class

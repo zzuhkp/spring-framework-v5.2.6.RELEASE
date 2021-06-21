@@ -22,6 +22,8 @@ import org.springframework.transaction.SavepointManager;
 import org.springframework.util.Assert;
 
 /**
+ * TransactionStatus 的默认实现
+ * <p>
  * Default implementation of the {@link org.springframework.transaction.TransactionStatus}
  * interface, used by {@link AbstractPlatformTransactionManager}. Based on the concept
  * of an underlying "transaction object".
@@ -39,7 +41,6 @@ import org.springframework.util.Assert;
  * {@link org.springframework.transaction.TransactionStatus} interface instead.
  *
  * @author Juergen Hoeller
- * @since 19.01.2004
  * @see AbstractPlatformTransactionManager
  * @see org.springframework.transaction.SavepointManager
  * @see #getTransaction
@@ -47,38 +48,62 @@ import org.springframework.util.Assert;
  * @see #rollbackToSavepoint
  * @see #releaseSavepoint
  * @see SimpleTransactionStatus
+ * @since 19.01.2004
  */
 public class DefaultTransactionStatus extends AbstractTransactionStatus {
 
+	/**
+	 * 当前事务对象（可能是已存在的事务对象）
+	 *
+	 * @see org.springframework.jdbc.datasource.JdbcTransactionObjectSupport
+	 */
 	@Nullable
 	private final Object transaction;
 
+	/**
+	 * 当前事务是否是一个新的事务
+	 */
 	private final boolean newTransaction;
 
+	/**
+	 * 是否为当前事务打开新的事务同步
+	 */
 	private final boolean newSynchronization;
 
+	/**
+	 * 当前事务是否标记为只读
+	 */
 	private final boolean readOnly;
 
+	/**
+	 * 是否为当前事务启用调试日志
+	 */
 	private final boolean debug;
 
+	/**
+	 * 为当前事务挂起的资源持有者
+	 *
+	 * @see org.springframework.jdbc.datasource.ConnectionHolder
+	 */
 	@Nullable
 	private final Object suspendedResources;
 
 
 	/**
 	 * Create a new {@code DefaultTransactionStatus} instance.
-	 * @param transaction underlying transaction object that can hold state
-	 * for the internal transaction implementation
-	 * @param newTransaction if the transaction is new, otherwise participating
-	 * in an existing transaction
+	 *
+	 * @param transaction        underlying transaction object that can hold state
+	 *                           for the internal transaction implementation
+	 * @param newTransaction     if the transaction is new, otherwise participating
+	 *                           in an existing transaction
 	 * @param newSynchronization if a new transaction synchronization has been
-	 * opened for the given transaction
-	 * @param readOnly whether the transaction is marked as read-only
-	 * @param debug should debug logging be enabled for the handling of this transaction?
-	 * Caching it in here can prevent repeated calls to ask the logging system whether
-	 * debug logging should be enabled.
+	 *                           opened for the given transaction
+	 * @param readOnly           whether the transaction is marked as read-only
+	 * @param debug              should debug logging be enabled for the handling of this transaction?
+	 *                           Caching it in here can prevent repeated calls to ask the logging system whether
+	 *                           debug logging should be enabled.
 	 * @param suspendedResources a holder for resources that have been suspended
-	 * for this transaction, if any
+	 *                           for this transaction, if any
 	 */
 	public DefaultTransactionStatus(
 			@Nullable Object transaction, boolean newTransaction, boolean newSynchronization,
@@ -94,7 +119,10 @@ public class DefaultTransactionStatus extends AbstractTransactionStatus {
 
 
 	/**
+	 * 获取底层事务对象
+	 * <p>
 	 * Return the underlying transaction object.
+	 *
 	 * @throws IllegalStateException if no transaction is active
 	 */
 	public Object getTransaction() {
@@ -103,6 +131,8 @@ public class DefaultTransactionStatus extends AbstractTransactionStatus {
 	}
 
 	/**
+	 * 是否有真实的事务激活
+	 * <p>
 	 * Return whether there is an actual transaction active.
 	 */
 	public boolean hasTransaction() {
@@ -115,6 +145,8 @@ public class DefaultTransactionStatus extends AbstractTransactionStatus {
 	}
 
 	/**
+	 * 是否为当前事务打开新的事务同步
+	 * <p>
 	 * Return if a new transaction synchronization has been opened
 	 * for this transaction.
 	 */
@@ -123,6 +155,8 @@ public class DefaultTransactionStatus extends AbstractTransactionStatus {
 	}
 
 	/**
+	 * 当前事务是否只读
+	 * <p>
 	 * Return if this transaction is defined as read-only transaction.
 	 */
 	public boolean isReadOnly() {
@@ -139,6 +173,8 @@ public class DefaultTransactionStatus extends AbstractTransactionStatus {
 	}
 
 	/**
+	 * 获取挂起的资源持有者
+	 * <p>
 	 * Return the holder for resources that have been suspended for this transaction,
 	 * if any.
 	 */
@@ -153,10 +189,13 @@ public class DefaultTransactionStatus extends AbstractTransactionStatus {
 	//---------------------------------------------------------------------
 
 	/**
+	 * 是否全局回滚
+	 * <p>
 	 * Determine the rollback-only flag via checking the transaction object, provided
 	 * that the latter implements the {@link SmartTransactionObject} interface.
 	 * <p>Will return {@code true} if the global transaction itself has been marked
 	 * rollback-only by the transaction coordinator, for example in case of a timeout.
+	 *
 	 * @see SmartTransactionObject#isRollbackOnly()
 	 */
 	@Override
@@ -166,8 +205,11 @@ public class DefaultTransactionStatus extends AbstractTransactionStatus {
 	}
 
 	/**
+	 * 获取保存点管理器
+	 * <p>
 	 * This implementation exposes the {@link SavepointManager} interface
 	 * of the underlying transaction object, if any.
+	 *
 	 * @throws NestedTransactionNotSupportedException if savepoints are not supported
 	 * @see #isTransactionSavepointManager()
 	 */
@@ -182,8 +224,11 @@ public class DefaultTransactionStatus extends AbstractTransactionStatus {
 	}
 
 	/**
+	 * 底层的事务是否为一个保存点管理器
+	 * <p>
 	 * Return whether the underlying transaction implements the {@link SavepointManager}
 	 * interface and therefore supports savepoints.
+	 *
 	 * @see #getTransaction()
 	 * @see #getSavepointManager()
 	 */
@@ -192,8 +237,11 @@ public class DefaultTransactionStatus extends AbstractTransactionStatus {
 	}
 
 	/**
+	 * 刷新
+	 * <p>
 	 * Delegate the flushing to the transaction object, provided that the latter
 	 * implements the {@link SmartTransactionObject} interface.
+	 *
 	 * @see SmartTransactionObject#flush()
 	 */
 	@Override

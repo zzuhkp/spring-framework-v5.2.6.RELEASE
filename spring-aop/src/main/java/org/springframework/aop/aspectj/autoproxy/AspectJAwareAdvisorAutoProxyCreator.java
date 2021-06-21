@@ -34,6 +34,13 @@ import org.springframework.core.Ordered;
 import org.springframework.util.ClassUtils;
 
 /**
+ * AbstractAdvisorAutoProxyCreator 的子类，当多个 Advice 来自同一个 Aspect 时，公开 AspectJ 的调用上下文，并遵从 AspectJ 的 优先级规则排序;
+ * <p>
+ * 和父类相比具有以下功能：
+ * 1. 支持按照 AspectJ 的优先级进行排序。
+ * 2. Advisor 列表中包含 aspectj advisor 则在列表最前面添加 ExposeInvocationInterceptor.ADVISOR，以便在调用链中公开代理对象。
+ * 3. 跳过处理 AspectJPointcutAdvisor 类型的 bean，不为该 bean 创建代理对象。
+ * <p>
  * {@link org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreator}
  * subclass that exposes AspectJ's invocation context and understands AspectJ's rules
  * for advice precedence when multiple pieces of advice come from the same aspect.
@@ -50,6 +57,10 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 
 
 	/**
+	 * 按照 AspectJ 优先级排序，如果两个 Advice 来自同一个 Aspect，则它们具有相同的顺序，否则根据以下规则排序：
+	 * 1. 如果一个 Advice 为 after advice，则这个 advice 具有最高的优先级。
+	 * 2. 否则首先声明的 Advice 具有最高的优先级(先运行).
+	 * <p>
 	 * Sort the rest by AspectJ precedence. If two pieces of advice have
 	 * come from the same aspect they will have the same order.
 	 * Advice from the same aspect is then further ordered according to the
@@ -110,6 +121,8 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 
 
 	/**
+	 * PartialComparable 的实现，以便定义 partial 顺序
+	 * <p>
 	 * Implements AspectJ PartialComparable interface for defining partial orderings.
 	 */
 	private static class PartiallyComparableAdvisorHolder implements PartialComparable {

@@ -58,7 +58,7 @@ public abstract class MethodMatchers {
 	}
 
 	/**
-	 * 任意一个 Pointcut 匹配则匹配
+	 * 任意一个 MethodMatcher 匹配则匹配
 	 * <p>
 	 * Match all methods that <i>either</i> (or both) of the given MethodMatchers matches.
 	 *

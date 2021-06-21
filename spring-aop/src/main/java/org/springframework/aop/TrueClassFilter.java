@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 /**
  * 匹配所有类的 ClassFilter
- *
+ * <p>
  * Canonical ClassFilter instance that matches all classes.
  *
  * @author Rod Johnson

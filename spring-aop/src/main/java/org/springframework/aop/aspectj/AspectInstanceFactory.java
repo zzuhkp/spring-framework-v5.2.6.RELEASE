@@ -20,7 +20,7 @@ import org.springframework.core.Ordered;
 import org.springframework.lang.Nullable;
 
 /**
- * AspectJ Aspect 实例的工厂
+ * AspectJ Aspect 实例的工厂。
  * <p>
  * Interface implemented to provide an instance of an AspectJ aspect.
  * Decouples from Spring's bean factory.

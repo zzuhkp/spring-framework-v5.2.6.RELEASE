@@ -17,6 +17,8 @@
 package org.springframework.aop.target;
 
 /**
+ * 从 BeanFactory 中获取 bean 作为目标对象
+ * <p>
  * Simple {@link org.springframework.aop.TargetSource} implementation,
  * freshly obtaining the specified target bean from its containing
  * Spring {@link org.springframework.beans.factory.BeanFactory}.

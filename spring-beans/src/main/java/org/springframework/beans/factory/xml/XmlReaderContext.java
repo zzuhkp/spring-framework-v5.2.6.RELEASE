@@ -16,11 +16,6 @@
 
 package org.springframework.beans.factory.xml;
 
-import java.io.StringReader;
-
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.parsing.ProblemReporter;
@@ -32,6 +27,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.lang.Nullable;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+
+import java.io.StringReader;
 
 /**
  * Extension of {@link org.springframework.beans.factory.parsing.ReaderContext},
@@ -132,6 +131,8 @@ public class XmlReaderContext extends ReaderContext {
 	// Convenience methods to delegate to
 
 	/**
+	 * 生成 bean 的名称
+	 * <p>
 	 * Call the bean name generator for the given bean definition.
 	 *
 	 * @see XmlBeanDefinitionReader#getBeanNameGenerator()
@@ -142,6 +143,8 @@ public class XmlReaderContext extends ReaderContext {
 	}
 
 	/**
+	 * 利用自动生成的 bean 名称注册 BeanDefinition
+	 * <p>
 	 * Call the bean name generator for the given bean definition
 	 * and register the bean definition under the generated name.
 	 *

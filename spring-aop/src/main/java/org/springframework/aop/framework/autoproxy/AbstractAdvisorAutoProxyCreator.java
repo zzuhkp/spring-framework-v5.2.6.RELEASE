@@ -28,6 +28,10 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 通用的 AutoProxyCreator 接口，使用 Advisor 类型的 bean 构建 AOP 代理；
+ * 子类可以重写 #findCandidateAdvisors 方法以返回自定义的 Advisor 列表；
+ * 子类可以重写 #shoudSkip 方法，以将某些 bean 排除在自动代理之外；
+ * <p>
  * Generic auto proxy creator that builds AOP proxies for specific beans
  * based on detected Advisors for each bean.
  *
@@ -49,6 +53,9 @@ import org.springframework.util.Assert;
 @SuppressWarnings("serial")
 public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyCreator {
 
+	/**
+	 * 从 BeanFactory 中检索 Advisor 类型的 bean 的帮助类
+	 */
 	@Nullable
 	private BeanFactoryAdvisorRetrievalHelper advisorRetrievalHelper;
 
@@ -124,7 +131,9 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	}
 
 	/**
-	 * 查找适用于给定 bean 的 Advisor
+	 * 查找适用于给定 bean 的 Advisor，
+	 * 普通的 Advisor 适用于所有的 bean，
+	 * IntroductionAdvisor、PointcutAdvisor 类型的 bean 需要判断是否匹配类型及方法；
 	 * <p>
 	 * Search the given candidate Advisors to find all Advisors that
 	 * can apply to the specified bean.

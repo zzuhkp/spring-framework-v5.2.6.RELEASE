@@ -28,6 +28,8 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.lang.Nullable;
 
 /**
+ * <aop:aspect-autoproxy/> 节点处理
+ * <p>
  * {@link BeanDefinitionParser} for the {@code aspectj-autoproxy} tag,
  * enabling the automatic application of @AspectJ-style aspects found in
  * the {@link org.springframework.beans.factory.BeanFactory}.
@@ -46,6 +48,12 @@ class AspectJAutoProxyBeanDefinitionParser implements BeanDefinitionParser {
 		return null;
 	}
 
+	/**
+	 * 设置 includePatterns
+	 *
+	 * @param element
+	 * @param parserContext
+	 */
 	private void extendBeanDefinition(Element element, ParserContext parserContext) {
 		BeanDefinition beanDef =
 				parserContext.getRegistry().getBeanDefinition(AopConfigUtils.AUTO_PROXY_CREATOR_BEAN_NAME);
@@ -54,6 +62,13 @@ class AspectJAutoProxyBeanDefinitionParser implements BeanDefinitionParser {
 		}
 	}
 
+	/**
+	 * 设置 includePatterns
+	 *
+	 * @param element
+	 * @param parserContext
+	 * @param beanDef
+	 */
 	private void addIncludePatterns(Element element, ParserContext parserContext, BeanDefinition beanDef) {
 		ManagedList<TypedStringValue> includePatterns = new ManagedList<>();
 		NodeList childNodes = element.getChildNodes();

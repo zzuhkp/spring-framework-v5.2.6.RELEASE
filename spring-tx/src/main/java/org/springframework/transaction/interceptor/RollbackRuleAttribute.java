@@ -22,6 +22,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 确定给定异常是否回滚的规则
+ * <p>
  * Rule determining whether or not a given exception (and any subclasses)
  * should cause a rollback.
  *
@@ -29,11 +31,11 @@ import org.springframework.util.Assert;
  * should commit or rollback after an exception has been thrown.
  *
  * @author Rod Johnson
- * @since 09.04.2003
  * @see NoRollbackRuleAttribute
+ * @since 09.04.2003
  */
 @SuppressWarnings("serial")
-public class RollbackRuleAttribute implements Serializable{
+public class RollbackRuleAttribute implements Serializable {
 
 	/**
 	 * The {@link RollbackRuleAttribute rollback rule} for
@@ -44,6 +46,8 @@ public class RollbackRuleAttribute implements Serializable{
 
 
 	/**
+	 * 异常类的名称
+	 * <p>
 	 * Could hold exception, resolving class name but would always require FQN.
 	 * This way does multiple string comparisons, but how often do we decide
 	 * whether to roll back a transaction following an exception?
@@ -55,10 +59,11 @@ public class RollbackRuleAttribute implements Serializable{
 	 * Create a new instance of the {@code RollbackRuleAttribute} class.
 	 * <p>This is the preferred way to construct a rollback rule that matches
 	 * the supplied {@link Exception} class, its subclasses, and its nested classes.
+	 *
 	 * @param clazz throwable class; must be {@link Throwable} or a subclass
-	 * of {@code Throwable}
+	 *              of {@code Throwable}
 	 * @throws IllegalArgumentException if the supplied {@code clazz} is
-	 * not a {@code Throwable} type or is {@code null}
+	 *                                  not a {@code Throwable} type or is {@code null}
 	 */
 	public RollbackRuleAttribute(Class<?> clazz) {
 		Assert.notNull(clazz, "'clazz' cannot be null");
@@ -82,10 +87,11 @@ public class RollbackRuleAttribute implements Serializable{
 	 * meant to define a rule for all checked exceptions. With more unusual
 	 * exception names such as "BaseBusinessException" there's no need to use a
 	 * fully package-qualified name.
+	 *
 	 * @param exceptionName the exception name pattern; can also be a fully
-	 * package-qualified class name
+	 *                      package-qualified class name
 	 * @throws IllegalArgumentException if the supplied
-	 * {@code exceptionName} is {@code null} or empty
+	 *                                  {@code exceptionName} is {@code null} or empty
 	 */
 	public RollbackRuleAttribute(String exceptionName) {
 		Assert.hasText(exceptionName, "'exceptionName' cannot be null or empty");
@@ -101,6 +107,8 @@ public class RollbackRuleAttribute implements Serializable{
 	}
 
 	/**
+	 * 超类匹配的深度
+	 * <p>
 	 * Return the depth of the superclass matching.
 	 * <p>{@code 0} means {@code ex} matches exactly. Returns
 	 * {@code -1} if there is no match. Otherwise, returns depth with the
@@ -110,7 +118,13 @@ public class RollbackRuleAttribute implements Serializable{
 		return getDepth(ex.getClass(), 0);
 	}
 
-
+	/**
+	 * 发生的异常类距离定义的回滚异常类的层次深度
+	 *
+	 * @param exceptionClass
+	 * @param depth
+	 * @return
+	 */
 	private int getDepth(Class<?> exceptionClass, int depth) {
 		if (exceptionClass.getName().contains(this.exceptionName)) {
 			// Found it!

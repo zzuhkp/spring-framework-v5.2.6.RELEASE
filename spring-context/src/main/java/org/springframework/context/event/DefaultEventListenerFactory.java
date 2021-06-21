@@ -22,6 +22,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.core.Ordered;
 
 /**
+ * 默认的事件监听器工厂，用于支持 @EventListener 注解
+ * <p>
  * Default {@link EventListenerFactory} implementation that supports the
  * regular {@link EventListener} annotation.
  *

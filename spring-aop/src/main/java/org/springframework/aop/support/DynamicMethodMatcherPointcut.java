@@ -21,7 +21,7 @@ import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.Pointcut;
 
 /**
- * 动态方法匹配的 Pointcut
+ * 动态方法匹配的 Pointcut。
  * <p>
  * Convenient superclass when we want to force subclasses to
  * implement MethodMatcher interface, but subclasses

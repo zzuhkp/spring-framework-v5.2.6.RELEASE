@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
- * 通过 BeanFactory 获取 Aspect 实例
+ * 由 BeanFactory 支持的 AspectInstanceFactory
  * <p>
  * {@link org.springframework.aop.aspectj.AspectInstanceFactory} implementation
  * backed by a Spring {@link org.springframework.beans.factory.BeanFactory}.
@@ -46,10 +46,19 @@ import org.springframework.util.ClassUtils;
 @SuppressWarnings("serial")
 public class BeanFactoryAspectInstanceFactory implements MetadataAwareAspectInstanceFactory, Serializable {
 
+	/**
+	 * bean 工厂
+	 */
 	private final BeanFactory beanFactory;
 
+	/**
+	 * @Aspect bean 名称
+	 */
 	private final String name;
 
+	/**
+	 * @Aspect bean 元数据
+	 */
 	private final AspectMetadata aspectMetadata;
 
 

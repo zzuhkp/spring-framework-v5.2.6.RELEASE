@@ -42,10 +42,19 @@ import org.springframework.util.Assert;
  */
 public class BeanFactoryAspectJAdvisorsBuilder {
 
+	/**
+	 * bean 工厂
+	 */
 	private final ListableBeanFactory beanFactory;
 
+	/**
+	 * 创建 Advisor 的工厂
+	 */
 	private final AspectJAdvisorFactory advisorFactory;
 
+	/**
+	 * @Aspect bean 的名称列表
+	 */
 	@Nullable
 	private volatile List<String> aspectBeanNames;
 
@@ -163,6 +172,8 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 	}
 
 	/**
+	 * 给定的 bean 是合格的
+	 * <p>
 	 * Return whether the aspect bean with the given name is eligible.
 	 *
 	 * @param beanName the name of the aspect bean

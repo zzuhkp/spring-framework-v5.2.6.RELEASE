@@ -19,6 +19,8 @@ package org.springframework.transaction.interceptor;
 import org.springframework.aop.SpringProxy;
 
 /**
+ * 标记接口，表示代理用于处理事务
+ *
  * A marker interface for manually created transactional proxies.
  *
  * <p>{@link TransactionAttributeSourcePointcut} will ignore such existing

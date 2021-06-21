@@ -16,8 +16,6 @@
 
 package org.springframework.aop.framework;
 
-import java.io.Closeable;
-
 import org.springframework.beans.factory.Aware;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.DisposableBean;
@@ -27,7 +25,11 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 
+import java.io.Closeable;
+
 /**
+ * 提供代理处理器通用功能的基类，如 ClassLoader 管理及评估代理要实现的接口或类
+ * <p>
  * Base class with common functionality for proxy processors, in particular
  * ClassLoader management and the {@link #evaluateProxyInterfaces} algorithm.
  *
@@ -45,9 +47,15 @@ public class ProxyProcessorSupport extends ProxyConfig implements Ordered, BeanC
 	 */
 	private int order = Ordered.LOWEST_PRECEDENCE;
 
+	/**
+	 * 创建代理对象的类加载器
+	 */
 	@Nullable
 	private ClassLoader proxyClassLoader = ClassUtils.getDefaultClassLoader();
 
+	/**
+	 * 是否配置过 ClassLoader
+	 */
 	private boolean classLoaderConfigured = false;
 
 
@@ -107,10 +115,12 @@ public class ProxyProcessorSupport extends ProxyConfig implements Ordered, BeanC
 	 */
 	protected void evaluateProxyInterfaces(Class<?> beanClass, ProxyFactory proxyFactory) {
 		Class<?>[] targetInterfaces = ClassUtils.getAllInterfacesForClass(beanClass, getProxyClassLoader());
+		// 给定接口中是否存在用户定义的接口
 		boolean hasReasonableProxyInterface = false;
 		for (Class<?> ifc : targetInterfaces) {
 			if (!isConfigurationCallbackInterface(ifc) && !isInternalLanguageInterface(ifc) &&
 					ifc.getMethods().length > 0) {
+				// 非容器回调接口、并且非内部语言接口、并且方法数量大于0，则代理接口
 				hasReasonableProxyInterface = true;
 				break;
 			}

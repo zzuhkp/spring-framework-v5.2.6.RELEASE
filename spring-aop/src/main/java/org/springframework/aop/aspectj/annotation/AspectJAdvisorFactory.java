@@ -27,7 +27,7 @@ import org.springframework.aop.framework.AopConfigException;
 import org.springframework.lang.Nullable;
 
 /**
- * 根据类上的 AspectJ 注解创建 Spring AOP Advisor 的工厂接口
+ * 根据类上的 @AspectJ 注解获取 Spring AOP Advisor 的工厂接口
  * <p>
  * Interface for factories that can create Spring AOP Advisors from classes
  * annotated with AspectJ annotation syntax.

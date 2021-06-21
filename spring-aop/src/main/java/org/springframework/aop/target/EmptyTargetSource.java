@@ -23,6 +23,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 没有 Target 的 TargetSource
+ * <p>
  * Canonical {@code TargetSource} when there is no target
  * (or just the target class known), and behavior is supplied
  * by interfaces and advisors only.
@@ -32,7 +34,9 @@ import org.springframework.util.ObjectUtils;
  */
 public final class EmptyTargetSource implements TargetSource, Serializable {
 
-	/** use serialVersionUID from Spring 1.2 for interoperability. */
+	/**
+	 * use serialVersionUID from Spring 1.2 for interoperability.
+	 */
 	private static final long serialVersionUID = 3680494563553489691L;
 
 
@@ -48,6 +52,7 @@ public final class EmptyTargetSource implements TargetSource, Serializable {
 
 	/**
 	 * Return an EmptyTargetSource for the given target Class.
+	 *
 	 * @param targetClass the target Class (may be {@code null})
 	 * @see #getTargetClass()
 	 */
@@ -57,8 +62,9 @@ public final class EmptyTargetSource implements TargetSource, Serializable {
 
 	/**
 	 * Return an EmptyTargetSource for the given target Class.
+	 *
 	 * @param targetClass the target Class (may be {@code null})
-	 * @param isStatic whether the TargetSource should be marked as static
+	 * @param isStatic    whether the TargetSource should be marked as static
 	 * @see #getTargetClass()
 	 */
 	public static EmptyTargetSource forClass(@Nullable Class<?> targetClass, boolean isStatic) {
@@ -79,8 +85,9 @@ public final class EmptyTargetSource implements TargetSource, Serializable {
 	 * Create a new instance of the {@link EmptyTargetSource} class.
 	 * <p>This constructor is {@code private} to enforce the
 	 * Singleton pattern / factory method pattern.
+	 *
 	 * @param targetClass the target class to expose (may be {@code null})
-	 * @param isStatic whether the TargetSource is marked as static
+	 * @param isStatic    whether the TargetSource is marked as static
 	 */
 	private EmptyTargetSource(@Nullable Class<?> targetClass, boolean isStatic) {
 		this.targetClass = targetClass;

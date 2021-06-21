@@ -19,6 +19,8 @@ package org.aopalliance.intercept;
 import java.lang.reflect.Constructor;
 
 /**
+ * 构造方法调用的描述
+ * <p>
  * Description of an invocation to a constructor, given to an
  * interceptor upon constructor-call.
  *
@@ -31,9 +33,13 @@ import java.lang.reflect.Constructor;
 public interface ConstructorInvocation extends Invocation {
 
 	/**
+	 * 获取正在被调用的构造方法
+	 * 这个方法是 #getStaticPort() 方法的友好实现(返回相同的结果)
+	 * <p>
 	 * Get the constructor being called.
 	 * <p>This method is a friendly implementation of the
 	 * {@link Joinpoint#getStaticPart()} method (same result).
+	 *
 	 * @return the constructor being called
 	 */
 	Constructor<?> getConstructor();

@@ -25,6 +25,8 @@ import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.util.Assert;
 
 /**
+ * Aspect Advice/Advisor 优先级排序
+ * <p>
  * Orders AspectJ advice/advisors by precedence (<i>not</i> invocation order).
  *
  * <p>Given two pieces of advice, {@code a} and {@code b}:
@@ -68,6 +70,7 @@ class AspectJPrecedenceComparator implements Comparator<Advisor> {
 	/**
 	 * Create a AspectJPrecedenceComparator, using the given Comparator
 	 * for comparing {@link org.springframework.aop.Advisor} instances.
+	 *
 	 * @param advisorComparator the Comparator to use for Advisors
 	 */
 	public AspectJPrecedenceComparator(Comparator<? super Advisor> advisorComparator) {
@@ -85,6 +88,13 @@ class AspectJPrecedenceComparator implements Comparator<Advisor> {
 		return advisorPrecedence;
 	}
 
+	/**
+	 * 比较 Advisor 在 aspect 中的优先级顺序
+	 *
+	 * @param advisor1
+	 * @param advisor2
+	 * @return
+	 */
 	private int comparePrecedenceWithinAspect(Advisor advisor1, Advisor advisor2) {
 		boolean oneOrOtherIsAfterAdvice =
 				(AspectJAopUtils.isAfterAdvice(advisor1) || AspectJAopUtils.isAfterAdvice(advisor2));
@@ -96,40 +106,54 @@ class AspectJPrecedenceComparator implements Comparator<Advisor> {
 				// advice1 was declared before advice2
 				// so advice1 has lower precedence
 				return LOWER_PRECEDENCE;
-			}
-			else if (adviceDeclarationOrderDelta == 0) {
+			} else if (adviceDeclarationOrderDelta == 0) {
 				return SAME_PRECEDENCE;
-			}
-			else {
+			} else {
 				return HIGHER_PRECEDENCE;
 			}
-		}
-		else {
+		} else {
 			// the advice declared first has higher precedence
 			if (adviceDeclarationOrderDelta < 0) {
 				// advice1 was declared before advice2
 				// so advice1 has higher precedence
 				return HIGHER_PRECEDENCE;
-			}
-			else if (adviceDeclarationOrderDelta == 0) {
+			} else if (adviceDeclarationOrderDelta == 0) {
 				return SAME_PRECEDENCE;
-			}
-			else {
+			} else {
 				return LOWER_PRECEDENCE;
 			}
 		}
 	}
 
+	/**
+	 * Advisor 是否定义在相同的 Aspect 中
+	 *
+	 * @param advisor1
+	 * @param advisor2
+	 * @return
+	 */
 	private boolean declaredInSameAspect(Advisor advisor1, Advisor advisor2) {
 		return (hasAspectName(advisor1) && hasAspectName(advisor2) &&
 				getAspectName(advisor1).equals(getAspectName(advisor2)));
 	}
 
+	/**
+	 * Advisor 是否具有 aspect 名称
+	 *
+	 * @param anAdvisor
+	 * @return
+	 */
 	private boolean hasAspectName(Advisor anAdvisor) {
 		return (anAdvisor instanceof AspectJPrecedenceInformation ||
 				anAdvisor.getAdvice() instanceof AspectJPrecedenceInformation);
 	}
 
+	/**
+	 * 获取 aspect 名称
+	 *
+	 * @param anAdvisor
+	 * @return
+	 */
 	// pre-condition is that hasAspectName returned true
 	private String getAspectName(Advisor anAdvisor) {
 		AspectJPrecedenceInformation pi = AspectJAopUtils.getAspectJPrecedenceInformationFor(anAdvisor);
@@ -137,13 +161,18 @@ class AspectJPrecedenceComparator implements Comparator<Advisor> {
 		return pi.getAspectName();
 	}
 
+	/**
+	 * 获取定义的顺序
+	 *
+	 * @param anAdvisor
+	 * @return
+	 */
 	private int getAspectDeclarationOrder(Advisor anAdvisor) {
 		AspectJPrecedenceInformation precedenceInfo =
-			AspectJAopUtils.getAspectJPrecedenceInformationFor(anAdvisor);
+				AspectJAopUtils.getAspectJPrecedenceInformationFor(anAdvisor);
 		if (precedenceInfo != null) {
 			return precedenceInfo.getDeclarationOrder();
-		}
-		else {
+		} else {
 			return 0;
 		}
 	}

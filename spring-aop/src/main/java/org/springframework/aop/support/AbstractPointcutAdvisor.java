@@ -27,15 +27,15 @@ import org.springframework.util.ObjectUtils;
 
 /**
  * PointcutAdvisor 接口的抽象基类
- *
+ * <p>
  * Abstract base class for {@link org.springframework.aop.PointcutAdvisor}
  * implementations. Can be subclassed for returning a specific pointcut/advice
  * or a freely configurable pointcut/advice.
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since 1.1.2
  * @see AbstractGenericPointcutAdvisor
+ * @since 1.1.2
  */
 @SuppressWarnings("serial")
 public abstract class AbstractPointcutAdvisor implements PointcutAdvisor, Ordered, Serializable {

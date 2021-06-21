@@ -24,6 +24,8 @@ import org.springframework.aop.Advisor;
 /**
  * 扩展 Spring AOP 框架的接口，允许处理新的 Advisor 和 Advice 类型
  * <p>
+ * 适配器模式，将 Advisor 适配为 MethodInterceptor
+ * <p>
  * Interface allowing extension to the Spring AOP framework to allow
  * handling of new Advisors and Advice types.
  *

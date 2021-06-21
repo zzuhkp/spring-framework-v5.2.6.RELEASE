@@ -31,6 +31,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 从 BeanFactory 中检索 Advisor 类型的 bean 的帮助类
+ * <p>
  * Helper for retrieving standard Spring Advisors from a BeanFactory,
  * for use with auto-proxying.
  *

@@ -23,6 +23,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.transaction.TransactionDefinition;
 
 /**
+ * 默认的事务定义
+ * <p>
  * Default implementation of the {@link TransactionDefinition} interface,
  * offering bean-style configuration and sensible default values
  * (PROPAGATION_REQUIRED, ISOLATION_DEFAULT, TIMEOUT_DEFAULT, readOnly=false).
@@ -36,28 +38,50 @@ import org.springframework.transaction.TransactionDefinition;
 @SuppressWarnings("serial")
 public class DefaultTransactionDefinition implements TransactionDefinition, Serializable {
 
-	/** Prefix for the propagation constants defined in TransactionDefinition. */
+	/**
+	 * 事务传播行为常量的前缀
+	 * <p>
+	 * Prefix for the propagation constants defined in TransactionDefinition.
+	 */
 	public static final String PREFIX_PROPAGATION = "PROPAGATION_";
 
-	/** Prefix for the isolation constants defined in TransactionDefinition. */
+	/**
+	 * 事务隔离级别常量的前缀
+	 * <p>
+	 * Prefix for the isolation constants defined in TransactionDefinition.
+	 */
 	public static final String PREFIX_ISOLATION = "ISOLATION_";
 
-	/** Prefix for transaction timeout values in description strings. */
+	/**
+	 * Prefix for transaction timeout values in description strings.
+	 */
 	public static final String PREFIX_TIMEOUT = "timeout_";
 
-	/** Marker for read-only transactions in description strings. */
+	/**
+	 * Marker for read-only transactions in description strings.
+	 */
 	public static final String READ_ONLY_MARKER = "readOnly";
 
 
-	/** Constants instance for TransactionDefinition. */
+	/**
+	 * 常量
+	 * <p>
+	 * Constants instance for TransactionDefinition.
+	 */
 	static final Constants constants = new Constants(TransactionDefinition.class);
 
 	private int propagationBehavior = PROPAGATION_REQUIRED;
 
 	private int isolationLevel = ISOLATION_DEFAULT;
 
+	/**
+	 * 事务超时时间
+	 */
 	private int timeout = TIMEOUT_DEFAULT;
 
+	/**
+	 * 事务是否只读
+	 */
 	private boolean readOnly = false;
 
 	@Nullable
@@ -67,6 +91,7 @@ public class DefaultTransactionDefinition implements TransactionDefinition, Seri
 	/**
 	 * Create a new DefaultTransactionDefinition, with default settings.
 	 * Can be modified through bean property setters.
+	 *
 	 * @see #setPropagationBehavior
 	 * @see #setIsolationLevel
 	 * @see #setTimeout
@@ -78,6 +103,7 @@ public class DefaultTransactionDefinition implements TransactionDefinition, Seri
 
 	/**
 	 * Copy constructor. Definition can be modified through bean property setters.
+	 *
 	 * @see #setPropagationBehavior
 	 * @see #setIsolationLevel
 	 * @see #setTimeout
@@ -95,8 +121,9 @@ public class DefaultTransactionDefinition implements TransactionDefinition, Seri
 	/**
 	 * Create a new DefaultTransactionDefinition with the given
 	 * propagation behavior. Can be modified through bean property setters.
+	 *
 	 * @param propagationBehavior one of the propagation constants in the
-	 * TransactionDefinition interface
+	 *                            TransactionDefinition interface
 	 * @see #setIsolationLevel
 	 * @see #setTimeout
 	 * @see #setReadOnly
@@ -107,11 +134,14 @@ public class DefaultTransactionDefinition implements TransactionDefinition, Seri
 
 
 	/**
+	 * 根据事务传播行为常量名称设置事务传播行为
+	 * <p>
 	 * Set the propagation behavior by the name of the corresponding constant in
 	 * TransactionDefinition, e.g. "PROPAGATION_REQUIRED".
+	 *
 	 * @param constantName name of the constant
 	 * @throws IllegalArgumentException if the supplied value is not resolvable
-	 * to one of the {@code PROPAGATION_} constants or is {@code null}
+	 *                                  to one of the {@code PROPAGATION_} constants or is {@code null}
 	 * @see #setPropagationBehavior
 	 * @see #PROPAGATION_REQUIRED
 	 */
@@ -123,6 +153,8 @@ public class DefaultTransactionDefinition implements TransactionDefinition, Seri
 	}
 
 	/**
+	 * 设置事务传播行为
+	 * <p>
 	 * Set the propagation behavior. Must be one of the propagation constants
 	 * in the TransactionDefinition interface. Default is PROPAGATION_REQUIRED.
 	 * <p>Exclusively designed for use with {@link #PROPAGATION_REQUIRED} or
@@ -133,8 +165,9 @@ public class DefaultTransactionDefinition implements TransactionDefinition, Seri
 	 * isolation level.
 	 * <p>Note that a transaction manager that does not support custom isolation levels
 	 * will throw an exception when given any other level than {@link #ISOLATION_DEFAULT}.
+	 *
 	 * @throws IllegalArgumentException if the supplied value is not one of the
-	 * {@code PROPAGATION_} constants
+	 *                                  {@code PROPAGATION_} constants
 	 * @see #PROPAGATION_REQUIRED
 	 */
 	public final void setPropagationBehavior(int propagationBehavior) {
@@ -150,11 +183,14 @@ public class DefaultTransactionDefinition implements TransactionDefinition, Seri
 	}
 
 	/**
+	 * 根据事务隔离级别名称设置事务隔离级别
+	 * <p>
 	 * Set the isolation level by the name of the corresponding constant in
 	 * TransactionDefinition, e.g. "ISOLATION_DEFAULT".
+	 *
 	 * @param constantName name of the constant
 	 * @throws IllegalArgumentException if the supplied value is not resolvable
-	 * to one of the {@code ISOLATION_} constants or is {@code null}
+	 *                                  to one of the {@code ISOLATION_} constants or is {@code null}
 	 * @see #setIsolationLevel
 	 * @see #ISOLATION_DEFAULT
 	 */
@@ -166,6 +202,8 @@ public class DefaultTransactionDefinition implements TransactionDefinition, Seri
 	}
 
 	/**
+	 * 设置事务隔离级别
+	 * <p>
 	 * Set the isolation level. Must be one of the isolation constants
 	 * in the TransactionDefinition interface. Default is ISOLATION_DEFAULT.
 	 * <p>Exclusively designed for use with {@link #PROPAGATION_REQUIRED} or
@@ -176,8 +214,9 @@ public class DefaultTransactionDefinition implements TransactionDefinition, Seri
 	 * isolation level.
 	 * <p>Note that a transaction manager that does not support custom isolation levels
 	 * will throw an exception when given any other level than {@link #ISOLATION_DEFAULT}.
+	 *
 	 * @throws IllegalArgumentException if the supplied value is not one of the
-	 * {@code ISOLATION_} constants
+	 *                                  {@code ISOLATION_} constants
 	 * @see #ISOLATION_DEFAULT
 	 */
 	public final void setIsolationLevel(int isolationLevel) {
@@ -193,6 +232,8 @@ public class DefaultTransactionDefinition implements TransactionDefinition, Seri
 	}
 
 	/**
+	 * 设置事务超时时间
+	 * <p>
 	 * Set the timeout to apply, as number of seconds.
 	 * Default is TIMEOUT_DEFAULT (-1).
 	 * <p>Exclusively designed for use with {@link #PROPAGATION_REQUIRED} or
@@ -200,6 +241,7 @@ public class DefaultTransactionDefinition implements TransactionDefinition, Seri
 	 * transactions.
 	 * <p>Note that a transaction manager that does not support timeouts will throw
 	 * an exception when given any other timeout than {@link #TIMEOUT_DEFAULT}.
+	 *
 	 * @see #TIMEOUT_DEFAULT
 	 */
 	public final void setTimeout(int timeout) {
@@ -215,6 +257,8 @@ public class DefaultTransactionDefinition implements TransactionDefinition, Seri
 	}
 
 	/**
+	 * 设置事务是否只读
+	 * <p>
 	 * Set whether to optimize as read-only transaction.
 	 * Default is "false".
 	 * <p>The read-only flag applies to any transaction context, whether backed
@@ -238,6 +282,7 @@ public class DefaultTransactionDefinition implements TransactionDefinition, Seri
 	}
 
 	/**
+	 * 设置事务名称
 	 * Set the name of this transaction. Default is none.
 	 * <p>This will be used as transaction name to be shown in a
 	 * transaction monitor, if applicable (for example, WebLogic's).
@@ -255,6 +300,7 @@ public class DefaultTransactionDefinition implements TransactionDefinition, Seri
 
 	/**
 	 * This implementation compares the {@code toString()} results.
+	 *
 	 * @see #toString()
 	 */
 	@Override
@@ -264,6 +310,7 @@ public class DefaultTransactionDefinition implements TransactionDefinition, Seri
 
 	/**
 	 * This implementation returns {@code toString()}'s hash code.
+	 *
 	 * @see #toString()
 	 */
 	@Override
@@ -280,6 +327,7 @@ public class DefaultTransactionDefinition implements TransactionDefinition, Seri
 	 * <p>Has to be overridden in subclasses for correct {@code equals}
 	 * and {@code hashCode} behavior. Alternatively, {@link #equals}
 	 * and {@link #hashCode} can be overridden themselves.
+	 *
 	 * @see #getDefinitionDescription()
 	 * @see org.springframework.transaction.interceptor.TransactionAttributeEditor
 	 */

@@ -17,7 +17,7 @@
 package org.springframework.aop.framework.adapter;
 
 /**
- * 提供 DefaultAdvisorAdapterRegistry 实例
+ * 全局的 AdvisorAdapter 注册中心
  * <p>
  * Singleton to publish a shared DefaultAdvisorAdapterRegistry instance.
  *

@@ -19,6 +19,8 @@ package org.springframework.aop.target;
 import org.springframework.beans.BeansException;
 
 /**
+ * 每次都会创建新的目标对象的 TargetSource
+ * <p>
  * {@link org.springframework.aop.TargetSource} implementation that
  * creates a new instance of the target bean for each request,
  * destroying each instance on release (after each request).
@@ -36,6 +38,7 @@ public class PrototypeTargetSource extends AbstractPrototypeBasedTargetSource {
 
 	/**
 	 * Obtain a new prototype instance for every call.
+	 *
 	 * @see #newPrototypeInstance()
 	 */
 	@Override
@@ -45,6 +48,7 @@ public class PrototypeTargetSource extends AbstractPrototypeBasedTargetSource {
 
 	/**
 	 * Destroy the given independent instance.
+	 *
 	 * @see #destroyPrototypeInstance
 	 */
 	@Override

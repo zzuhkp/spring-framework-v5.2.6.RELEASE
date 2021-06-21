@@ -74,7 +74,7 @@ public class IntroductionInfoSupport implements IntroductionInfo, Serializable {
 	}
 
 	/**
-	 * 确定给定接口是否是发布接口的父接口
+	 * 确定给定接口是否是发布接口中的(父)接口
 	 * <p>
 	 * Check whether the specified interfaces is a published introduction interface.
 	 *
@@ -91,7 +91,7 @@ public class IntroductionInfoSupport implements IntroductionInfo, Serializable {
 	}
 
 	/**
-	 * 获取代理实现的接口
+	 * 添加代理实现的接口
 	 * <p>
 	 * Publish all interfaces that the given delegate implements at the proxy level.
 	 *

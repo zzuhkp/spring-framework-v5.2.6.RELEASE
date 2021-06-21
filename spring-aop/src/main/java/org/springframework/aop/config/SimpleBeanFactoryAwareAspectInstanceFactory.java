@@ -26,6 +26,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
+ * 使用配置的 bean 名称获取 aspect 实例的 AspectInstanceFactory
+ * <p>
  * Implementation of {@link AspectInstanceFactory} that locates the aspect from the
  * {@link org.springframework.beans.factory.BeanFactory} using a configured bean name.
  *
@@ -59,6 +61,7 @@ public class SimpleBeanFactoryAwareAspectInstanceFactory implements AspectInstan
 
 	/**
 	 * Look up the aspect bean from the {@link BeanFactory} and returns it.
+	 *
 	 * @see #setAspectBeanName
 	 */
 	@Override
@@ -73,8 +76,7 @@ public class SimpleBeanFactoryAwareAspectInstanceFactory implements AspectInstan
 	public ClassLoader getAspectClassLoader() {
 		if (this.beanFactory instanceof ConfigurableBeanFactory) {
 			return ((ConfigurableBeanFactory) this.beanFactory).getBeanClassLoader();
-		}
-		else {
+		} else {
 			return ClassUtils.getDefaultClassLoader();
 		}
 	}

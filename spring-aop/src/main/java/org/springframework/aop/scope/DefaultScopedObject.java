@@ -22,6 +22,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.util.Assert;
 
 /**
+ * 从 BeanFactory 中获取目标对象的 ScopedObject
+ * <p>
  * Default implementation of the {@link ScopedObject} interface.
  *
  * <p>Simply delegates the calls to the underlying
@@ -30,21 +32,25 @@ import org.springframework.util.Assert;
  * {@link ConfigurableBeanFactory#destroyScopedBean(String)}).
  *
  * @author Juergen Hoeller
- * @since 2.0
  * @see org.springframework.beans.factory.BeanFactory#getBean
  * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#destroyScopedBean
+ * @since 2.0
  */
 @SuppressWarnings("serial")
 public class DefaultScopedObject implements ScopedObject, Serializable {
 
 	private final ConfigurableBeanFactory beanFactory;
 
+	/**
+	 * 目标 bean 名称
+	 */
 	private final String targetBeanName;
 
 
 	/**
 	 * Creates a new instance of the {@link DefaultScopedObject} class.
-	 * @param beanFactory the {@link ConfigurableBeanFactory} that holds the scoped target object
+	 *
+	 * @param beanFactory    the {@link ConfigurableBeanFactory} that holds the scoped target object
 	 * @param targetBeanName the name of the target bean
 	 */
 	public DefaultScopedObject(ConfigurableBeanFactory beanFactory, String targetBeanName) {

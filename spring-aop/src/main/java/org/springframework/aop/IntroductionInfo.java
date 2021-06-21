@@ -17,7 +17,7 @@
 package org.springframework.aop;
 
 /**
- * 提供描述 Introduction 所需信息的接口
+ * 提供了描述 Introduction 所需信息的接口
  * <p>
  * Interface supplying the information necessary to describe an introduction.
  *

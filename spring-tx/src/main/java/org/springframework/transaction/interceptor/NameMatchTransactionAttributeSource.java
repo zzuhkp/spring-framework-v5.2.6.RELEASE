@@ -36,9 +36,9 @@ import org.springframework.util.PatternMatchUtils;
  * allows attributes to be matched by registered name.
  *
  * @author Juergen Hoeller
- * @since 21.08.2003
  * @see #isMatch
  * @see MethodMapTransactionAttributeSource
+ * @since 21.08.2003
  */
 @SuppressWarnings("serial")
 public class NameMatchTransactionAttributeSource implements TransactionAttributeSource, Serializable {
@@ -49,7 +49,11 @@ public class NameMatchTransactionAttributeSource implements TransactionAttribute
 	 */
 	protected static final Log logger = LogFactory.getLog(NameMatchTransactionAttributeSource.class);
 
-	/** Keys are method names; values are TransactionAttributes. */
+	/**
+	 * 方法名->事务属性
+	 * <p>
+	 * Keys are method names; values are TransactionAttributes.
+	 */
 	private Map<String, TransactionAttribute> nameMap = new HashMap<>();
 
 
@@ -57,6 +61,7 @@ public class NameMatchTransactionAttributeSource implements TransactionAttribute
 	 * Set a name/attribute map, consisting of method names
 	 * (e.g. "myMethod") and TransactionAttribute instances
 	 * (or Strings to be converted to TransactionAttribute instances).
+	 *
 	 * @see TransactionAttribute
 	 * @see TransactionAttributeEditor
 	 */
@@ -65,9 +70,12 @@ public class NameMatchTransactionAttributeSource implements TransactionAttribute
 	}
 
 	/**
+	 * 设置事务属性
+	 * <p>
 	 * Parses the given properties into a name/attribute map.
 	 * Expects method names as keys and String attributes definitions as values,
 	 * parsable into TransactionAttribute instances via TransactionAttributeEditor.
+	 *
 	 * @see #setNameMap
 	 * @see TransactionAttributeEditor
 	 */
@@ -84,11 +92,14 @@ public class NameMatchTransactionAttributeSource implements TransactionAttribute
 	}
 
 	/**
+	 * 添加事务方法
+	 * <p>
 	 * Add an attribute for a transactional method.
 	 * <p>Method names can be exact matches, or of the pattern "xxx*",
 	 * "*xxx" or "*xxx*" for matching multiple methods.
+	 *
 	 * @param methodName the name of the method
-	 * @param attr attribute associated with the method
+	 * @param attr       attribute associated with the method
 	 */
 	public void addTransactionalMethod(String methodName, TransactionAttribute attr) {
 		if (logger.isDebugEnabled()) {
@@ -115,6 +126,7 @@ public class NameMatchTransactionAttributeSource implements TransactionAttribute
 			for (String mappedName : this.nameMap.keySet()) {
 				if (isMatch(methodName, mappedName) &&
 						(bestNameMatch == null || bestNameMatch.length() <= mappedName.length())) {
+					// 取匹配的方法中最长的方法名对应的事务属性
 					attr = this.nameMap.get(mappedName);
 					bestNameMatch = mappedName;
 				}
@@ -125,9 +137,12 @@ public class NameMatchTransactionAttributeSource implements TransactionAttribute
 	}
 
 	/**
+	 * 方法名是否匹配
+	 * <p>
 	 * Return if the given method name matches the mapped name.
 	 * <p>The default implementation checks for "xxx*", "*xxx" and "*xxx*" matches,
 	 * as well as direct equality. Can be overridden in subclasses.
+	 *
 	 * @param methodName the method name of the class
 	 * @param mappedName the name in the descriptor
 	 * @return if the names match

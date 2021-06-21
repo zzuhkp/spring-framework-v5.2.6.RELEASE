@@ -16,8 +16,6 @@
 
 package org.springframework.transaction.annotation;
 
-import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
@@ -32,22 +30,31 @@ import org.springframework.transaction.config.TransactionManagementConfigUtils;
 import org.springframework.transaction.event.TransactionalEventListenerFactory;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collection;
+
 /**
+ * 抽象的事务管理器配置
+ * <p>
  * Abstract base {@code @Configuration} class providing common structure for enabling
  * Spring's annotation-driven transaction management capability.
  *
  * @author Chris Beams
  * @author Stephane Nicoll
- * @since 3.1
  * @see EnableTransactionManagement
+ * @since 3.1
  */
 @Configuration
 public abstract class AbstractTransactionManagementConfiguration implements ImportAware {
 
+	/**
+	 * @EnableTransactionManagement 注解属性
+	 */
 	@Nullable
 	protected AnnotationAttributes enableTx;
 
 	/**
+	 * 默认的事务管理器
+	 * <p>
 	 * Default transaction manager, as configured through a {@link TransactionManagementConfigurer}.
 	 */
 	@Nullable

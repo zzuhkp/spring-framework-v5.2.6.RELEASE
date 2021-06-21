@@ -20,7 +20,7 @@ import org.springframework.aop.aspectj.AspectInstanceFactory;
 import org.springframework.lang.Nullable;
 
 /**
- * AspectInstanceFactory 的子接口，返回 AspectJ 注解的 AspectMetadata
+ * AspectInstanceFactory 的子接口，返回 AspectJ 注解的 AspectMetadata。
  * <p>
  * Subinterface of {@link org.springframework.aop.aspectj.AspectInstanceFactory}
  * that returns {@link AspectMetadata} associated with AspectJ-annotated classes.

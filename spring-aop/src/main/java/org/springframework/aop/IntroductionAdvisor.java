@@ -17,6 +17,9 @@
 package org.springframework.aop;
 
 /**
+ * Introduction 和 Advisor 的结合，
+ * 提供了校验 Introduction 中的接口是否被 Advisor 中的 Advice 发布的方法
+ * <p>
  * Superinterface for advisors that perform one or more AOP <b>introductions</b>.
  *
  * <p>This interface cannot be implemented directly; subinterfaces must

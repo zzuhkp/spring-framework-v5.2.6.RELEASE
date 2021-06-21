@@ -1,4 +1,6 @@
 /**
+ * 允许 Spring AOP 框架处理任意 Advice 类型的 SPI 包（将 Advice 适配为 MethodInterceptor）
+ * <p>
  * SPI package allowing Spring AOP framework to handle arbitrary advice types.
  *
  * <p>Users who want merely to <i>use</i> the Spring AOP framework, rather than extend

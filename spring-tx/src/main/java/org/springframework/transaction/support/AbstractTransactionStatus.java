@@ -24,6 +24,8 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.TransactionUsageException;
 
 /**
+ * TransactionStatus 的抽象基类
+ * <p>
  * Abstract base implementation of the
  * {@link org.springframework.transaction.TransactionStatus} interface.
  *
@@ -35,7 +37,6 @@ import org.springframework.transaction.TransactionUsageException;
  * underlying transaction object, and no transaction synchronization mechanism.
  *
  * @author Juergen Hoeller
- * @since 1.2.3
  * @see #setRollbackOnly()
  * @see #isRollbackOnly()
  * @see #setCompleted()
@@ -43,13 +44,23 @@ import org.springframework.transaction.TransactionUsageException;
  * @see #getSavepointManager()
  * @see SimpleTransactionStatus
  * @see DefaultTransactionStatus
+ * @since 1.2.3
  */
 public abstract class AbstractTransactionStatus implements TransactionStatus {
 
+	/**
+	 * 事务是否仅回滚
+	 */
 	private boolean rollbackOnly = false;
 
+	/**
+	 * 事务是否已完成
+	 */
 	private boolean completed = false;
 
+	/**
+	 * 保存点
+	 */
 	@Nullable
 	private Object savepoint;
 
@@ -64,18 +75,24 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 	}
 
 	/**
+	 * 是否需要回滚事务
+	 * <p>
 	 * Determine the rollback-only flag via checking both the local rollback-only flag
 	 * of this TransactionStatus and the global rollback-only flag of the underlying
 	 * transaction, if any.
+	 *
 	 * @see #isLocalRollbackOnly()
 	 * @see #isGlobalRollbackOnly()
 	 */
 	@Override
 	public boolean isRollbackOnly() {
+		// 局部回滚或全局回滚即回滚
 		return (isLocalRollbackOnly() || isGlobalRollbackOnly());
 	}
 
 	/**
+	 * 本地 rollbackOnly
+	 * <p>
 	 * Determine the rollback-only flag via checking this TransactionStatus.
 	 * <p>Will only return "true" if the application called {@code setRollbackOnly}
 	 * on this TransactionStatus object.
@@ -85,6 +102,10 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 	}
 
 	/**
+	 * 全局 rollbackOnly
+	 * <p>
+	 * 模板方法
+	 * <p>
 	 * Template method for determining the global rollback-only flag of the
 	 * underlying transaction, if any.
 	 * <p>This implementation always returns {@code false}.
@@ -94,6 +115,7 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 	}
 
 	/**
+	 * 设置事务已完成
 	 * Mark this transaction as completed, that is, committed or rolled back.
 	 */
 	public void setCompleted() {
@@ -116,7 +138,10 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 	}
 
 	/**
+	 * 设置保存点
+	 * <p>
 	 * Set a savepoint for this transaction. Useful for PROPAGATION_NESTED.
+	 *
 	 * @see org.springframework.transaction.TransactionDefinition#PROPAGATION_NESTED
 	 */
 	protected void setSavepoint(@Nullable Object savepoint) {
@@ -132,15 +157,19 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 	}
 
 	/**
+	 * 创建并设置保存点
+	 * <p>
 	 * Create a savepoint and hold it for the transaction.
-	 * @throws org.springframework.transaction.NestedTransactionNotSupportedException
-	 * if the underlying transaction does not support savepoints
+	 *
+	 * @throws org.springframework.transaction.NestedTransactionNotSupportedException if the underlying transaction does not support savepoints
 	 */
 	public void createAndHoldSavepoint() throws TransactionException {
 		setSavepoint(getSavepointManager().createSavepoint());
 	}
 
 	/**
+	 * 回滚到持有的保存点
+	 * <p>
 	 * Roll back to the savepoint that is held for the transaction
 	 * and release the savepoint right afterwards.
 	 */
@@ -156,6 +185,8 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 	}
 
 	/**
+	 * 释放持有的保存点
+	 * <p>
 	 * Release the savepoint that is held for the transaction.
 	 */
 	public void releaseHeldSavepoint() throws TransactionException {
@@ -176,6 +207,7 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 	/**
 	 * This implementation delegates to a SavepointManager for the
 	 * underlying transaction, if possible.
+	 *
 	 * @see #getSavepointManager()
 	 * @see SavepointManager#createSavepoint()
 	 */
@@ -187,6 +219,7 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 	/**
 	 * This implementation delegates to a SavepointManager for the
 	 * underlying transaction, if possible.
+	 *
 	 * @see #getSavepointManager()
 	 * @see SavepointManager#rollbackToSavepoint(Object)
 	 */
@@ -198,6 +231,7 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 	/**
 	 * This implementation delegates to a SavepointManager for the
 	 * underlying transaction, if possible.
+	 *
 	 * @see #getSavepointManager()
 	 * @see SavepointManager#releaseSavepoint(Object)
 	 */
@@ -207,10 +241,12 @@ public abstract class AbstractTransactionStatus implements TransactionStatus {
 	}
 
 	/**
+	 * 获取保存点管理器
+	 * <p>
 	 * Return a SavepointManager for the underlying transaction, if possible.
 	 * <p>Default implementation always throws a NestedTransactionNotSupportedException.
-	 * @throws org.springframework.transaction.NestedTransactionNotSupportedException
-	 * if the underlying transaction does not support savepoints
+	 *
+	 * @throws org.springframework.transaction.NestedTransactionNotSupportedException if the underlying transaction does not support savepoints
 	 */
 	protected SavepointManager getSavepointManager() {
 		throw new NestedTransactionNotSupportedException("This transaction does not support savepoints");

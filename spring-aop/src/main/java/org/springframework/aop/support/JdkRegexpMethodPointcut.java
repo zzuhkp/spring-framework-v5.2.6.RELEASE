@@ -41,17 +41,22 @@ import java.util.regex.PatternSyntaxException;
 public class JdkRegexpMethodPointcut extends AbstractRegexpMethodPointcut {
 
 	/**
+	 * 编译后的正则
 	 * Compiled form of the patterns.
 	 */
 	private Pattern[] compiledPatterns = new Pattern[0];
 
 	/**
+	 * 编译后的排除的正则
+	 * <p>
 	 * Compiled form of the exclusion patterns.
 	 */
 	private Pattern[] compiledExclusionPatterns = new Pattern[0];
 
 
 	/**
+	 * 初始化正则
+	 * <p>
 	 * Initialize {@link Pattern Patterns} from the supplied {@code String[]}.
 	 */
 	@Override
@@ -60,6 +65,8 @@ public class JdkRegexpMethodPointcut extends AbstractRegexpMethodPointcut {
 	}
 
 	/**
+	 * 初始化排除的正则
+	 * <p>
 	 * Initialize exclusion {@link Pattern Patterns} from the supplied {@code String[]}.
 	 */
 	@Override
@@ -68,6 +75,8 @@ public class JdkRegexpMethodPointcut extends AbstractRegexpMethodPointcut {
 	}
 
 	/**
+	 * 字符串是否匹配正则
+	 * <p>
 	 * Returns {@code true} if the {@link Pattern} at index {@code patternIndex}
 	 * matches the supplied candidate {@code String}.
 	 */
@@ -78,6 +87,8 @@ public class JdkRegexpMethodPointcut extends AbstractRegexpMethodPointcut {
 	}
 
 	/**
+	 * 字符串是否匹配排除的正则
+	 * <p>
 	 * Returns {@code true} if the exclusion {@link Pattern} at index {@code patternIndex}
 	 * matches the supplied candidate {@code String}.
 	 */
@@ -89,6 +100,8 @@ public class JdkRegexpMethodPointcut extends AbstractRegexpMethodPointcut {
 
 
 	/**
+	 * 编译正则表达式
+	 * <p>
 	 * Compiles the supplied {@code String[]} into an array of
 	 * {@link Pattern} objects and returns that array.
 	 */

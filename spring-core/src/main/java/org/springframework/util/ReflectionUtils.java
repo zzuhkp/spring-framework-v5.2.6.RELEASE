@@ -229,6 +229,8 @@ public abstract class ReflectionUtils {
 	}
 
 	/**
+	 * 从给定类中查找给定签名的方法
+	 * <p>
 	 * Attempt to find a {@link Method} on the supplied class with the supplied name
 	 * and parameter types. Searches all superclasses up to {@code Object}.
 	 * <p>Returns {@code null} if no {@link Method} can be found.
@@ -252,11 +254,19 @@ public abstract class ReflectionUtils {
 					return method;
 				}
 			}
+			// 循环从父类中查找
 			searchType = searchType.getSuperclass();
 		}
 		return null;
 	}
 
+	/**
+	 * 给定方法是否有给定的参数
+	 *
+	 * @param method
+	 * @param paramTypes
+	 * @return
+	 */
 	private static boolean hasSameParams(Method method, Class<?>[] paramTypes) {
 		return (paramTypes.length == method.getParameterCount() &&
 				Arrays.equals(paramTypes, method.getParameterTypes()));
@@ -470,12 +480,20 @@ public abstract class ReflectionUtils {
 		return getDeclaredMethods(clazz, true);
 	}
 
+	/**
+	 * 获取给定类中定义的方法
+	 *
+	 * @param clazz
+	 * @param defensive
+	 * @return
+	 */
 	private static Method[] getDeclaredMethods(Class<?> clazz, boolean defensive) {
 		Assert.notNull(clazz, "Class must not be null");
 		Method[] result = declaredMethodsCache.get(clazz);
 		if (result == null) {
 			try {
 				Method[] declaredMethods = clazz.getDeclaredMethods();
+				// 除了直接获取类上的方法还获取接口上的默认方法
 				List<Method> defaultMethods = findConcreteMethodsOnInterfaces(clazz);
 				if (defaultMethods != null) {
 					result = new Method[declaredMethods.length + defaultMethods.size()];
@@ -497,6 +515,12 @@ public abstract class ReflectionUtils {
 		return (result.length == 0 || !defensive) ? result : result.clone();
 	}
 
+	/**
+	 * 获取给定类的接口上的非抽象方法
+	 *
+	 * @param clazz
+	 * @return
+	 */
 	@Nullable
 	private static List<Method> findConcreteMethodsOnInterfaces(Class<?> clazz) {
 		List<Method> result = null;

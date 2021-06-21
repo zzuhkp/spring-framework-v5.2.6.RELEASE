@@ -16,14 +16,8 @@
 
 package org.springframework.aop.aspectj.annotation;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
-import java.lang.reflect.Method;
-
 import org.aopalliance.aop.Advice;
 import org.aspectj.lang.reflect.PerClauseKind;
-
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.aspectj.AspectJPrecedenceInformation;
@@ -33,7 +27,16 @@ import org.springframework.aop.support.DynamicMethodMatcherPointcut;
 import org.springframework.aop.support.Pointcuts;
 import org.springframework.lang.Nullable;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.lang.reflect.Method;
+
 /**
+ * AspectJPointcutAdvisor 的实现。
+ * <p>
+ * 每个目标方法对应一个 Advisor 的实例。
+ * <p>
  * Internal implementation of AspectJPointcutAdvisor.
  * Note that there will be one instance of this advisor for each target method.
  *
@@ -247,7 +250,7 @@ final class InstantiationModelAwarePointcutAdvisorImpl
 
 	/**
 	 * 确定 Advice 的类型
-	 *
+	 * <p>
 	 * Duplicates some logic from getAdvice, but importantly does not force
 	 * creation of the advice.
 	 */
@@ -305,10 +308,19 @@ final class InstantiationModelAwarePointcutAdvisorImpl
 	 */
 	private static final class PerTargetInstantiationModelPointcut extends DynamicMethodMatcherPointcut {
 
+		/**
+		 * @Aspect 注解中指定的 Pointcut
+		 */
 		private final AspectJExpressionPointcut declaredPointcut;
 
+		/**
+		 * Advice 方法上注解指定的 Pointcut
+		 */
 		private final Pointcut preInstantiationPointcut;
 
+		/**
+		 * Aspect 实例工厂
+		 */
 		@Nullable
 		private LazySingletonAspectInstanceFactoryDecorator aspectInstanceFactory;
 

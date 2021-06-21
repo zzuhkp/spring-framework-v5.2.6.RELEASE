@@ -21,6 +21,8 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.aop.Advisor;
 
 /**
+ * 注册 AdvisorAdapter 的接口
+ * <p>
  * Interface for registries of Advisor adapters.
  *
  * <p><i>This is an SPI interface, not to be implemented by any Spring user.</i>
@@ -31,7 +33,8 @@ import org.springframework.aop.Advisor;
 public interface AdvisorAdapterRegistry {
 
 	/**
-	 * 包装 Advice
+	 * 包装 Advice，
+	 * 默认情况支持 MethodInterceptor，MethodBeforeAdvice，AfterReturningAdvice，ThrowsAdvice
 	 * <p>
 	 * Return an {@link Advisor} wrapping the given advice.
 	 * <p>Should by default at least support

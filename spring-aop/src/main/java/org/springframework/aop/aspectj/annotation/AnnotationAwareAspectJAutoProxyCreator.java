@@ -16,10 +16,6 @@
 
 package org.springframework.aop.aspectj.annotation;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import org.springframework.aop.Advisor;
 import org.springframework.aop.aspectj.autoproxy.AspectJAwareAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -27,8 +23,15 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
 /**
- * AspectJAwareAdvisorAutoProxyCreator 的子类，处理所有 Spring 应用上下文中的 AspectJ 注解
+ * AspectJAwareAdvisorAutoProxyCreator 的子类，处理所有 Spring 应用上下文中的 AspectJ 注解；
+ * <p>
+ * 和父类相比，添加了从 @Aspect bean 获取 Advisor 的能力、并支持设置处理的 @Aspect bean 名称的正则表达式
+ *
  * <p>
  * {@link AspectJAwareAdvisorAutoProxyCreator} subclass that processes all AspectJ
  * annotation aspects in the current application context, as well as Spring Advisors.
@@ -51,17 +54,28 @@ import org.springframework.util.Assert;
 @SuppressWarnings("serial")
 public class AnnotationAwareAspectJAutoProxyCreator extends AspectJAwareAdvisorAutoProxyCreator {
 
+	/**
+	 * 处理的 @AspectJ bean 名称需要满足的正则表达式
+	 */
 	@Nullable
 	private List<Pattern> includePatterns;
 
+	/**
+	 * 创建 Advisor 的工厂
+	 */
 	@Nullable
 	private AspectJAdvisorFactory aspectJAdvisorFactory;
 
+	/**
+	 * Advisor 构建器
+	 */
 	@Nullable
 	private BeanFactoryAspectJAdvisorsBuilder aspectJAdvisorsBuilder;
 
 
 	/**
+	 * 设置处理的 @Aspect bean 名称需要满足的正则表达式
+	 * <p>
 	 * Set a list of regex patterns, matching eligible @AspectJ bean names.
 	 * <p>Default is to consider all @AspectJ beans as eligible.
 	 */
@@ -72,6 +86,11 @@ public class AnnotationAwareAspectJAutoProxyCreator extends AspectJAwareAdvisorA
 		}
 	}
 
+	/**
+	 * 设置根据 @Aspect bean 创建 Advisor 的工厂
+	 *
+	 * @param aspectJAdvisorFactory
+	 */
 	public void setAspectJAdvisorFactory(AspectJAdvisorFactory aspectJAdvisorFactory) {
 		Assert.notNull(aspectJAdvisorFactory, "AspectJAdvisorFactory must not be null");
 		this.aspectJAdvisorFactory = aspectJAdvisorFactory;
@@ -119,6 +138,8 @@ public class AnnotationAwareAspectJAutoProxyCreator extends AspectJAwareAdvisorA
 	}
 
 	/**
+	 * 检查给定的 @Aspect bean 是否符合正则表达式
+	 * <p>
 	 * Check whether the given aspect bean is eligible for auto-proxying.
 	 * <p>If no &lt;aop:include&gt; elements were used then "includePatterns" will be
 	 * {@code null} and all beans are included. If "includePatterns" is non-null,
@@ -139,6 +160,8 @@ public class AnnotationAwareAspectJAutoProxyCreator extends AspectJAwareAdvisorA
 
 
 	/**
+	 * BeanFactoryAspectJAdvisorsBuilder 的子类，委派给 AnnotationAwareAspectJAutoProxyCreator 处理
+	 * <p>
 	 * Subclass of BeanFactoryAspectJAdvisorsBuilderAdapter that delegates to
 	 * surrounding AnnotationAwareAspectJAutoProxyCreator facilities.
 	 */

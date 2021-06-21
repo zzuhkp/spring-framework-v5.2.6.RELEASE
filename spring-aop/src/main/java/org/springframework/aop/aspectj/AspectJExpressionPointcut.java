@@ -90,6 +90,7 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 	private static final Set<PointcutPrimitive> SUPPORTED_PRIMITIVES = new HashSet<>();
 
 	static {
+		// Spring 支持的切点指示符
 		SUPPORTED_PRIMITIVES.add(PointcutPrimitive.EXECUTION);
 		SUPPORTED_PRIMITIVES.add(PointcutPrimitive.ARGS);
 		SUPPORTED_PRIMITIVES.add(PointcutPrimitive.REFERENCE);
@@ -106,7 +107,7 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 	private static final Log logger = LogFactory.getLog(AspectJExpressionPointcut.class);
 
 	/**
-	 * 作用域
+	 * pointcut 所在的 aspect 类
 	 */
 	@Nullable
 	private Class<?> pointcutDeclarationScope;
@@ -133,6 +134,9 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 	@Nullable
 	private transient ClassLoader pointcutClassLoader;
 
+	/**
+	 * AspectJ 切点表达式
+	 */
 	@Nullable
 	private transient PointcutExpression pointcutExpression;
 
@@ -204,6 +208,8 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 
 
 	/**
+	 * 获取 AspectJ 底层的切点表达式
+	 * <p>
 	 * Check whether this pointcut is ready to match,
 	 * lazily building the underlying AspectJ pointcut expression.
 	 */
@@ -257,6 +263,8 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 	}
 
 	/**
+	 * 实例化底层的 AspectJ Pointcut 解析器
+	 * <p>
 	 * Initialize the underlying AspectJ pointcut parser.
 	 */
 	private PointcutParser initializePointcutParser(@Nullable ClassLoader classLoader) {
@@ -269,6 +277,8 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 
 
 	/**
+	 * 替换 Spring 支持的表达式为 AspectJ 中的表达式
+	 * <p>
 	 * If a pointcut expression has been specified in XML, the user cannot
 	 * write {@code and} as "&&" (though &amp;&amp; will work).
 	 * We also allow {@code and} between two pointcut sub-expressions.
@@ -283,6 +293,8 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 
 
 	/**
+	 * 获取底层的 AspectJ 切点表达式
+	 * <p>
 	 * Return the underlying AspectJ pointcut expression.
 	 */
 	public PointcutExpression getPointcutExpression() {
@@ -585,6 +597,8 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 
 
 	/**
+	 * Spring 扩展的 bean 指示符处理器
+	 * <p>
 	 * Handler for the Spring-specific {@code bean()} pointcut designator
 	 * extension to AspectJ.
 	 * <p>This handler must be added to each pointcut object that needs to
@@ -609,6 +623,8 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 
 
 	/**
+	 * BeanNamePointcutDesignatorHandler 的匹配器类
+	 * <p>
 	 * Matcher class for the BeanNamePointcutDesignatorHandler.
 	 * <p>Dynamic match tests for this matcher always return true,
 	 * since the matching decision is made at the proxy creation time.

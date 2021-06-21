@@ -17,7 +17,7 @@
 package org.springframework.aop;
 
 /**
- * 所有 Pointcut 驱动的 Advisor 的父接口
+ * 所有 Pointcut 驱动的 Advisor 的父接口。
  * <p>
  * Superinterface for all Advisors that are driven by a pointcut.
  * This covers nearly all advisors except introduction advisors,

@@ -23,14 +23,16 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 单例对象实现的 AspectInstanceFactory，每次调用 #getAspectInstance 方法返回相同的对象
+ * <p>
  * Implementation of {@link AspectInstanceFactory} that is backed by a
  * specified singleton object, returning the same instance for every
  * {@link #getAspectInstance()} call.
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since 2.0
  * @see SimpleAspectInstanceFactory
+ * @since 2.0
  */
 @SuppressWarnings("serial")
 public class SingletonAspectInstanceFactory implements AspectInstanceFactory, Serializable {
@@ -40,6 +42,7 @@ public class SingletonAspectInstanceFactory implements AspectInstanceFactory, Se
 
 	/**
 	 * Create a new SingletonAspectInstanceFactory for the given aspect instance.
+	 *
 	 * @param aspectInstance the singleton aspect instance
 	 */
 	public SingletonAspectInstanceFactory(Object aspectInstance) {
@@ -64,6 +67,7 @@ public class SingletonAspectInstanceFactory implements AspectInstanceFactory, Se
 	 * either an instance-specific order expressed through implementing
 	 * the {@link org.springframework.core.Ordered} interface,
 	 * or a fallback order.
+	 *
 	 * @see org.springframework.core.Ordered
 	 * @see #getOrderForAspectClass
 	 */
@@ -76,10 +80,13 @@ public class SingletonAspectInstanceFactory implements AspectInstanceFactory, Se
 	}
 
 	/**
+	 * 获取 order 失败后的回调
+	 * <p>
 	 * Determine a fallback order for the case that the aspect instance
 	 * does not express an instance-specific order through implementing
 	 * the {@link org.springframework.core.Ordered} interface.
 	 * <p>The default implementation simply returns {@code Ordered.LOWEST_PRECEDENCE}.
+	 *
 	 * @param aspectClass the aspect class
 	 */
 	protected int getOrderForAspectClass(Class<?> aspectClass) {

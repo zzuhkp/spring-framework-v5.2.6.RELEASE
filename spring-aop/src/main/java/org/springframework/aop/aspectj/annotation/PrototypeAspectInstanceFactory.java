@@ -21,6 +21,8 @@ import java.io.Serializable;
 import org.springframework.beans.factory.BeanFactory;
 
 /**
+ * 由 BeanFactory 提供的 prototype 作用域支持的 AspectInstanceFactory，用于增强语义，给定的 bean 作用域必须为 prototype
+ * <p>
  * {@link org.springframework.aop.aspectj.AspectInstanceFactory} backed by a
  * {@link BeanFactory}-provided prototype, enforcing prototype semantics.
  *

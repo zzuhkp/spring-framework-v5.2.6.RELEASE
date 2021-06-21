@@ -16,9 +16,9 @@
 
 package org.springframework.aop.framework;
 
-import java.io.Serializable;
-
 import org.springframework.util.Assert;
+
+import java.io.Serializable;
 
 /**
  * 用于创建代理的配置
@@ -38,27 +38,28 @@ public class ProxyConfig implements Serializable {
 	private static final long serialVersionUID = -8409359707199703185L;
 
 	/**
-	 * 是否直接代理目标类
+	 * 是否直接代理目标类，为 true 则根据目标类是否为接口决定使用 JDK 动态代理还是 Cglib 动态代理
 	 */
 	private boolean proxyTargetClass = false;
 
 	/**
-	 * 代理是否执行优化
+	 * 代理是否执行优化，为 true 则根据目标类是否为接口决定使用 JDK 动态代理还是 Cglib 动态代理
 	 */
 	private boolean optimize = false;
 
 	/**
-	 * 通过当前配置创建的代理是否应避免强制转换为 Advised
+	 * 通过当前配置创建的代理是否应避免强制转换为 Advised，
+	 * 即通过当前配置创建的代理是否不实现 Advised
 	 */
 	boolean opaque = false;
 
 	/**
-	 * AOP 代理是否应该将代理公开为 ThreadLocal，以便通过 AopContext 类进行检索
+	 * AOP 代理是否应该将代理公开到 ThreadLocal，以便通过 AopContext 类进行检索
 	 */
 	boolean exposeProxy = false;
 
 	/**
-	 * 当前配置是否被冻结
+	 * 当前配置是否被冻结，冻结后再修改配置将抛出异常
 	 */
 	private boolean frozen = false;
 
@@ -140,7 +141,7 @@ public class ProxyConfig implements Serializable {
 	}
 
 	/**
-	 * 设置 AOP 代理是否应该将代理公开为 ThreadLocal，以便通过 AopContext 类进行检索
+	 * 设置 AOP 代理是否应该将代理公开到 ThreadLocal，以便通过 AopContext 类进行检索
 	 * <p>
 	 * Set whether the proxy should be exposed by the AOP framework as a
 	 * ThreadLocal for retrieval via the AopContext class. This is useful
@@ -155,7 +156,7 @@ public class ProxyConfig implements Serializable {
 	}
 
 	/**
-	 * AOP 代理是否应该将代理公开为 ThreadLocal，以便通过 AopContext 类进行检索
+	 * AOP 代理是否应该将代理公开到 ThreadLocal，以便通过 AopContext 类进行检索
 	 * <p>
 	 * Return whether the AOP proxy will expose the AOP proxy for
 	 * each invocation.

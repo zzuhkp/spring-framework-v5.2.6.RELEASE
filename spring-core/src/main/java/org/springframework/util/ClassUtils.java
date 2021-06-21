@@ -16,31 +16,14 @@
 
 package org.springframework.util;
 
+import org.springframework.lang.Nullable;
+
 import java.beans.Introspector;
 import java.io.Closeable;
 import java.io.Externalizable;
 import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.StringJoiner;
-
-import org.springframework.lang.Nullable;
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * Miscellaneous {@code java.lang.Class} utility methods. Mainly for internal use within the framework.
@@ -369,6 +352,8 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 检查给定类是否对给定类加载器可见
+	 * <p>
 	 * Check whether the given class is visible in the given ClassLoader.
 	 *
 	 * @param clazz       the class to check (typically an interface)
@@ -437,6 +422,8 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 检查给定类是否由给定的类加载器加载
+	 * <p>
 	 * Check whether the given class is loadable in the given ClassLoader.
 	 *
 	 * @param clazz       the class to check (typically an interface)
@@ -726,6 +713,8 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 获取给定对象的所有接口
+	 * <p>
 	 * Return all interfaces that the given instance implements as a Set, including ones implemented by superclasses.
 	 *
 	 * @param instance the instance to analyze for interfaces
@@ -737,6 +726,8 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 获取给定类的所有接口
+	 * <p>
 	 * Return all interfaces that the given class implements as a Set, including ones implemented by superclasses.
 	 * <p>If the class itself is an interface, it gets returned as sole interface.
 	 *
@@ -748,6 +739,8 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 获取给定类的所有接口
+	 * <p>
 	 * Return all interfaces that the given class implements as a Set, including ones implemented by superclasses.
 	 * <p>If the class itself is an interface, it gets returned as sole interface.
 	 *
@@ -776,6 +769,8 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 创建给定接口列表的组合类型
+	 * <p>
 	 * Create a composite interface Class for the given interfaces, implementing the given interfaces in one single
 	 * Class.
 	 * <p>This implementation builds a JDK proxy class for the given interfaces.
@@ -904,6 +899,8 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 获取用户定义的类，如果给定类为 CGLIB 生成的代理则返回目标类
+	 * <p>
 	 * Return the user-defined class for the given class: usually simply the given class, but the original class in case
 	 * of a CGLIB-generated subclass.
 	 *
@@ -1063,6 +1060,8 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 获取给定方法的限定名，由类名和方法名组成
+	 * <p>
 	 * Return the qualified name of the given method, consisting of fully qualified interface/class name + "." + method
 	 * name.
 	 *
@@ -1263,6 +1262,8 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 查找特定的方法，给定的方法可能是给定目标类的接口中的方法，此时返回目标类相同签名的方法，否则返回给定的方法
+	 * <p>
 	 * Given a method, which may come from an interface, and a target class used in the current reflective invocation,
 	 * find the corresponding target method if there is one. E.g. the method may be {@code IFoo.bar()} and the target
 	 * class may be {@code DefaultFoo}. In this case, the method may be {@code DefaultFoo.bar()}. This enables
@@ -1286,11 +1287,13 @@ public abstract class ClassUtils {
 			try {
 				if (Modifier.isPublic(method.getModifiers())) {
 					try {
+						// 尝试返回目标类中的相同签名的方法
 						return targetClass.getMethod(method.getName(), method.getParameterTypes());
 					} catch (NoSuchMethodException ex) {
 						return method;
 					}
 				} else {
+					// 非公共方法，尝试通过反射查找给定签名的方法
 					Method specificMethod =
 							ReflectionUtils.findMethod(targetClass, method.getName(), method.getParameterTypes());
 					return (specificMethod != null ? specificMethod : method);
@@ -1354,6 +1357,8 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 给定的方法是否可以被给定的目标类覆盖
+	 * <p>
 	 * Determine whether the given method is overridable in the given target class.
 	 *
 	 * @param method      the method to check

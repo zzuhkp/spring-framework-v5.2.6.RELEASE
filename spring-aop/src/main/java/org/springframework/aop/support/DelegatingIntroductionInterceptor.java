@@ -25,6 +25,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 使用代理对象调用 Introduction 指定的接口方法
+ * <p>
  * Convenient implementation of the
  * {@link org.springframework.aop.IntroductionInterceptor} interface.
  *
@@ -54,6 +56,8 @@ public class DelegatingIntroductionInterceptor extends IntroductionInfoSupport
 		implements IntroductionInterceptor {
 
 	/**
+	 * 实现 introduction 指定接口的对象
+	 * <p>
 	 * Object that actually implements the interfaces.
 	 * May be "this" if a subclass implements the introduced interfaces.
 	 */
@@ -101,6 +105,8 @@ public class DelegatingIntroductionInterceptor extends IntroductionInfoSupport
 
 
 	/**
+	 * 如果调用的方法为 Introduction 指定接口中的方法，则使用给定 delegate 调用方法
+	 * <p>
 	 * Subclasses may need to override this if they want to perform custom
 	 * behaviour in around advice. However, subclasses should invoke this
 	 * method, which handles introduced interfaces and forwarding to the target.

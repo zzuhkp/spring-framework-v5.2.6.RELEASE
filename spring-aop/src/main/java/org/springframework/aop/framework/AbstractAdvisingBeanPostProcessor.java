@@ -16,15 +16,17 @@
 
 package org.springframework.aop.framework;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.springframework.aop.Advisor;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.lang.Nullable;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
+ * 将 Advisor 应用到 bean (添加到 Advised bean 或使用 Advisor 创建 bean 的代理)
+ * <p>
  * Base class for {@link BeanPostProcessor} implementations that apply a
  * Spring AOP {@link Advisor} to specific beans.
  *
@@ -37,8 +39,14 @@ public abstract class AbstractAdvisingBeanPostProcessor extends ProxyProcessorSu
 	@Nullable
 	protected Advisor advisor;
 
+	/**
+	 * Advisor 是否添加到 Advised bean 的 advisor 列表的前面
+	 */
 	protected boolean beforeExistingAdvisors = false;
 
+	/**
+	 * 目标类->当前实例保存的 advisor 能否应用到目标类
+	 */
 	private final Map<Class<?>, Boolean> eligibleBeans = new ConcurrentHashMap<>(256);
 
 
@@ -61,6 +69,13 @@ public abstract class AbstractAdvisingBeanPostProcessor extends ProxyProcessorSu
 		return bean;
 	}
 
+	/**
+	 * 将 Advisor 添加到 Advised bean 或获取 bean 的代理对象
+	 *
+	 * @param bean     the new bean instance
+	 * @param beanName the name of the bean
+	 * @return
+	 */
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) {
 		if (this.advisor == null || bean instanceof AopInfrastructureBean) {
@@ -74,8 +89,7 @@ public abstract class AbstractAdvisingBeanPostProcessor extends ProxyProcessorSu
 				// Add our local Advisor to the existing proxy's Advisor chain...
 				if (this.beforeExistingAdvisors) {
 					advised.addAdvisor(0, this.advisor);
-				}
-				else {
+				} else {
 					advised.addAdvisor(this.advisor);
 				}
 				return bean;
@@ -97,6 +111,8 @@ public abstract class AbstractAdvisingBeanPostProcessor extends ProxyProcessorSu
 	}
 
 	/**
+	 * Advisor 能否应用到目标 bean 实例
+	 * <p>
 	 * Check whether the given bean is eligible for advising with this
 	 * post-processor's {@link Advisor}.
 	 * <p>Delegates to {@link #isEligible(Class)} for target class checking.
@@ -107,7 +123,8 @@ public abstract class AbstractAdvisingBeanPostProcessor extends ProxyProcessorSu
 	 * For the latter, {@link #isEligible(Class)} is being called directly,
 	 * with the actual target class behind the existing proxy (as determined
 	 * by {@link AopUtils#getTargetClass(Object)}).
-	 * @param bean the bean instance
+	 *
+	 * @param bean     the bean instance
 	 * @param beanName the name of the bean
 	 * @see #isEligible(Class)
 	 */
@@ -116,9 +133,12 @@ public abstract class AbstractAdvisingBeanPostProcessor extends ProxyProcessorSu
 	}
 
 	/**
+	 * Advisor 能否应用到目标类
+	 * <p>
 	 * Check whether the given class is eligible for advising with this
 	 * post-processor's {@link Advisor}.
 	 * <p>Implements caching of {@code canApply} results per bean target class.
+	 *
 	 * @param targetClass the class to check against
 	 * @see AopUtils#canApply(Advisor, Class)
 	 */
@@ -136,18 +156,21 @@ public abstract class AbstractAdvisingBeanPostProcessor extends ProxyProcessorSu
 	}
 
 	/**
+	 * 为给定 bean 创建 ProxyFactory
+	 * <p>
 	 * Prepare a {@link ProxyFactory} for the given bean.
 	 * <p>Subclasses may customize the handling of the target instance and in
 	 * particular the exposure of the target class. The default introspection
 	 * of interfaces for non-target-class proxies and the configured advisor
 	 * will be applied afterwards; {@link #customizeProxyFactory} allows for
 	 * late customizations of those parts right before proxy creation.
-	 * @param bean the bean instance to create a proxy for
+	 *
+	 * @param bean     the bean instance to create a proxy for
 	 * @param beanName the corresponding bean name
 	 * @return the ProxyFactory, initialized with this processor's
 	 * {@link ProxyConfig} settings and the specified bean
-	 * @since 4.2.3
 	 * @see #customizeProxyFactory
+	 * @since 4.2.3
 	 */
 	protected ProxyFactory prepareProxyFactory(Object bean, String beanName) {
 		ProxyFactory proxyFactory = new ProxyFactory();
@@ -160,11 +183,12 @@ public abstract class AbstractAdvisingBeanPostProcessor extends ProxyProcessorSu
 	 * Subclasses may choose to implement this: for example,
 	 * to change the interfaces exposed.
 	 * <p>The default implementation is empty.
+	 *
 	 * @param proxyFactory the ProxyFactory that is already configured with
-	 * target, advisor and interfaces and will be used to create the proxy
-	 * immediately after this method returns
-	 * @since 4.2.3
+	 *                     target, advisor and interfaces and will be used to create the proxy
+	 *                     immediately after this method returns
 	 * @see #prepareProxyFactory
+	 * @since 4.2.3
 	 */
 	protected void customizeProxyFactory(ProxyFactory proxyFactory) {
 	}

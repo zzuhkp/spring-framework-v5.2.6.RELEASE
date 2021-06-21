@@ -22,6 +22,8 @@ import java.util.List;
 import org.springframework.lang.Nullable;
 
 /**
+ * Advisor 链的工厂
+ * <p>
  * Factory interface for advisor chains.
  *
  * @author Rod Johnson
@@ -30,7 +32,7 @@ import org.springframework.lang.Nullable;
 public interface AdvisorChainFactory {
 
 	/**
-	 * 获取 MethodInterceptor 列表
+	 * 获取 MethodInterceptor/InterceptorAndDynamicMethodMatcher 列表
 	 * <p>
 	 * Determine a list of {@link org.aopalliance.intercept.MethodInterceptor} objects
 	 * for the given advisor chain configuration.

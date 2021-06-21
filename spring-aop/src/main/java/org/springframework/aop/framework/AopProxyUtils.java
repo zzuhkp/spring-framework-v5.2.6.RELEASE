@@ -16,11 +16,6 @@
 
 package org.springframework.aop.framework;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.Arrays;
-
 import org.springframework.aop.SpringProxy;
 import org.springframework.aop.TargetClassAware;
 import org.springframework.aop.TargetSource;
@@ -31,7 +26,16 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
+
 /**
+ * AOP 代理工厂的工具类，主要在 AOP 框架内部使用；
+ * <p>
+ * 不依赖于 AOP 框架内部的通用 AOP 工具方法可以参考 AopUtils
+ * <p>
  * Utility methods for AOP proxy factories.
  * Mainly for internal use within the AOP framework.
  *
@@ -95,6 +99,8 @@ public abstract class AopProxyUtils {
 	}
 
 	/**
+	 * 确定代理要实现的完整接口列表
+	 * <p>
 	 * Determine the complete set of interfaces to proxy for the given AOP configuration.
 	 * <p>This will always add the {@link Advised} interface unless the AdvisedSupport's
 	 * {@link AdvisedSupport#setOpaque "opaque"} flag is on. Always adds the
@@ -111,6 +117,8 @@ public abstract class AopProxyUtils {
 
 	/**
 	 * 为给定的 AOP 配置确定要代理的完整接口
+	 * <p>
+	 * 除了 AdvisedSupport 中指定的接口，根据配置还可能包含 SpringProxy、Advised、DecoratingProxy
 	 * <p>
 	 * Determine the complete set of interfaces to proxy for the given AOP configuration.
 	 * <p>This will always add the {@link Advised} interface unless the AdvisedSupport's
@@ -172,6 +180,8 @@ public abstract class AopProxyUtils {
 	}
 
 	/**
+	 * 获取用户指定的代理要实现的接口
+	 * <p>
 	 * Extract the user-specified interfaces that the given proxy implements,
 	 * i.e. all non-Advised interfaces that the proxy implements.
 	 *
@@ -236,7 +246,8 @@ public abstract class AopProxyUtils {
 	 *
 	 * @param method    the target method
 	 * @param arguments the given arguments
-	 * @return a cloned argument array, or the original if no adaptation is needed
+	 * @return 适配后方法参数值
+	 * a cloned argument array, or the original if no adaptation is needed
 	 * @since 4.2.3
 	 */
 	static Object[] adaptArgumentsIfNecessary(Method method, @Nullable Object[] arguments) {
@@ -251,6 +262,7 @@ public abstract class AopProxyUtils {
 				if (varargType.isArray()) {
 					Object varargArray = arguments[varargIndex];
 					if (varargArray instanceof Object[] && !varargType.isInstance(varargArray)) {
+						// 参数最后一位的值与可变参数类型不匹配，将最后一位参数的值转换为可变参数的类型
 						Object[] newArguments = new Object[arguments.length];
 						System.arraycopy(arguments, 0, newArguments, 0, varargIndex);
 						Class<?> targetElementType = varargType.getComponentType();

@@ -25,7 +25,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.AfterAdvice;
 
 /**
- * 包装 AspectJ 的 Spring AOP Advice，方法抛出异常后调用
+ * 包装 AspectJ 的 Spring AOP Advice，方法抛出异常后调用。
  * <p>
  * Spring AOP advice wrapping an AspectJ after-throwing advice method.
  *

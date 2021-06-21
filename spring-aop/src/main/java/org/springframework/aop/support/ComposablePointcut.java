@@ -76,6 +76,8 @@ public class ComposablePointcut implements Pointcut, Serializable {
 	}
 
 	/**
+	 * 使用给定的 ClassFilter 创建实例
+	 * <p>
 	 * Create a ComposablePointcut for the given ClassFilter,
 	 * with {@code MethodMatcher.TRUE}.
 	 *
@@ -88,6 +90,8 @@ public class ComposablePointcut implements Pointcut, Serializable {
 	}
 
 	/**
+	 * 使用给定的 MethodMatcher 创建实例
+	 * <p>
 	 * Create a ComposablePointcut for the given MethodMatcher,
 	 * with {@code ClassFilter.TRUE}.
 	 *

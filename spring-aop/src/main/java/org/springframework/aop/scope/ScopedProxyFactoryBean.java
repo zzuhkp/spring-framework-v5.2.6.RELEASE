@@ -33,6 +33,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
+ * 创建目标 bean 的代理，
+ *
  * Convenient proxy factory bean for scoped objects.
  *
  * <p>Proxies created using this factory bean are thread-safe singletons
@@ -48,21 +50,33 @@ import org.springframework.util.ClassUtils;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since 2.0
  * @see #setProxyTargetClass
+ * @since 2.0
  */
 @SuppressWarnings("serial")
 public class ScopedProxyFactoryBean extends ProxyConfig
 		implements FactoryBean<Object>, BeanFactoryAware, AopInfrastructureBean {
 
-	/** The TargetSource that manages scoping. */
+	/**
+	 * 目标源
+	 *
+	 * The TargetSource that manages scoping.
+	 */
 	private final SimpleBeanTargetSource scopedTargetSource = new SimpleBeanTargetSource();
 
-	/** The name of the target bean. */
+	/**
+	 * 目标 bean 名称
+	 *
+	 * The name of the target bean.
+	 */
 	@Nullable
 	private String targetBeanName;
 
-	/** The cached singleton proxy. */
+	/**
+	 * 目标类的代理对象
+	 *
+	 * The cached singleton proxy.
+	 */
 	@Nullable
 	private Object proxy;
 
@@ -83,6 +97,13 @@ public class ScopedProxyFactoryBean extends ProxyConfig
 		this.scopedTargetSource.setTargetBeanName(targetBeanName);
 	}
 
+	/**
+	 * 创建给定目标 bean 的代理，
+	 * 代理同时拦截 ScopedObject 接口方法的调用，ScopedObject 获取到的目标对象是当前 FactoryBean 创建的代理对象
+	 *
+	 * @param beanFactory owning BeanFactory (never {@code null}).
+	 * The bean can immediately call methods on the factory.
+	 */
 	@Override
 	public void setBeanFactory(BeanFactory beanFactory) {
 		if (!(beanFactory instanceof ConfigurableBeanFactory)) {

@@ -16,11 +16,13 @@
 
 package org.springframework.transaction.interceptor;
 
-import java.beans.PropertyEditorSupport;
-
 import org.springframework.util.StringUtils;
 
+import java.beans.PropertyEditorSupport;
+
 /**
+ * 字符串转换为 RuleBasedTransactionAttribute
+ * <p>
  * PropertyEditor for {@link TransactionAttribute} objects. Accepts a String of form
  * <p>{@code PROPAGATION_NAME, ISOLATION_NAME, readOnly, timeout_NNNN,+Exception1,-Exception2}
  * <p>where only propagation code is required. For example:
@@ -36,9 +38,9 @@ import org.springframework.util.StringUtils;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since 24.04.2003
  * @see org.springframework.transaction.TransactionDefinition
  * @see org.springframework.core.Constants
+ * @since 24.04.2003
  */
 public class TransactionAttributeEditor extends PropertyEditorSupport {
 
@@ -63,30 +65,23 @@ public class TransactionAttributeEditor extends PropertyEditorSupport {
 				// Check token type.
 				if (trimmedToken.startsWith(RuleBasedTransactionAttribute.PREFIX_PROPAGATION)) {
 					attr.setPropagationBehaviorName(trimmedToken);
-				}
-				else if (trimmedToken.startsWith(RuleBasedTransactionAttribute.PREFIX_ISOLATION)) {
+				} else if (trimmedToken.startsWith(RuleBasedTransactionAttribute.PREFIX_ISOLATION)) {
 					attr.setIsolationLevelName(trimmedToken);
-				}
-				else if (trimmedToken.startsWith(RuleBasedTransactionAttribute.PREFIX_TIMEOUT)) {
+				} else if (trimmedToken.startsWith(RuleBasedTransactionAttribute.PREFIX_TIMEOUT)) {
 					String value = trimmedToken.substring(DefaultTransactionAttribute.PREFIX_TIMEOUT.length());
 					attr.setTimeout(Integer.parseInt(value));
-				}
-				else if (trimmedToken.equals(RuleBasedTransactionAttribute.READ_ONLY_MARKER)) {
+				} else if (trimmedToken.equals(RuleBasedTransactionAttribute.READ_ONLY_MARKER)) {
 					attr.setReadOnly(true);
-				}
-				else if (trimmedToken.startsWith(RuleBasedTransactionAttribute.PREFIX_COMMIT_RULE)) {
+				} else if (trimmedToken.startsWith(RuleBasedTransactionAttribute.PREFIX_COMMIT_RULE)) {
 					attr.getRollbackRules().add(new NoRollbackRuleAttribute(trimmedToken.substring(1)));
-				}
-				else if (trimmedToken.startsWith(RuleBasedTransactionAttribute.PREFIX_ROLLBACK_RULE)) {
+				} else if (trimmedToken.startsWith(RuleBasedTransactionAttribute.PREFIX_ROLLBACK_RULE)) {
 					attr.getRollbackRules().add(new RollbackRuleAttribute(trimmedToken.substring(1)));
-				}
-				else {
+				} else {
 					throw new IllegalArgumentException("Invalid transaction attribute token: [" + trimmedToken + "]");
 				}
 			}
 			setValue(attr);
-		}
-		else {
+		} else {
 			setValue(null);
 		}
 	}

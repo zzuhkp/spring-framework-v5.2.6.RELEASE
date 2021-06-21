@@ -49,6 +49,8 @@ import org.springframework.aop.support.ComposablePointcut;
 public class AspectMetadata implements Serializable {
 
 	/**
+	 * Spring 定义的 aspect 的名称，用来确定两个 Advice 是否来自相同的 aspect
+	 * <p>
 	 * The name of this aspect as defined to Spring (the bean name) -
 	 * allows us to determine if two pieces of advice come from the
 	 * same aspect and hence their relative precedence.
@@ -56,18 +58,24 @@ public class AspectMetadata implements Serializable {
 	private final String aspectName;
 
 	/**
+	 * aspect 类
+	 * <p>
 	 * The aspect class, stored separately for re-resolution of the
 	 * corresponding AjType on deserialization.
 	 */
 	private final Class<?> aspectClass;
 
 	/**
+	 * AspectJ 反射类型
+	 * <p>
 	 * AspectJ reflection information (AspectJ 5 / Java 5 specific).
 	 * Re-resolved on deserialization since it isn't serializable itself.
 	 */
 	private transient AjType<?> ajType;
 
 	/**
+	 * per clause 对应的 Spring AOP Pointcut
+	 * <p>
 	 * Spring AOP pointcut corresponding to the per clause of the
 	 * aspect. Will be the Pointcut.TRUE canonical instance in the
 	 * case of a singleton, otherwise an AspectJExpressionPointcut.
@@ -126,6 +134,8 @@ public class AspectMetadata implements Serializable {
 	}
 
 	/**
+	 * 从 aspect 类中查找 per clause
+	 * <p>
 	 * Extract contents from String of form {@code pertarget(contents)}.
 	 */
 	private String findPerClause(Class<?> aspectClass) {
@@ -166,6 +176,8 @@ public class AspectMetadata implements Serializable {
 	}
 
 	/**
+	 * per clause 的种类是否为 perthis 或 pertarget
+	 * <p>
 	 * Return whether the aspect is defined as "perthis" or "pertarget".
 	 */
 	public boolean isPerThisOrPerTarget() {
@@ -174,6 +186,8 @@ public class AspectMetadata implements Serializable {
 	}
 
 	/**
+	 * per clause 的类型是否为 pertypewithin
+	 * <p>
 	 * Return whether the aspect is defined as "pertypewithin".
 	 */
 	public boolean isPerTypeWithin() {
@@ -182,6 +196,8 @@ public class AspectMetadata implements Serializable {
 	}
 
 	/**
+	 * aspect 是否需要延迟初始化
+	 * <p>
 	 * Return whether the aspect needs to be lazily instantiated.
 	 */
 	public boolean isLazilyInstantiated() {

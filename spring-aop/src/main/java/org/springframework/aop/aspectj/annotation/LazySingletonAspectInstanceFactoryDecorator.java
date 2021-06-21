@@ -22,7 +22,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
- * 只加载器一次 Aspect 实例的工厂
+ * 只加载器一次 Aspect 实例的工厂。
  * <p>
  * Decorator to cause a {@link MetadataAwareAspectInstanceFactory} to instantiate only once.
  *
@@ -35,6 +35,9 @@ public class LazySingletonAspectInstanceFactoryDecorator implements MetadataAwar
 
 	private final MetadataAwareAspectInstanceFactory maaif;
 
+	/**
+	 * 缓存的 Aspect 实例
+	 */
 	@Nullable
 	private volatile Object materialized;
 

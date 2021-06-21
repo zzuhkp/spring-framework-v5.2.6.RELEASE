@@ -19,6 +19,8 @@ package org.springframework.aop;
 import org.springframework.core.NestedRuntimeException;
 
 /**
+ * AOP 调用失败引发的异常
+ * <p>
  * Exception that gets thrown when an AOP invocation failed
  * because of misconfiguration or unexpected runtime issues.
  *
@@ -30,6 +32,7 @@ public class AopInvocationException extends NestedRuntimeException {
 
 	/**
 	 * Constructor for AopInvocationException.
+	 *
 	 * @param msg the detail message
 	 */
 	public AopInvocationException(String msg) {
@@ -38,7 +41,8 @@ public class AopInvocationException extends NestedRuntimeException {
 
 	/**
 	 * Constructor for AopInvocationException.
-	 * @param msg the detail message
+	 *
+	 * @param msg   the detail message
 	 * @param cause the root cause
 	 */
 	public AopInvocationException(String msg, Throwable cause) {

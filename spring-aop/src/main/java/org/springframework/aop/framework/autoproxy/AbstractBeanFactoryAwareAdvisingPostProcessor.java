@@ -24,6 +24,8 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.lang.Nullable;
 
 /**
+ * AbstractAutoProxyCreator 的扩展，使用 BeanFactory 判断是否应该代理目标类
+ * <p>
  * Extension of {@link AbstractAutoProxyCreator} which implements {@link BeanFactoryAware},
  * adds exposure of the original target class for each proxied bean
  * ({@link AutoProxyUtils#ORIGINAL_TARGET_CLASS_ATTRIBUTE}),
@@ -32,9 +34,9 @@ import org.springframework.lang.Nullable;
  * This post-processor is therefore aligned with {@link AbstractAutoProxyCreator}.
  *
  * @author Juergen Hoeller
- * @since 4.2.3
  * @see AutoProxyUtils#shouldProxyTargetClass
  * @see AutoProxyUtils#determineTargetClass
+ * @since 4.2.3
  */
 @SuppressWarnings("serial")
 public abstract class AbstractBeanFactoryAwareAdvisingPostProcessor extends AbstractAdvisingBeanPostProcessor

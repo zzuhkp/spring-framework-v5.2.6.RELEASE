@@ -26,6 +26,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
 /**
+ * 用于定位 Method 的 FactoryBean
+ * <p>
  * {@link FactoryBean} implementation that locates a {@link Method} on a specified bean.
  *
  * @author Rob Harrop
@@ -46,6 +48,7 @@ public class MethodLocatingFactoryBean implements FactoryBean<Method>, BeanFacto
 	/**
 	 * Set the name of the bean to locate the {@link Method} on.
 	 * <p>This property is required.
+	 *
 	 * @param targetBeanName the name of the bean to locate the {@link Method} on
 	 */
 	public void setTargetBeanName(String targetBeanName) {
@@ -55,6 +58,7 @@ public class MethodLocatingFactoryBean implements FactoryBean<Method>, BeanFacto
 	/**
 	 * Set the name of the {@link Method} to locate.
 	 * <p>This property is required.
+	 *
 	 * @param methodName the name of the {@link Method} to locate
 	 */
 	public void setMethodName(String methodName) {

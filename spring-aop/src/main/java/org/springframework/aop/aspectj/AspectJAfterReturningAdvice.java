@@ -27,7 +27,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.TypeUtils;
 
 /**
- * 包装 AspectJ 的 Spring AOP Advice，方法正常返回时调用
+ * 包装 AspectJ 的 Spring AOP Advice，方法正常返回时调用。
  * <p>
  * Spring AOP advice wrapping an AspectJ after-returning advice method.
  *

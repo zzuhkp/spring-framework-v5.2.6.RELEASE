@@ -26,11 +26,15 @@ import org.springframework.beans.factory.parsing.ParseState;
  */
 public class AdvisorEntry implements ParseState.Entry {
 
+	/**
+	 * aop:advisor 节点 id 属性值
+	 */
 	private final String name;
 
 
 	/**
 	 * Creates a new instance of the {@link AdvisorEntry} class.
+	 *
 	 * @param name the bean name of the advisor
 	 */
 	public AdvisorEntry(String name) {

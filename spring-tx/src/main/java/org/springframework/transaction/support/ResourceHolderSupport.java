@@ -22,6 +22,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.transaction.TransactionTimedOutException;
 
 /**
+ * ResourceHolder 的基类
+ * <p>
  * Convenient base class for resource holders.
  *
  * <p>Features rollback-only support for participating transactions.
@@ -29,19 +31,31 @@ import org.springframework.transaction.TransactionTimedOutException;
  * in order to determine a transactional timeout.
  *
  * @author Juergen Hoeller
- * @since 02.02.2004
  * @see org.springframework.jdbc.datasource.DataSourceTransactionManager#doBegin
  * @see org.springframework.jdbc.datasource.DataSourceUtils#applyTransactionTimeout
+ * @since 02.02.2004
  */
 public abstract class ResourceHolderSupport implements ResourceHolder {
 
+	/**
+	 * 资源和事务一起同步
+	 */
 	private boolean synchronizedWithTransaction = false;
 
+	/**
+	 * 是否仅回滚
+	 */
 	private boolean rollbackOnly = false;
 
+	/**
+	 * 超时时间
+	 */
 	@Nullable
 	private Date deadline;
 
+	/**
+	 * 引用计数；用于表示资源被请求的次数
+	 */
 	private int referenceCount = 0;
 
 	private boolean isVoid = false;
@@ -72,8 +86,9 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 	 * Reset the rollback-only status for this resource transaction.
 	 * <p>Only really intended to be called after custom rollback steps which
 	 * keep the original resource in action, e.g. in case of a savepoint.
-	 * @since 5.0
+	 *
 	 * @see org.springframework.transaction.SavepointManager#rollbackToSavepoint
+	 * @since 5.0
 	 */
 	public void resetRollbackOnly() {
 		this.rollbackOnly = false;
@@ -88,6 +103,7 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 
 	/**
 	 * Set the timeout for this object in seconds.
+	 *
 	 * @param seconds number of seconds until expiration
 	 */
 	public void setTimeoutInSeconds(int seconds) {
@@ -96,6 +112,7 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 
 	/**
 	 * Set the timeout for this object in milliseconds.
+	 *
 	 * @param millis number of milliseconds until expiration
 	 */
 	public void setTimeoutInMillis(long millis) {
@@ -111,6 +128,7 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 
 	/**
 	 * Return the expiration deadline of this object.
+	 *
 	 * @return the deadline as Date object
 	 */
 	@Nullable
@@ -119,8 +137,11 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 	}
 
 	/**
+	 * 获取距离超时的秒数
+	 * <p>
 	 * Return the time to live for this object in seconds.
 	 * Rounds up eagerly, e.g. 9.00001 still to 10.
+	 *
 	 * @return number of seconds until expiration
 	 * @throws TransactionTimedOutException if the deadline has already been reached
 	 */
@@ -132,11 +153,14 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 	}
 
 	/**
+	 * 获取距离超时的毫秒数
+	 * <p>
 	 * Return the time to live for this object in milliseconds.
+	 *
 	 * @return number of milliseconds until expiration
 	 * @throws TransactionTimedOutException if the deadline has already been reached
 	 */
-	public long getTimeToLiveInMillis() throws TransactionTimedOutException{
+	public long getTimeToLiveInMillis() throws TransactionTimedOutException {
 		if (this.deadline == null) {
 			throw new IllegalStateException("No timeout specified for this resource holder");
 		}
@@ -146,6 +170,8 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 	}
 
 	/**
+	 * 检查事务是否已超时
+	 * <p>
 	 * Set the transaction rollback-only if the deadline has been reached,
 	 * and throw a TransactionTimedOutException.
 	 */
@@ -157,6 +183,8 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 	}
 
 	/**
+	 * 新增引用计数
+	 * <p>
 	 * Increase the reference count by one because the holder has been requested
 	 * (i.e. someone requested the resource held by it).
 	 */
@@ -165,6 +193,8 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 	}
 
 	/**
+	 * 减少引用计数
+	 * <p>
 	 * Decrease the reference count by one because the holder has been released
 	 * (i.e. someone released the resource held by it).
 	 */
@@ -173,6 +203,8 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 	}
 
 	/**
+	 * 是否还存在对当前持有者的引用
+	 * <p>
 	 * Return whether there are still open references to this holder.
 	 */
 	public boolean isOpen() {
@@ -180,6 +212,8 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 	}
 
 	/**
+	 * 清除资源事务状态
+	 * <p>
 	 * Clear the transactional state of this resource holder.
 	 */
 	public void clear() {
@@ -189,6 +223,8 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 	}
 
 	/**
+	 * 重置资源持有者
+	 * <p>
 	 * Reset this resource holder - transactional state as well as reference count.
 	 */
 	@Override

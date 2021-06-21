@@ -16,22 +16,12 @@
 
 package org.springframework.aop.aspectj;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.aopalliance.aop.Advice;
 import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.weaver.tools.JoinPointMatch;
 import org.aspectj.weaver.tools.PointcutParameter;
-
 import org.springframework.aop.AopInvocationException;
 import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.Pointcut;
@@ -43,13 +33,20 @@ import org.springframework.aop.support.StaticMethodMatcher;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
+ * AOP 联盟 Advice 的基类，包装了 AspectJ 的 aspect 或标注的 AspectJ advice 方法。
+ * <p>
  * Base class for AOP Alliance {@link org.aopalliance.aop.Advice} classes
  * wrapping an AspectJ aspect or an AspectJ-annotated advice method.
  *
@@ -124,6 +121,8 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 	private final AspectInstanceFactory aspectInstanceFactory;
 
 	/**
+	 * Advice 所在的 Aspect 名称
+	 * <p>
 	 * The name of the aspect (ref bean) in which this advice was defined
 	 * (used when determining advice precedence so that we can determine
 	 * whether two pieces of advice come from the same aspect).
@@ -131,6 +130,8 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 	private String aspectName = "";
 
 	/**
+	 * Advice 的顺序
+	 *
 	 * The order of declaration of this advice within the aspect.
 	 */
 	private int declarationOrder;
@@ -145,12 +146,16 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 	private String[] argumentNames;
 
 	/**
+	 * 异常参数名
+	 * <p>
 	 * Non-null if after throwing advice binds the thrown value.
 	 */
 	@Nullable
 	private String throwingName;
 
 	/**
+	 * 返回值参数名
+	 * <p>
 	 * Non-null if after returning advice binds the return value.
 	 */
 	@Nullable
@@ -311,6 +316,12 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 		setArgumentNamesFromStringArray(tokens);
 	}
 
+	/**
+	 * 设置参数名，
+	 * 如果 Advice 方法的参数数量比给定参数多一位，则设置第一位的参数名为 THIS_JOIN_POINT
+	 *
+	 * @param args
+	 */
 	public void setArgumentNamesFromStringArray(String... args) {
 		this.argumentNames = new String[args.length];
 		for (int i = 0; i < args.length; i++) {
@@ -439,10 +450,12 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 			return;
 		}
 
+		// 没有查找到名称的参数数量
 		int numUnboundArgs = this.parameterTypes.length;
 		Class<?>[] parameterTypes = this.aspectJAdviceMethod.getParameterTypes();
 		if (maybeBindJoinPoint(parameterTypes[0]) || maybeBindProceedingJoinPoint(parameterTypes[0]) ||
 				maybeBindJoinPointStaticPart(parameterTypes[0])) {
+			// 第一个方法参数为 JointPoint
 			numUnboundArgs--;
 		}
 
@@ -549,7 +562,7 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 	/**
 	 * 绑定明确的参数
 	 *
-	 * @param numArgumentsLeftToBind
+	 * @param numArgumentsLeftToBind 剩余待查找名称的参数数量
 	 */
 	private void bindExplicitArguments(int numArgumentsLeftToBind) {
 		Assert.state(this.argumentNames != null, "No argument names available");
@@ -571,6 +584,7 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 		// Check that returning and throwing were in the argument names list if
 		// specified, and find the discovered argument types.
 		if (this.returningName != null) {
+			// 配置的返回类型参数名必须和计算出来的保持一致
 			if (!this.argumentBindings.containsKey(this.returningName)) {
 				throw new IllegalStateException("Returning argument name '" + this.returningName +
 						"' was not bound in advice arguments");
@@ -581,6 +595,7 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 			}
 		}
 		if (this.throwingName != null) {
+			// 配置的异常参数名必须和计算出来的保持一致
 			if (!this.argumentBindings.containsKey(this.throwingName)) {
 				throw new IllegalStateException("Throwing argument name '" + this.throwingName +
 						"' was not bound in advice arguments");

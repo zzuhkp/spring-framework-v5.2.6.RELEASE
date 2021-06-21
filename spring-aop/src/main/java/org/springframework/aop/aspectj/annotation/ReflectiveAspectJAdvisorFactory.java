@@ -82,6 +82,7 @@ public class ReflectiveAspectJAdvisorFactory extends AbstractAspectJAdvisorFacto
 							AbstractAspectJAdvisorFactory.findAspectJAnnotationOnMethod(method);
 					return (annotation != null ? annotation.getAnnotation() : null);
 				});
+		// 优先按照上述 Aspect 中的注解顺序排序，然后按照方法名排序
 		Comparator<Method> methodNameComparator = new ConvertingComparator<>(Method::getName);
 		METHOD_COMPARATOR = adviceKindComparator.thenComparing(methodNameComparator);
 	}
@@ -150,7 +151,7 @@ public class ReflectiveAspectJAdvisorFactory extends AbstractAspectJAdvisorFacto
 	}
 
 	/**
-	 * 获取给定类中 AspectJ 注解标注的 Advice 方法
+	 * 获取给定类中 Advisor 方法
 	 *
 	 * @param aspectClass
 	 * @return

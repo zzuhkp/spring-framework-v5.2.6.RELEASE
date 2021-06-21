@@ -16,25 +16,26 @@
 
 package org.springframework.context.annotation;
 
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.aop.config.AopConfigUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 
+import java.util.Set;
+
 /**
+ * 注册自动创建代理的 InfrastructureAdvisorAutoProxyCreator 作为 bean
+ * <p>
  * Registers an auto proxy creator against the current {@link BeanDefinitionRegistry}
  * as appropriate based on an {@code @Enable*} annotation having {@code mode} and
  * {@code proxyTargetClass} attributes set to the correct values.
  *
  * @author Chris Beams
- * @since 3.1
  * @see org.springframework.cache.annotation.EnableCaching
  * @see org.springframework.transaction.annotation.EnableTransactionManagement
+ * @since 3.1
  */
 public class AutoProxyRegistrar implements ImportBeanDefinitionRegistrar {
 
@@ -68,10 +69,13 @@ public class AutoProxyRegistrar implements ImportBeanDefinitionRegistrar {
 			Object proxyTargetClass = candidate.get("proxyTargetClass");
 			if (mode != null && proxyTargetClass != null && AdviceMode.class == mode.getClass() &&
 					Boolean.class == proxyTargetClass.getClass()) {
+				// 存在类型为 AdviceMode 值不为空的 mode 属性，并且存在类型为 Boolean 的 proxyTargetClass 属性
 				candidateFound = true;
 				if (mode == AdviceMode.PROXY) {
+					// 注册自动创建代理的 InfrastructureAdvisorAutoProxyCreator 作为 bean
 					AopConfigUtils.registerAutoProxyCreatorIfNecessary(registry);
 					if ((Boolean) proxyTargetClass) {
+						// 设置 InfrastructureAdvisorAutoProxyCreator 类型的 bean proxyTargetClass 为 true
 						AopConfigUtils.forceAutoProxyCreatorToUseClassProxying(registry);
 						return;
 					}

@@ -32,7 +32,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
- * 默认的 IntroductionAdvisor
+ * 默认的 IntroductionAdvisor,持有 Advice 和待实现接口的引用
  * <p>
  * Simple {@link org.springframework.aop.IntroductionAdvisor} implementation
  * that by default applies to any class.
@@ -98,7 +98,7 @@ public class DefaultIntroductionAdvisor implements IntroductionAdvisor, ClassFil
 
 	/**
 	 * 添加 Introduction 的接口
-	 *
+	 * <p>
 	 * Add the specified interface to the list of interfaces to introduce.
 	 *
 	 * @param ifc the interface to introduce
@@ -119,6 +119,7 @@ public class DefaultIntroductionAdvisor implements IntroductionAdvisor, ClassFil
 	@Override
 	public void validateInterfaces() throws IllegalArgumentException {
 		for (Class<?> ifc : this.interfaces) {
+			// 确保 DynamicIntroductionAdvice 中的发布接口必须实现给定的接口列表
 			if (this.advice instanceof DynamicIntroductionAdvice &&
 					!((DynamicIntroductionAdvice) this.advice).implementsInterface(ifc)) {
 				throw new IllegalArgumentException("DynamicIntroductionAdvice [" + this.advice + "] " +

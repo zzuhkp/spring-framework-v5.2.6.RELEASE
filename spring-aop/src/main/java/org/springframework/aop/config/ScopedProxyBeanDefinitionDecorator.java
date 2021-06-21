@@ -49,6 +49,8 @@ class ScopedProxyBeanDefinitionDecorator implements BeanDefinitionDecorator {
 			}
 		}
 
+		// 为目标 bean 创建代理
+
 		// Register the original bean definition as it will be referenced by the scoped proxy
 		// and is relevant for tooling (validation, navigation).
 		BeanDefinitionHolder holder =

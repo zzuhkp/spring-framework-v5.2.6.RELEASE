@@ -25,7 +25,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * AspectInstanceFactory 实现，每次都会创建新的实例
+ * AspectInstanceFactory 实现，每次都会创建新的实例。
  * <p>
  * Implementation of {@link AspectInstanceFactory} that creates a new instance
  * of the specified aspect class for every {@link #getAspectInstance()} call.

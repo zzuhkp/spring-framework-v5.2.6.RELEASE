@@ -17,6 +17,8 @@
 package org.springframework.transaction.support;
 
 /**
+ * TransactionStatus 的简单实现，可以设置是否为新的事务
+ * <p>
  * A simple {@link org.springframework.transaction.TransactionStatus}
  * implementation. Derives from {@link AbstractTransactionStatus} and
  * adds an explicit {@link #isNewTransaction() "newTransaction"} flag.
@@ -29,8 +31,8 @@ package org.springframework.transaction.support;
  * as argument passed into a {@link TransactionCallback} to be tested).
  *
  * @author Juergen Hoeller
- * @since 1.2.3
  * @see TransactionCallback#doInTransaction
+ * @since 1.2.3
  */
 public class SimpleTransactionStatus extends AbstractTransactionStatus {
 
@@ -47,6 +49,7 @@ public class SimpleTransactionStatus extends AbstractTransactionStatus {
 
 	/**
 	 * Create a new {@code SimpleTransactionStatus} instance.
+	 *
 	 * @param newTransaction whether to indicate a new transaction
 	 */
 	public SimpleTransactionStatus(boolean newTransaction) {

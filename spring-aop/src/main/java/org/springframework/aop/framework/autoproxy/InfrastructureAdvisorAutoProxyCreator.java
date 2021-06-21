@@ -21,6 +21,8 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.lang.Nullable;
 
 /**
+ * 角色为 ROLE_INFRASTRUCTURE 的 bean 作为合适的 Advisor bean
+ * <p>
  * Auto-proxy creator that considers infrastructure Advisor beans only,
  * ignoring any application-defined Advisors.
  *

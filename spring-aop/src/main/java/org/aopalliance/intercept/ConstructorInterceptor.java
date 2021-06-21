@@ -17,6 +17,8 @@
 package org.aopalliance.intercept;
 
 /**
+ * 构造方法拦截器，用于拦截构造方法连接点
+ * <p>
  * Intercepts the construction of a new object.
  *
  * <p>The user should implement the {@link
@@ -41,18 +43,22 @@ package org.aopalliance.intercept;
  *
  * @author Rod Johnson
  */
-public interface ConstructorInterceptor extends Interceptor  {
+public interface ConstructorInterceptor extends Interceptor {
 
 	/**
+	 * 实现该方法，以便在构造方法调用前后执行额外的逻辑
+	 * <p>
 	 * Implement this method to perform extra treatments before and
 	 * after the construction of a new object. Polite implementations
 	 * would certainly like to invoke {@link Joinpoint#proceed()}.
+	 *
 	 * @param invocation the construction joinpoint
-	 * @return the newly created object, which is also the result of
+	 * @return 新创建的对象
+	 * the newly created object, which is also the result of
 	 * the call to {@link Joinpoint#proceed()}; might be replaced by
 	 * the interceptor
 	 * @throws Throwable if the interceptors or the target object
-	 * throws an exception
+	 *                   throws an exception
 	 */
 	Object construct(ConstructorInvocation invocation) throws Throwable;
 

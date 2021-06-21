@@ -57,6 +57,8 @@ public interface NamespaceHandler {
 	void init();
 
 	/**
+	 * 将 XML 文档节点解析为 BeanDefinition
+	 * <p>
 	 * Parse the specified {@link Element} and register any resulting
 	 * {@link BeanDefinition BeanDefinitions} with the
 	 * {@link org.springframework.beans.factory.support.BeanDefinitionRegistry}

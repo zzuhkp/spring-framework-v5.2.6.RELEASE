@@ -17,7 +17,6 @@
 package org.springframework.aop.aspectj;
 
 import org.aopalliance.aop.Advice;
-
 import org.springframework.aop.Advisor;
 import org.springframework.aop.AfterAdvice;
 import org.springframework.aop.BeforeAdvice;
@@ -44,6 +43,8 @@ public abstract class AspectJAopUtils {
 	}
 
 	/**
+	 * 给定的 Advisor 是否为后置通知
+	 * <p>
 	 * Return {@code true} if the advisor is a form of after advice.
 	 */
 	public static boolean isAfterAdvice(Advisor anAdvisor) {
@@ -55,6 +56,8 @@ public abstract class AspectJAopUtils {
 	}
 
 	/**
+	 * 获取 AspectJPrecedenceInformation
+	 * <p>
 	 * Return the AspectJPrecedenceInformation provided by this advisor or its advice.
 	 * If neither the advisor nor the advice have precedence information, this method
 	 * will return {@code null}.

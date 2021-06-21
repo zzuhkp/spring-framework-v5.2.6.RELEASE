@@ -16,23 +16,8 @@
 
 package org.springframework.aop.framework;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.aopalliance.aop.Advice;
-
-import org.springframework.aop.Advisor;
-import org.springframework.aop.DynamicIntroductionAdvice;
-import org.springframework.aop.IntroductionAdvisor;
-import org.springframework.aop.IntroductionInfo;
-import org.springframework.aop.TargetSource;
+import org.springframework.aop.*;
 import org.springframework.aop.support.DefaultIntroductionAdvisor;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.target.EmptyTargetSource;
@@ -42,8 +27,14 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
- * AOP 代理配置管理器的基类
+ * AOP 配置的基类，实现 Advised，并提供了对接口的管理
  * <p>
  * Base class for AOP proxy configuration managers.
  * These are not themselves AOP proxies, but subclasses of this class are
@@ -76,23 +67,29 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 
 
 	/**
-	 * 目标类
+	 * 目标对象
 	 * <p>
 	 * Package-protected to allow direct access for efficiency.
 	 */
 	TargetSource targetSource = EMPTY_TARGET_SOURCE;
 
 	/**
+	 * 是否已经为目标类预筛选 Advisor
+	 * <p>
 	 * Whether the Advisors are already filtered for the specific target class.
 	 */
 	private boolean preFiltered = false;
 
 	/**
+	 * Advisor 链工厂
+	 * <p>
 	 * The AdvisorChainFactory to use.
 	 */
 	AdvisorChainFactory advisorChainFactory = new DefaultAdvisorChainFactory();
 
 	/**
+	 * 方法-> MethodInterceptor/InterceptorAndDynamicMethodMatcher 列表
+	 * <p>
 	 * Cache with Method as key and advisor chain List as value.
 	 */
 	private transient Map<MethodCacheKey, List<Object>> methodCache;
@@ -316,6 +313,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 		Advisor advisor = this.advisors.remove(index);
 		if (advisor instanceof IntroductionAdvisor) {
 			IntroductionAdvisor ia = (IntroductionAdvisor) advisor;
+			// 同时移除 IntroductionAdvisor 中的接口
 			// We need to remove introduction interfaces.
 			for (Class<?> ifc : ia.getInterfaces()) {
 				removeInterface(ifc);
@@ -381,7 +379,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 	}
 
 	/**
-	 * 校验 IntroductionAdvisor
+	 * 校验 IntroductionAdvisor，并将 IntroductionAdvisor 中的接口添加到列表
 	 *
 	 * @param advisor
 	 */
@@ -522,6 +520,8 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 
 
 	/**
+	 * 从 Advisor 链工厂中获取当前配置对应的 MethodInterceptor/InterceptorAndDynamicMethodMatcher 列表
+	 * <p>
 	 * Determine a list of {@link org.aopalliance.intercept.MethodInterceptor} objects
 	 * for the given method, based on this configuration.
 	 *
@@ -565,7 +565,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 	}
 
 	/**
-	 * 复制配置
+	 * 复制其他配置到当前配置
 	 * <p>
 	 * Copy the AOP configuration from the given AdvisedSupport object,
 	 * but allow substitution of a fresh TargetSource and a given interceptor chain.
@@ -591,6 +591,8 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 	}
 
 	/**
+	 * 获取当前配置的复制
+	 * <p>
 	 * Build a configuration-only copy of this AdvisedSupport,
 	 * replacing the TargetSource.
 	 */
@@ -641,6 +643,8 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 
 
 	/**
+	 * Method 的简单包装对象，用于比较 Method
+	 * <p>
 	 * Simple wrapper class around a Method. Used as the key when
 	 * caching methods, for efficient equals and hashCode comparisons.
 	 */

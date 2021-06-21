@@ -19,6 +19,8 @@ package org.springframework.transaction;
 import java.io.Flushable;
 
 /**
+ * 事务状态，可以使用它以编程的方式提交或回滚事务
+ * <p>
  * Representation of the status of a transaction.
  *
  * <p>Transactional code can use this to retrieve status information,
@@ -30,20 +32,23 @@ import java.io.Flushable;
  * is only available if supported by the underlying transaction manager.
  *
  * @author Juergen Hoeller
- * @since 27.03.2003
  * @see #setRollbackOnly()
  * @see PlatformTransactionManager#getTransaction
  * @see org.springframework.transaction.support.TransactionCallback#doInTransaction
  * @see org.springframework.transaction.interceptor.TransactionInterceptor#currentTransactionStatus()
+ * @since 27.03.2003
  */
 public interface TransactionStatus extends TransactionExecution, SavepointManager, Flushable {
 
 	/**
+	 * 当前事务内部是否有保存点
+	 * <p>
 	 * Return whether this transaction internally carries a savepoint,
 	 * that is, has been created as nested transaction based on a savepoint.
 	 * <p>This method is mainly here for diagnostic purposes, alongside
 	 * {@link #isNewTransaction()}. For programmatic handling of custom
 	 * savepoints, use the operations provided by {@link SavepointManager}.
+	 *
 	 * @see #isNewTransaction()
 	 * @see #createSavepoint()
 	 * @see #rollbackToSavepoint(Object)
@@ -52,6 +57,8 @@ public interface TransactionStatus extends TransactionExecution, SavepointManage
 	boolean hasSavepoint();
 
 	/**
+	 * 刷新的底层的会话到数据存储区
+	 * <p>
 	 * Flush the underlying session to the datastore, if applicable:
 	 * for example, all affected Hibernate/JPA sessions.
 	 * <p>This is effectively just a hint and may be a no-op if the underlying

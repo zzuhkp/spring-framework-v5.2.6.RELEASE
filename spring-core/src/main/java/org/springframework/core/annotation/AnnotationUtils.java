@@ -138,6 +138,8 @@ public abstract class AnnotationUtils {
 	}
 
 	/**
+	 * 给定类(类、方法、字段上)是否是给定的注解的候选者
+	 *
 	 * Determine whether the given class is a candidate for carrying the specified annotation
 	 * (at type, method or field level).
 	 * @param clazz the class to introspect
@@ -153,6 +155,8 @@ public abstract class AnnotationUtils {
 	}
 
 	/**
+	 * 给定类(类、方法、字段上)是否存在给定的注解
+	 *
 	 * Determine whether the given class is a candidate for carrying the specified annotation
 	 * (at type, method or field level).
 	 * @param clazz the class to introspect

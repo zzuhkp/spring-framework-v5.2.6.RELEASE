@@ -19,6 +19,8 @@ package org.springframework.aop.aspectj.annotation;
 import org.springframework.aop.framework.AopConfigException;
 
 /**
+ * 给定类不是一个 Aspect
+ * <p>
  * Extension of AopConfigException thrown when trying to perform
  * an advisor generation operation on a class that is not an
  * AspectJ annotation-style aspect.
@@ -34,6 +36,7 @@ public class NotAnAtAspectException extends AopConfigException {
 
 	/**
 	 * Create a new NotAnAtAspectException for the given class.
+	 *
 	 * @param nonAspectClass the offending class
 	 */
 	public NotAnAtAspectException(Class<?> nonAspectClass) {

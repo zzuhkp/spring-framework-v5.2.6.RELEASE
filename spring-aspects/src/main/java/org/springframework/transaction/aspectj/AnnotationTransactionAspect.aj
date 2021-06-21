@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.AnnotationTransactionAttribute
 import org.springframework.transaction.annotation.Transactional;
 
 /**
+ * 注解切面
+ *
  * Concrete AspectJ transaction aspect using Spring's
  * {@link org.springframework.transaction.annotation.Transactional} annotation.
  *
@@ -45,28 +47,32 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public aspect AnnotationTransactionAspect extends AbstractTransactionAspect {
 
-	public AnnotationTransactionAspect() {
-		super(new AnnotationTransactionAttributeSource(false));
-	}
+    public AnnotationTransactionAspect() {
+        super(new AnnotationTransactionAttributeSource(false));
+    }
 
-	/**
-	 * Matches the execution of any public method in a type with the Transactional
-	 * annotation, or any subtype of a type with the Transactional annotation.
-	 */
-	private pointcut executionOfAnyPublicMethodInAtTransactionalType() :
-		execution(public * ((@Transactional *)+).*(..)) && within(@Transactional *);
+    /**
+     * 类上存在 @Transactional 注解
+     *
+     * Matches the execution of any public method in a type with the Transactional
+     * annotation, or any subtype of a type with the Transactional annotation.
+     */
+    private pointcut executionOfAnyPublicMethodInAtTransactionalType():
+            execution(public * ((@Transactional *)+).*(..)) && within(@Transactional *);
 
-	/**
-	 * Matches the execution of any method with the Transactional annotation.
-	 */
-	private pointcut executionOfTransactionalMethod() :
-		execution(@Transactional * *(..));
+    /**
+     * 方法上存在 @Transactional 注解
+     *
+     * Matches the execution of any method with the Transactional annotation.
+     */
+    private pointcut executionOfTransactionalMethod():
+            execution(@Transactional * *(..));
 
-	/**
-	 * Definition of pointcut from super aspect - matched join points
-	 * will have Spring transaction management applied.
-	 */
-	protected pointcut transactionalMethodExecution(Object txObject) :
-		(executionOfAnyPublicMethodInAtTransactionalType() || executionOfTransactionalMethod() ) && this(txObject);
+    /**
+     * Definition of pointcut from super aspect - matched join points
+     * will have Spring transaction management applied.
+     */
+    protected pointcut transactionalMethodExecution(Object txObject):
+            (executionOfAnyPublicMethodInAtTransactionalType() || executionOfTransactionalMethod() ) && this(txObject);
 
 }
