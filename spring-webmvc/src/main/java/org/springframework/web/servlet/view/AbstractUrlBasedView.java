@@ -22,6 +22,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.lang.Nullable;
 
 /**
+ * 基于 url 的视图
+ * <p>
  * Abstract base class for URL-based views. Provides a consistent way of
  * holding the URL that a View wraps, in the form of a "url" bean property.
  *
@@ -42,6 +44,7 @@ public abstract class AbstractUrlBasedView extends AbstractView implements Initi
 
 	/**
 	 * Create a new AbstractUrlBasedView with the given URL.
+	 *
 	 * @param url the URL to forward to
 	 */
 	protected AbstractUrlBasedView(String url) {
@@ -84,6 +87,7 @@ public abstract class AbstractUrlBasedView extends AbstractView implements Initi
 	/**
 	 * Check whether the underlying resource that the configured URL points to
 	 * actually exists.
+	 *
 	 * @param locale the desired Locale that we're looking for
 	 * @return {@code true} if the resource exists (or is assumed to exist);
 	 * {@code false} if we know that it does not exist

@@ -24,6 +24,8 @@ import org.springframework.util.Assert;
 import org.springframework.web.context.request.NativeWebRequest;
 
 /**
+ * 根据请求参数确定文件扩展名的 ContentNegotiationStrategy
+ * <p>
  * Strategy that resolves the requested content type from a query parameter.
  * The default query parameter name is {@literal "format"}.
  *

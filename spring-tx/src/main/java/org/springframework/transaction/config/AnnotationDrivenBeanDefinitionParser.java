@@ -16,8 +16,6 @@
 
 package org.springframework.transaction.config;
 
-import org.w3c.dom.Element;
-
 import org.springframework.aop.config.AopNamespaceUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
@@ -31,8 +29,11 @@ import org.springframework.transaction.event.TransactionalEventListenerFactory;
 import org.springframework.transaction.interceptor.BeanFactoryTransactionAttributeSourceAdvisor;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 import org.springframework.util.ClassUtils;
+import org.w3c.dom.Element;
 
 /**
+ * tx:annotation-driven 元素节点解析
+ * <p>
  * {@link org.springframework.beans.factory.xml.BeanDefinitionParser
  * BeanDefinitionParser} implementation that allows users to easily configure
  * all the infrastructure beans required to enable annotation-driven transaction
@@ -63,19 +64,25 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		registerTransactionalEventListenerFactory(parserContext);
 		String mode = element.getAttribute("mode");
 		if ("aspectj".equals(mode)) {
+			// 注册支持 @Transactional 注解的切面作为 bean
 			// mode="aspectj"
 			registerTransactionAspect(element, parserContext);
 			if (ClassUtils.isPresent("javax.transaction.Transactional", getClass().getClassLoader())) {
 				registerJtaTransactionAspect(element, parserContext);
 			}
-		}
-		else {
+		} else {
 			// mode="proxy"
 			AopAutoProxyConfigurer.configureAutoProxyCreator(element, parserContext);
 		}
 		return null;
 	}
 
+	/**
+	 * 注册 AnnotationTransactionAspect 作为 bean
+	 *
+	 * @param element
+	 * @param parserContext
+	 */
 	private void registerTransactionAspect(Element element, ParserContext parserContext) {
 		String txAspectBeanName = TransactionManagementConfigUtils.TRANSACTION_ASPECT_BEAN_NAME;
 		String txAspectClassName = TransactionManagementConfigUtils.TRANSACTION_ASPECT_CLASS_NAME;
@@ -100,11 +107,22 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		}
 	}
 
+	/**
+	 * 添加事务管理器到 AnnotationTransactionAspect|JtaAnnotationTransactionAspect
+	 *
+	 * @param element
+	 * @param def
+	 */
 	private static void registerTransactionManager(Element element, BeanDefinition def) {
 		def.getPropertyValues().add("transactionManagerBeanName",
 				TxNamespaceHandler.getTransactionManagerName(element));
 	}
 
+	/**
+	 * 注册 TransactionalEventListenerFactory 作为 bean
+	 *
+	 * @param parserContext
+	 */
 	private void registerTransactionalEventListenerFactory(ParserContext parserContext) {
 		RootBeanDefinition def = new RootBeanDefinition();
 		def.setBeanClass(TransactionalEventListenerFactory.class);

@@ -42,6 +42,8 @@ import org.springframework.web.multipart.support.MultipartResolutionDelegate;
 import org.springframework.web.multipart.support.RequestPartServletServerHttpRequest;
 
 /**
+ * multipart 参数支持
+ *
  * Resolves the following method arguments:
  * <ul>
  * <li>Annotated with @{@link RequestPart}
@@ -88,6 +90,7 @@ public class RequestPartMethodArgumentResolver extends AbstractMessageConverterM
 
 
 	/**
+	 *
 	 * Whether the given {@linkplain MethodParameter method parameter} is a multi-part
 	 * supported. Supports the following:
 	 * <ul>

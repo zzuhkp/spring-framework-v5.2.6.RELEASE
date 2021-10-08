@@ -16,9 +16,8 @@
 
 package org.springframework.transaction.config;
 
-import org.w3c.dom.Element;
-
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
+import org.w3c.dom.Element;
 
 /**
  * {@code NamespaceHandler} allowing for the configuration of
@@ -44,6 +43,12 @@ public class TxNamespaceHandler extends NamespaceHandlerSupport {
 	static final String DEFAULT_TRANSACTION_MANAGER_BEAN_NAME = "transactionManager";
 
 
+	/**
+	 * 获取事务管理器的 bean 名称
+	 *
+	 * @param element
+	 * @return
+	 */
 	static String getTransactionManagerName(Element element) {
 		return (element.hasAttribute(TRANSACTION_MANAGER_ATTRIBUTE) ?
 				element.getAttribute(TRANSACTION_MANAGER_ATTRIBUTE) : DEFAULT_TRANSACTION_MANAGER_BEAN_NAME);

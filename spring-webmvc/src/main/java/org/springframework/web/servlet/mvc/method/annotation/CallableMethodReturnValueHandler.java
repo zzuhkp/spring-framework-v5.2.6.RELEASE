@@ -26,6 +26,8 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
+ * Callable 返回类型处理
+ * <p>
  * Handles return values of type {@link Callable}.
  *
  * @author Rossen Stoyanchev
@@ -40,7 +42,7 @@ public class CallableMethodReturnValueHandler implements HandlerMethodReturnValu
 
 	@Override
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
-			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
+								  ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
 
 		if (returnValue == null) {
 			mavContainer.setRequestHandled(true);

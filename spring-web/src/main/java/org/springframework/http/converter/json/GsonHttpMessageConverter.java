@@ -27,6 +27,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 基于 Gson 的 HttpMessageConverter
+ * <p>
  * Implementation of {@link org.springframework.http.converter.HttpMessageConverter}
  * that can read and write JSON using the
  * <a href="https://code.google.com/p/google-gson/">Google Gson</a> library.
@@ -39,10 +41,10 @@ import org.springframework.util.Assert;
  *
  * @author Roy Clarkson
  * @author Juergen Hoeller
- * @since 4.1
  * @see com.google.gson.Gson
  * @see com.google.gson.GsonBuilder
  * @see #setGson
+ * @since 4.1
  */
 public class GsonHttpMessageConverter extends AbstractJsonHttpMessageConverter {
 
@@ -58,6 +60,7 @@ public class GsonHttpMessageConverter extends AbstractJsonHttpMessageConverter {
 
 	/**
 	 * Construct a new {@code GsonHttpMessageConverter} with the given delegate.
+	 *
 	 * @param gson the Gson instance to use
 	 * @since 5.0
 	 */
@@ -72,6 +75,7 @@ public class GsonHttpMessageConverter extends AbstractJsonHttpMessageConverter {
 	 * If not set, a default {@link Gson#Gson() Gson} instance will be used.
 	 * <p>Setting a custom-configured {@code Gson} is one way to take further
 	 * control of the JSON serialization process.
+	 *
 	 * @see #GsonHttpMessageConverter(Gson)
 	 */
 	public void setGson(Gson gson) {
@@ -101,8 +105,7 @@ public class GsonHttpMessageConverter extends AbstractJsonHttpMessageConverter {
 		// which might contain extra generics that the object instance doesn't retain.
 		if (type instanceof ParameterizedType) {
 			getGson().toJson(o, type, writer);
-		}
-		else {
+		} else {
 			getGson().toJson(o, writer);
 		}
 	}

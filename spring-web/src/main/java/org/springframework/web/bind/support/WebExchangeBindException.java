@@ -16,22 +16,20 @@
 
 package org.springframework.web.bind.support;
 
-import java.beans.PropertyEditor;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.*;
 import org.springframework.web.server.ServerWebInputException;
 
+import java.beans.PropertyEditor;
+import java.util.List;
+import java.util.Map;
+
 /**
+ * 数据绑定和验证失败后的异常，可以分析异常原因
+ * <p>
  * A specialization of {@link ServerWebInputException} thrown when after data
  * binding and validation failure. Implements {@link BindingResult} (and its
  * super-interface {@link Errors}) to allow for direct analysis of binding and
@@ -55,6 +53,7 @@ public class WebExchangeBindException extends ServerWebInputException implements
 	/**
 	 * Return the BindingResult that this BindException wraps.
 	 * Will typically be a BeanPropertyBindingResult.
+	 *
 	 * @see BeanPropertyBindingResult
 	 */
 	public final BindingResult getBindingResult() {

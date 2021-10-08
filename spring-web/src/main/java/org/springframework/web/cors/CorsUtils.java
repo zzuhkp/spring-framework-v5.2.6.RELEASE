@@ -35,6 +35,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 public abstract class CorsUtils {
 
 	/**
+	 * 是否为一个 CORS 请求
+	 * <p>
 	 * Returns {@code true} if the request is a valid CORS one by checking {@code Origin}
 	 * header presence and ensuring that origins are different.
 	 */
@@ -57,8 +59,7 @@ public abstract class CorsUtils {
 		if (port == -1) {
 			if ("http".equals(scheme) || "ws".equals(scheme)) {
 				port = 80;
-			}
-			else if ("https".equals(scheme) || "wss".equals(scheme)) {
+			} else if ("https".equals(scheme) || "wss".equals(scheme)) {
 				port = 443;
 			}
 		}
@@ -66,6 +67,8 @@ public abstract class CorsUtils {
 	}
 
 	/**
+	 * 是否为一个 CORS 预请求
+	 * <p>
 	 * Returns {@code true} if the request is a valid CORS pre-flight one by checking {code OPTIONS} method with
 	 * {@code Origin} and {@code Access-Control-Request-Method} headers presence.
 	 */

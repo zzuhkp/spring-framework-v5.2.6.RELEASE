@@ -26,6 +26,8 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.lang.Nullable;
 
 /**
+ * 基于 Jackson 的 ResponseBodyAdvice 抽象实现
+ *
  * A convenient base class for {@code ResponseBodyAdvice} implementations
  * that customize the response before JSON serialization with
  * {@link AbstractJackson2HttpMessageConverter}'s concrete subclasses.

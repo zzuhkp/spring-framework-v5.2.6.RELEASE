@@ -513,6 +513,8 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 基本类型转包装类型
+	 * <p>
 	 * Resolve the given class if it is a primitive class, returning the corresponding primitive wrapper type instead.
 	 *
 	 * @param clazz the class to check

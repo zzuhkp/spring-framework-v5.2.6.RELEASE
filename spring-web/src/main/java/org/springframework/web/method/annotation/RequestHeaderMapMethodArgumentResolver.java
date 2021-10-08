@@ -32,6 +32,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
+ * 注解 @RequestHeader 标注的 Map 类型的参数支持
+ *
  * Resolves {@link Map} method arguments annotated with {@code @RequestHeader}.
  * For individual header values annotated with {@code @RequestHeader} see
  * {@link RequestHeaderMethodArgumentResolver} instead.

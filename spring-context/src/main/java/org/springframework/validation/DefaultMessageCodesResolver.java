@@ -16,16 +16,11 @@
 
 package org.springframework.validation;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.StringJoiner;
-
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * MessageCodesResolver 接口的默认实现
@@ -96,7 +91,7 @@ public class DefaultMessageCodesResolver implements MessageCodesResolver, Serial
 
 	/**
 	 * 解析消息代码时的分隔符
-	 *
+	 * <p>
 	 * The separator that this implementation uses when resolving message codes.
 	 */
 	public static final String CODE_SEPARATOR = ".";
@@ -182,6 +177,8 @@ public class DefaultMessageCodesResolver implements MessageCodesResolver, Serial
 	}
 
 	/**
+	 * 将字段添加到列表中，同时从带 key 的字段解析出不带 key 的字段名添加到列表中
+	 * <p>
 	 * Add both keyed and non-keyed entries for the supplied {@code field}
 	 * to the supplied field list.
 	 */
@@ -192,6 +189,7 @@ public class DefaultMessageCodesResolver implements MessageCodesResolver, Serial
 		while (keyIndex != -1) {
 			int endKeyIndex = plainField.indexOf(']', keyIndex);
 			if (endKeyIndex != -1) {
+				// 去掉 [number] 后添加到列表
 				plainField = plainField.substring(0, keyIndex) + plainField.substring(endKeyIndex + 1);
 				fieldList.add(plainField);
 				keyIndex = plainField.lastIndexOf('[');

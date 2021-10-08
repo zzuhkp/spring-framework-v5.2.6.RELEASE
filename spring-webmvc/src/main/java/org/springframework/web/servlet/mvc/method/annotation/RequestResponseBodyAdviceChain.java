@@ -33,6 +33,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.method.ControllerAdviceBean;
 
 /**
+ * RequestBodyAdvice、ResponseBodyAdvice 的实例，委托给内部的 advice 列表
+ * <p>
  * Invokes {@link RequestBodyAdvice} and {@link ResponseBodyAdvice} where each
  * instance may be (and is most likely) wrapped with
  * {@link org.springframework.web.method.ControllerAdviceBean ControllerAdviceBean}.
@@ -56,6 +58,14 @@ class RequestResponseBodyAdviceChain implements RequestBodyAdvice, ResponseBodyA
 		this.responseBodyAdvice.addAll(getAdviceByType(requestResponseBodyAdvice, ResponseBodyAdvice.class));
 	}
 
+	/**
+	 * 获取给定类型的 advice 列表
+	 *
+	 * @param requestResponseBodyAdvice
+	 * @param adviceType
+	 * @param <T>
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	static <T> List<T> getAdviceByType(@Nullable List<Object> requestResponseBodyAdvice, Class<T> adviceType) {
 		if (requestResponseBodyAdvice != null) {
@@ -85,10 +95,11 @@ class RequestResponseBodyAdviceChain implements RequestBodyAdvice, ResponseBodyA
 
 	@Override
 	public HttpInputMessage beforeBodyRead(HttpInputMessage request, MethodParameter parameter,
-			Type targetType, Class<? extends HttpMessageConverter<?>> converterType) throws IOException {
+										   Type targetType, Class<? extends HttpMessageConverter<?>> converterType) throws IOException {
 
 		for (RequestBodyAdvice advice : getMatchingAdvice(parameter, RequestBodyAdvice.class)) {
 			if (advice.supports(parameter, targetType, converterType)) {
+				// 读取前调用
 				request = advice.beforeBodyRead(request, parameter, targetType, converterType);
 			}
 		}
@@ -97,10 +108,11 @@ class RequestResponseBodyAdviceChain implements RequestBodyAdvice, ResponseBodyA
 
 	@Override
 	public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter,
-			Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
+								Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
 
 		for (RequestBodyAdvice advice : getMatchingAdvice(parameter, RequestBodyAdvice.class)) {
 			if (advice.supports(parameter, targetType, converterType)) {
+				// 读取后调用
 				body = advice.afterBodyRead(body, inputMessage, parameter, targetType, converterType);
 			}
 		}
@@ -110,8 +122,8 @@ class RequestResponseBodyAdviceChain implements RequestBodyAdvice, ResponseBodyA
 	@Override
 	@Nullable
 	public Object beforeBodyWrite(@Nullable Object body, MethodParameter returnType, MediaType contentType,
-			Class<? extends HttpMessageConverter<?>> converterType,
-			ServerHttpRequest request, ServerHttpResponse response) {
+								  Class<? extends HttpMessageConverter<?>> converterType,
+								  ServerHttpRequest request, ServerHttpResponse response) {
 
 		return processBody(body, returnType, contentType, converterType, request, response);
 	}
@@ -119,7 +131,7 @@ class RequestResponseBodyAdviceChain implements RequestBodyAdvice, ResponseBodyA
 	@Override
 	@Nullable
 	public Object handleEmptyBody(@Nullable Object body, HttpInputMessage inputMessage, MethodParameter parameter,
-			Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
+								  Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
 
 		for (RequestBodyAdvice advice : getMatchingAdvice(parameter, RequestBodyAdvice.class)) {
 			if (advice.supports(parameter, targetType, converterType)) {
@@ -130,11 +142,23 @@ class RequestResponseBodyAdviceChain implements RequestBodyAdvice, ResponseBodyA
 	}
 
 
+	/**
+	 * 处理响应体
+	 *
+	 * @param body
+	 * @param returnType
+	 * @param contentType
+	 * @param converterType
+	 * @param request
+	 * @param response
+	 * @param <T>
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	@Nullable
 	private <T> Object processBody(@Nullable Object body, MethodParameter returnType, MediaType contentType,
-			Class<? extends HttpMessageConverter<?>> converterType,
-			ServerHttpRequest request, ServerHttpResponse response) {
+								   Class<? extends HttpMessageConverter<?>> converterType,
+								   ServerHttpRequest request, ServerHttpResponse response) {
 
 		for (ResponseBodyAdvice<?> advice : getMatchingAdvice(returnType, ResponseBodyAdvice.class)) {
 			if (advice.supports(returnType, converterType)) {
@@ -145,6 +169,14 @@ class RequestResponseBodyAdviceChain implements RequestBodyAdvice, ResponseBodyA
 		return body;
 	}
 
+	/**
+	 * 获取匹配给定类型的 advice 列表
+	 *
+	 * @param parameter
+	 * @param adviceType
+	 * @param <A>
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	private <A> List<A> getMatchingAdvice(MethodParameter parameter, Class<? extends A> adviceType) {
 		List<Object> availableAdvice = getAdvice(adviceType);
@@ -167,14 +199,18 @@ class RequestResponseBodyAdviceChain implements RequestBodyAdvice, ResponseBodyA
 		return result;
 	}
 
+	/**
+	 * 获取给定类型的 advice 列表
+	 *
+	 * @param adviceType
+	 * @return
+	 */
 	private List<Object> getAdvice(Class<?> adviceType) {
 		if (RequestBodyAdvice.class == adviceType) {
 			return this.requestBodyAdvice;
-		}
-		else if (ResponseBodyAdvice.class == adviceType) {
+		} else if (ResponseBodyAdvice.class == adviceType) {
 			return this.responseBodyAdvice;
-		}
-		else {
+		} else {
 			throw new IllegalArgumentException("Unexpected adviceType: " + adviceType);
 		}
 	}

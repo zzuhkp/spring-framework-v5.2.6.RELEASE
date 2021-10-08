@@ -16,13 +16,13 @@
 
 package org.springframework.transaction.aspectj;
 
-import javax.transaction.Transactional;
-
 import org.aspectj.lang.annotation.RequiredTypes;
-
 import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
 
 /**
+ *
+ * 支持 @javax.transaction.Transactional 注解的切面
+ *
  * Concrete AspectJ transaction aspect using the JTA 1.2
  * {@link javax.transaction.Transactional} annotation.
  *

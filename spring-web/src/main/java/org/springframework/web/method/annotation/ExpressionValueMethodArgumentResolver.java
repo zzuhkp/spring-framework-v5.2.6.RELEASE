@@ -27,6 +27,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.context.request.NativeWebRequest;
 
 /**
+ * 注解 @Value 标注的参数解析
+ * <p>
  * Resolves method arguments annotated with {@code @Value}.
  *
  * <p>An {@code @Value} does not have a name but gets resolved from the default
@@ -43,9 +45,10 @@ public class ExpressionValueMethodArgumentResolver extends AbstractNamedValueMet
 
 	/**
 	 * Create a new {@link ExpressionValueMethodArgumentResolver} instance.
+	 *
 	 * @param beanFactory a bean factory to use for resolving  ${...}
-	 * placeholder and #{...} SpEL expressions in default values;
-	 * or {@code null} if default values are not expected to contain expressions
+	 *                    placeholder and #{...} SpEL expressions in default values;
+	 *                    or {@code null} if default values are not expected to contain expressions
 	 */
 	public ExpressionValueMethodArgumentResolver(@Nullable ConfigurableBeanFactory beanFactory) {
 		super(beanFactory);

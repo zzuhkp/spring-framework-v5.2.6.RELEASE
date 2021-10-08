@@ -23,6 +23,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.lang.Nullable;
 
 /**
+ * 表示 multipart 类型的请求
+ * <p>
  * Provides additional methods for dealing with multipart content within a
  * servlet request, allowing to access uploaded files.
  * Implementations also need to override the standard
@@ -37,7 +39,6 @@ import org.springframework.lang.Nullable;
  *
  * @author Juergen Hoeller
  * @author Trevor D. Cook
- * @since 29.09.2003
  * @see MultipartResolver
  * @see MultipartFile
  * @see javax.servlet.http.HttpServletRequest#getParameter
@@ -45,21 +46,28 @@ import org.springframework.lang.Nullable;
  * @see javax.servlet.http.HttpServletRequest#getParameterMap
  * @see org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
  * @see org.springframework.web.multipart.support.AbstractMultipartHttpServletRequest
+ * @since 29.09.2003
  */
 public interface MultipartHttpServletRequest extends HttpServletRequest, MultipartRequest {
 
 	/**
+	 * 获取请求方法
+	 * <p>
 	 * Return this request's method as a convenient HttpMethod instance.
 	 */
 	@Nullable
 	HttpMethod getRequestMethod();
 
 	/**
+	 * 获取请求头
+	 * <p>
 	 * Return this request's headers as a convenient HttpHeaders instance.
 	 */
 	HttpHeaders getRequestHeaders();
 
 	/**
+	 * 获取请求头
+	 * <p>
 	 * Return the headers associated with the specified part of the multipart request.
 	 * <p>If the underlying implementation supports access to headers, then all headers are returned.
 	 * Otherwise, the returned headers will include a 'Content-Type' header at the very least.

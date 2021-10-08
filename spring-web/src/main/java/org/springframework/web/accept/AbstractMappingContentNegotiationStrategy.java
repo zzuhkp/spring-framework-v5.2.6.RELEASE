@@ -32,6 +32,8 @@ import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.context.request.NativeWebRequest;
 
 /**
+ * 抽象的 ContentNegotiationStrategy
+ * <p>
  * Base class for {@code ContentNegotiationStrategy} implementations with the
  * steps to resolve a request to media types.
  *
@@ -54,8 +56,14 @@ public abstract class AbstractMappingContentNegotiationStrategy extends MappingM
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	/**
+	 * 是否仅使用注册的扩展名
+	 */
 	private boolean useRegisteredExtensionsOnly = false;
 
+	/**
+	 * 是否忽略未知的扩展名
+	 */
 	private boolean ignoreUnknownExtensions = false;
 
 
@@ -105,6 +113,7 @@ public abstract class AbstractMappingContentNegotiationStrategy extends MappingM
 	/**
 	 * An alternative to {@link #resolveMediaTypes(NativeWebRequest)} that accepts
 	 * an already extracted key.
+	 *
 	 * @since 3.2.16
 	 */
 	public List<MediaType> resolveMediaTypeKey(NativeWebRequest webRequest, @Nullable String key)
@@ -127,7 +136,9 @@ public abstract class AbstractMappingContentNegotiationStrategy extends MappingM
 
 
 	/**
+	 * 获取 key 值，以便用来获取媒体类型
 	 * Extract a key from the request to use to look up media types.
+	 *
 	 * @return the lookup key, or {@code null} if none
 	 */
 	@Nullable
@@ -141,6 +152,8 @@ public abstract class AbstractMappingContentNegotiationStrategy extends MappingM
 	}
 
 	/**
+	 * 处理无法根据 key 获取到媒体类型的情况
+	 *
 	 * Override to provide handling when a key is not resolved via.
 	 * {@link #lookupMediaType}. Sub-classes can take further steps to
 	 * determine the media type(s). If a MediaType is returned from

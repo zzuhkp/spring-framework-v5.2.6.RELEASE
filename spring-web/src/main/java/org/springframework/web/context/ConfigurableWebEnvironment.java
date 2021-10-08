@@ -16,13 +16,15 @@
 
 package org.springframework.web.context;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.lang.Nullable;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+
 /**
+ * 可配置的 web 环境
+ * <p>
  * Specialization of {@link ConfigurableEnvironment} allowing initialization of
  * servlet-related {@link org.springframework.core.env.PropertySource} objects at the
  * earliest moment that the {@link ServletContext} and (optionally) {@link ServletConfig}

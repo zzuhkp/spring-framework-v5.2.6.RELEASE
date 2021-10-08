@@ -33,6 +33,8 @@ import org.springframework.util.ReflectionUtils.MethodFilter;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
+ * 查找 @ExceptionHandler 方法的类
+ * <p>
  * Discovers {@linkplain ExceptionHandler @ExceptionHandler} methods in a given class,
  * including all of its superclasses, and helps to resolve a given {@link Exception}
  * to the exception types supported by a given {@link Method}.
@@ -57,6 +59,7 @@ public class ExceptionHandlerMethodResolver {
 
 	/**
 	 * A constructor that finds {@link ExceptionHandler} methods in the given type.
+	 *
 	 * @param handlerType the type to introspect
 	 */
 	public ExceptionHandlerMethodResolver(Class<?> handlerType) {
@@ -69,14 +72,18 @@ public class ExceptionHandlerMethodResolver {
 
 
 	/**
+	 * 探测异常
+	 * <p>
 	 * Extract exception mappings from the {@code @ExceptionHandler} annotation first,
 	 * and then as a fallback from the method signature itself.
 	 */
 	@SuppressWarnings("unchecked")
 	private List<Class<? extends Throwable>> detectExceptionMappings(Method method) {
 		List<Class<? extends Throwable>> result = new ArrayList<>();
+		// 先根据 @ExceptionHandler 确定处理的异常
 		detectAnnotationExceptionMappings(method, result);
 		if (result.isEmpty()) {
+			// 没有查到再根据方法参数确定处理器的异常
 			for (Class<?> paramType : method.getParameterTypes()) {
 				if (Throwable.class.isAssignableFrom(paramType)) {
 					result.add((Class<? extends Throwable>) paramType);
@@ -89,12 +96,25 @@ public class ExceptionHandlerMethodResolver {
 		return result;
 	}
 
+
+	/**
+	 * 根据 @ExceptionHandler 探测异常
+	 *
+	 * @param method
+	 * @param result
+	 */
 	private void detectAnnotationExceptionMappings(Method method, List<Class<? extends Throwable>> result) {
 		ExceptionHandler ann = AnnotatedElementUtils.findMergedAnnotation(method, ExceptionHandler.class);
 		Assert.state(ann != null, "No ExceptionHandler annotation");
 		result.addAll(Arrays.asList(ann.value()));
 	}
 
+	/**
+	 * 添加异常映射
+	 *
+	 * @param exceptionType
+	 * @param method
+	 */
 	private void addExceptionMapping(Class<? extends Throwable> exceptionType, Method method) {
 		Method oldMethod = this.mappedMethods.put(exceptionType, method);
 		if (oldMethod != null && !oldMethod.equals(method)) {
@@ -113,6 +133,7 @@ public class ExceptionHandlerMethodResolver {
 	/**
 	 * Find a {@link Method} to handle the given exception.
 	 * Use {@link ExceptionDepthComparator} if more than one match is found.
+	 *
 	 * @param exception the exception
 	 * @return a Method to handle the exception, or {@code null} if none found
 	 */
@@ -122,8 +143,11 @@ public class ExceptionHandlerMethodResolver {
 	}
 
 	/**
+	 * 根据异常解析方法
+	 * <p>
 	 * Find a {@link Method} to handle the given Throwable.
 	 * Use {@link ExceptionDepthComparator} if more than one match is found.
+	 *
 	 * @param exception the exception
 	 * @return a Method to handle the exception, or {@code null} if none found
 	 * @since 5.0
@@ -141,8 +165,11 @@ public class ExceptionHandlerMethodResolver {
 	}
 
 	/**
+	 * 解析方法
+	 * <p>
 	 * Find a {@link Method} to handle the given exception type. This can be
 	 * useful if an {@link Exception} instance is not available (e.g. for tools).
+	 *
 	 * @param exceptionType the exception type
 	 * @return a Method to handle the exception, or {@code null} if none found
 	 */
@@ -157,6 +184,8 @@ public class ExceptionHandlerMethodResolver {
 	}
 
 	/**
+	 * 获取映射的方法
+	 * <p>
 	 * Return the {@link Method} mapped to the given exception type, or {@code null} if none.
 	 */
 	@Nullable
@@ -170,8 +199,7 @@ public class ExceptionHandlerMethodResolver {
 		if (!matches.isEmpty()) {
 			matches.sort(new ExceptionDepthComparator(exceptionType));
 			return this.mappedMethods.get(matches.get(0));
-		}
-		else {
+		} else {
 			return null;
 		}
 	}

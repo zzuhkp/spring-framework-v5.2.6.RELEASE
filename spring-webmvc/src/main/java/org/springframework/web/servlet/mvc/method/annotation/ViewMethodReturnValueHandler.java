@@ -26,6 +26,8 @@ import org.springframework.web.servlet.SmartView;
 import org.springframework.web.servlet.View;
 
 /**
+ * View 返回值类型处理
+ *
  * Handles return values that are of type {@link View}.
  *
  * <p>A {@code null} return value is left as-is leaving it to the configured

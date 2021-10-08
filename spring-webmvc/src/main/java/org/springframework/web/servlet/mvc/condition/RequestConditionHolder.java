@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.lang.Nullable;
 
 /**
+ * RequestCondition 持有者
+ * <p>
  * A holder for a {@link RequestCondition} useful when the type of the request
  * condition is not known ahead of time, e.g. custom condition. Since this
  * class is also an implementation of {@code RequestCondition}, effectively it
@@ -45,6 +47,7 @@ public final class RequestConditionHolder extends AbstractRequestCondition<Reque
 
 	/**
 	 * Create a new holder to wrap the given request condition.
+	 *
 	 * @param requestCondition the condition to hold, may be {@code null}
 	 */
 	@SuppressWarnings("unchecked")
@@ -80,14 +83,11 @@ public final class RequestConditionHolder extends AbstractRequestCondition<Reque
 	public RequestConditionHolder combine(RequestConditionHolder other) {
 		if (this.condition == null && other.condition == null) {
 			return this;
-		}
-		else if (this.condition == null) {
+		} else if (this.condition == null) {
 			return other;
-		}
-		else if (other.condition == null) {
+		} else if (other.condition == null) {
 			return this;
-		}
-		else {
+		} else {
 			assertEqualConditionTypes(this.condition, other.condition);
 			RequestCondition<?> combined = (RequestCondition<?>) this.condition.combine(other.condition);
 			return new RequestConditionHolder(combined);
@@ -129,14 +129,11 @@ public final class RequestConditionHolder extends AbstractRequestCondition<Reque
 	public int compareTo(RequestConditionHolder other, HttpServletRequest request) {
 		if (this.condition == null && other.condition == null) {
 			return 0;
-		}
-		else if (this.condition == null) {
+		} else if (this.condition == null) {
 			return 1;
-		}
-		else if (other.condition == null) {
+		} else if (other.condition == null) {
 			return -1;
-		}
-		else {
+		} else {
 			assertEqualConditionTypes(this.condition, other.condition);
 			return this.condition.compareTo(other.condition, request);
 		}

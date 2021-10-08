@@ -37,6 +37,8 @@ import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.FrameworkServlet;
 
 /**
+ * WebApplicationInitializer 的子类，Servlet 容器启动时注册 DispatcherServlet 和 Filter
+ *
  * Base class for {@link org.springframework.web.WebApplicationInitializer}
  * implementations that register a {@link DispatcherServlet} in the servlet context.
  *

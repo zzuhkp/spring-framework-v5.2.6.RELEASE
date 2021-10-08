@@ -21,6 +21,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 
 /**
+ * 400 响应码异常
+ * <p>
  * Exception for errors that fit response status 400 (bad request) for use in
  * Spring Web applications. The exception provides additional fields (e.g.
  * an optional {@link MethodParameter} if related to the error).

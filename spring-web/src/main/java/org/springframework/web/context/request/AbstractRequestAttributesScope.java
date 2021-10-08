@@ -21,6 +21,8 @@ import org.springframework.beans.factory.config.Scope;
 import org.springframework.lang.Nullable;
 
 /**
+ * web 环境 scope 支持
+ *
  * Abstract {@link Scope} implementation that reads from a particular scope
  * in the current thread-bound {@link RequestAttributes} object.
  *

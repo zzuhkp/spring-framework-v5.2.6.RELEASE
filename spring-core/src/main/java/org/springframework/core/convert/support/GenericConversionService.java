@@ -354,6 +354,8 @@ public class GenericConversionService implements ConfigurableConversionService {
 
 
 	/**
+	 * Converter 适配
+	 * <p>
 	 * Adapts a {@link Converter} to a {@link GenericConverter}.
 	 */
 	@SuppressWarnings("unchecked")
@@ -409,6 +411,8 @@ public class GenericConversionService implements ConfigurableConversionService {
 
 
 	/**
+	 * ConverterFactory 适配
+	 * <p>
 	 * Adapts a {@link ConverterFactory} to a {@link GenericConverter}.
 	 */
 	@SuppressWarnings("unchecked")
@@ -589,6 +593,8 @@ public class GenericConversionService implements ConfigurableConversionService {
 		}
 
 		/**
+		 * 获取给定的类型的层次结构
+		 * <p>
 		 * Returns an ordered class hierarchy for the given type.
 		 *
 		 * @param type the type
@@ -711,6 +717,8 @@ public class GenericConversionService implements ConfigurableConversionService {
 
 
 	/**
+	 * 没有进行任何操作的 GenericConverter
+	 * <p>
 	 * Internal converter that performs no operation.
 	 */
 	private static class NoOpConverter implements GenericConverter {

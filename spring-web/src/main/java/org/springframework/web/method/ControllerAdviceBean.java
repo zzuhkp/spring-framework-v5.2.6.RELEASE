@@ -33,6 +33,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 /**
+ * 。 @ControllerAdvice bean 的封装
+ * <p>
  * Encapsulates information about an {@link ControllerAdvice @ControllerAdvice}
  * Spring-managed bean without necessarily requiring it to be instantiated.
  *
@@ -49,20 +51,30 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 public class ControllerAdviceBean implements Ordered {
 
 	/**
+	 * bean 的名称或实例
+	 * <p>
 	 * Reference to the actual bean instance or a {@code String} representing
 	 * the bean name.
 	 */
 	private final Object beanOrName;
 
+	/**
+	 * 是否为单例 bean
+	 */
 	private final boolean isSingleton;
 
 	/**
+	 * 根据 bean 名称获取到的 bean 实例
+	 * <p>
 	 * Reference to the resolved bean instance, potentially lazily retrieved
 	 * via the {@code BeanFactory}.
 	 */
 	@Nullable
 	private Object resolvedBean;
 
+	/**
+	 * bean 类型
+	 */
 	@Nullable
 	private final Class<?> beanType;
 
@@ -77,6 +89,7 @@ public class ControllerAdviceBean implements Ordered {
 
 	/**
 	 * Create a {@code ControllerAdviceBean} using the given bean instance.
+	 *
 	 * @param bean the bean instance
 	 */
 	public ControllerAdviceBean(Object bean) {
@@ -92,9 +105,10 @@ public class ControllerAdviceBean implements Ordered {
 	/**
 	 * Create a {@code ControllerAdviceBean} using the given bean name and
 	 * {@code BeanFactory}.
-	 * @param beanName the name of the bean
+	 *
+	 * @param beanName    the name of the bean
 	 * @param beanFactory a {@code BeanFactory} to retrieve the bean type initially
-	 * and later to resolve the actual bean
+	 *                    and later to resolve the actual bean
 	 */
 	public ControllerAdviceBean(String beanName, BeanFactory beanFactory) {
 		this(beanName, beanFactory, null);
@@ -104,11 +118,12 @@ public class ControllerAdviceBean implements Ordered {
 	 * Create a {@code ControllerAdviceBean} using the given bean name,
 	 * {@code BeanFactory}, and {@link ControllerAdvice @ControllerAdvice}
 	 * annotation.
-	 * @param beanName the name of the bean
-	 * @param beanFactory a {@code BeanFactory} to retrieve the bean type initially
-	 * and later to resolve the actual bean
+	 *
+	 * @param beanName         the name of the bean
+	 * @param beanFactory      a {@code BeanFactory} to retrieve the bean type initially
+	 *                         and later to resolve the actual bean
 	 * @param controllerAdvice the {@code @ControllerAdvice} annotation for the
-	 * bean, or {@code null} if not yet retrieved
+	 *                         bean, or {@code null} if not yet retrieved
 	 * @since 5.2
 	 */
 	public ControllerAdviceBean(String beanName, BeanFactory beanFactory, @Nullable ControllerAdvice controllerAdvice) {
@@ -143,6 +158,7 @@ public class ControllerAdviceBean implements Ordered {
 	 * <li>Otherwise use {@link Ordered#LOWEST_PRECEDENCE} as the default, fallback
 	 * order value.</li>
 	 * </ul>
+	 *
 	 * @see #resolveBean()
 	 */
 	@Override
@@ -160,18 +176,15 @@ public class ControllerAdviceBean implements Ordered {
 				if (!isScopedProxy && !ScopedProxyUtils.isScopedTarget(beanName)) {
 					resolvedBean = resolveBean();
 				}
-			}
-			else {
+			} else {
 				resolvedBean = resolveBean();
 			}
 
 			if (resolvedBean instanceof Ordered) {
 				this.order = ((Ordered) resolvedBean).getOrder();
-			}
-			else if (this.beanType != null) {
+			} else if (this.beanType != null) {
 				this.order = OrderUtils.getOrder(this.beanType, Ordered.LOWEST_PRECEDENCE);
-			}
-			else {
+			} else {
 				this.order = Ordered.LOWEST_PRECEDENCE;
 			}
 		}
@@ -189,6 +202,8 @@ public class ControllerAdviceBean implements Ordered {
 	}
 
 	/**
+	 * 解析 bean
+	 * <p>
 	 * Get the bean instance for this {@code ControllerAdviceBean}, if necessary
 	 * resolving the bean name through the {@link BeanFactory}.
 	 * <p>As of Spring Framework 5.2, once the bean instance has been resolved it
@@ -215,11 +230,14 @@ public class ControllerAdviceBean implements Ordered {
 	}
 
 	/**
+	 * 当前实例是否应该应用到给定的 bean 类型
+	 * <p>
 	 * Check whether the given bean type should be advised by this
 	 * {@code ControllerAdviceBean}.
+	 *
 	 * @param beanType the type of the bean to check
-	 * @since 4.0
 	 * @see ControllerAdvice
+	 * @since 4.0
 	 */
 	public boolean isApplicableToBeanType(@Nullable Class<?> beanType) {
 		return this.beanTypePredicate.test(beanType);
@@ -250,11 +268,14 @@ public class ControllerAdviceBean implements Ordered {
 
 
 	/**
+	 * 查找标注了 @ControllerAdvice 的 bean
+	 * <p>
 	 * Find beans annotated with {@link ControllerAdvice @ControllerAdvice} in the
 	 * given {@link ApplicationContext} and wrap them as {@code ControllerAdviceBean}
 	 * instances.
 	 * <p>As of Spring Framework 5.2, the {@code ControllerAdviceBean} instances
 	 * in the returned list are sorted using {@link OrderComparator#sort(List)}.
+	 *
 	 * @see #getOrder()
 	 * @see OrderComparator
 	 * @see Ordered
@@ -275,18 +296,37 @@ public class ControllerAdviceBean implements Ordered {
 		return adviceBeans;
 	}
 
+	/**
+	 * 获取  bean 的类型
+	 *
+	 * @param beanName
+	 * @param beanFactory
+	 * @return
+	 */
 	@Nullable
 	private static Class<?> getBeanType(String beanName, BeanFactory beanFactory) {
 		Class<?> beanType = beanFactory.getType(beanName);
 		return (beanType != null ? ClassUtils.getUserClass(beanType) : null);
 	}
 
+	/**
+	 * 创建 HandlerTypePredicate
+	 *
+	 * @param beanType
+	 * @return
+	 */
 	private static HandlerTypePredicate createBeanTypePredicate(@Nullable Class<?> beanType) {
 		ControllerAdvice controllerAdvice = (beanType != null ?
 				AnnotatedElementUtils.findMergedAnnotation(beanType, ControllerAdvice.class) : null);
 		return createBeanTypePredicate(controllerAdvice);
 	}
 
+	/**
+	 * HandlerTypePredicate 创建
+	 *
+	 * @param controllerAdvice
+	 * @return
+	 */
 	private static HandlerTypePredicate createBeanTypePredicate(@Nullable ControllerAdvice controllerAdvice) {
 		if (controllerAdvice != null) {
 			return HandlerTypePredicate.builder()

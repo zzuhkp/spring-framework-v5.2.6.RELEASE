@@ -26,6 +26,8 @@ import org.springframework.web.context.ServletConfigAware;
 import org.springframework.web.context.ServletContextAware;
 
 /**
+ * ServletContextAware、ServletConfigAware 支持
+ *
  * {@link org.springframework.beans.factory.config.BeanPostProcessor}
  * implementation that passes the ServletContext to beans that implement
  * the {@link ServletContextAware} interface.

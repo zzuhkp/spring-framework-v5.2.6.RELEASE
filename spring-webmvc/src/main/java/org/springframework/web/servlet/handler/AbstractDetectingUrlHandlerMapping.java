@@ -28,11 +28,14 @@ import org.springframework.util.ObjectUtils;
  * defined beans in the application context.
  *
  * @author Juergen Hoeller
- * @since 2.5
  * @see #determineUrlsForHandler
+ * @since 2.5
  */
 public abstract class AbstractDetectingUrlHandlerMapping extends AbstractUrlHandlerMapping {
 
+	/**
+	 * 是否探测父 BeanFactory 中的处理器
+	 */
 	private boolean detectHandlersInAncestorContexts = false;
 
 
@@ -60,10 +63,13 @@ public abstract class AbstractDetectingUrlHandlerMapping extends AbstractUrlHand
 	}
 
 	/**
+	 * 探测处理器
+	 * <p>
 	 * Register all handlers found in the current ApplicationContext.
 	 * <p>The actual URL determination for a handler is up to the concrete
 	 * {@link #determineUrlsForHandler(String)} implementation. A bean for
 	 * which no such URLs could be determined is simply not considered a handler.
+	 *
 	 * @throws org.springframework.beans.BeansException if the handler couldn't be registered
 	 * @see #determineUrlsForHandler(String)
 	 */
@@ -89,7 +95,10 @@ public abstract class AbstractDetectingUrlHandlerMapping extends AbstractUrlHand
 
 
 	/**
+	 * 根据 handler bean 名称确定 URL 路径
+	 * <p>
 	 * Determine the URLs for the given handler bean.
+	 *
 	 * @param beanName the name of the candidate bean
 	 * @return the URLs determined for the bean, or an empty array if none
 	 */

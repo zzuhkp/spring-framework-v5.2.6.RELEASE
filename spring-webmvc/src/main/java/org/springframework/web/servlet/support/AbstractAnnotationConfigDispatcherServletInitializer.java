@@ -22,6 +22,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
 /**
+ * 注册 DispatcherServlet 到 Servlet 的 WebApplicationInitializer
+ * <p>
  * {@link org.springframework.web.WebApplicationInitializer WebApplicationInitializer}
  * to register a {@code DispatcherServlet} and use Java-based Spring configuration.
  *
@@ -45,6 +47,8 @@ public abstract class AbstractAnnotationConfigDispatcherServletInitializer
 		extends AbstractDispatcherServletInitializer {
 
 	/**
+	 * 创建根应用上下文
+	 * <p>
 	 * {@inheritDoc}
 	 * <p>This implementation creates an {@link AnnotationConfigWebApplicationContext},
 	 * providing it the annotated classes returned by {@link #getRootConfigClasses()}.
@@ -58,13 +62,13 @@ public abstract class AbstractAnnotationConfigDispatcherServletInitializer
 			AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
 			context.register(configClasses);
 			return context;
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
 
 	/**
+	 * 创建 Servlet 应用上下文
 	 * {@inheritDoc}
 	 * <p>This implementation creates an {@link AnnotationConfigWebApplicationContext},
 	 * providing it the annotated classes returned by {@link #getServletConfigClasses()}.
@@ -80,8 +84,11 @@ public abstract class AbstractAnnotationConfigDispatcherServletInitializer
 	}
 
 	/**
+	 * 获取根应用上下文使用的配置类
+	 * <p>
 	 * Specify {@code @Configuration} and/or {@code @Component} classes for the
 	 * {@linkplain #createRootApplicationContext() root application context}.
+	 *
 	 * @return the configuration for the root application context, or {@code null}
 	 * if creation and registration of a root context is not desired
 	 */
@@ -89,8 +96,11 @@ public abstract class AbstractAnnotationConfigDispatcherServletInitializer
 	protected abstract Class<?>[] getRootConfigClasses();
 
 	/**
+	 * 获取 Servlet 应用上下文中的配置类
+	 * <p>
 	 * Specify {@code @Configuration} and/or {@code @Component} classes for the
 	 * {@linkplain #createServletApplicationContext() Servlet application context}.
+	 *
 	 * @return the configuration for the Servlet application context, or
 	 * {@code null} if all configuration is specified through root config classes.
 	 */

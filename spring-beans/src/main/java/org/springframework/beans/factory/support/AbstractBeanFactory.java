@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeansException;
@@ -154,6 +155,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	private final Set<PropertyEditorRegistrar> propertyEditorRegistrars = new LinkedHashSet<>(4);
 
 	/**
+	 * 自定义 PropertyEditor
+	 * <p>
 	 * Custom PropertyEditors to apply to the beans of this factory.
 	 */
 	private final Map<Class<?>, Class<? extends PropertyEditor>> customEditors = new HashMap<>(4);
@@ -278,7 +281,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 */
 	@SuppressWarnings("unchecked")
 	protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
-			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
+							  @Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
 
 		// 先去除前缀&获取别名对应的真实名称
 		final String beanName = transformedBeanName(name);
@@ -545,7 +548,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * 给定名称的bean是否与指定类型匹配
-	 *
+	 * <p>
 	 * Internal extended variant of {@link #isTypeMatch(String, ResolvableType)}
 	 * to check whether the bean with the given name matches the specified type. Allow
 	 * additional constraints to be applied to ensure that beans are not created early.
@@ -1400,7 +1403,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * 返回和父BeanDefinition合并后的RootBeanDefinition
-	 *
+	 * <p>
 	 * Return a RootBeanDefinition for the given bean, by merging with the
 	 * parent if the given bean's definition is a child bean definition.
 	 *
@@ -1570,7 +1573,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * 将执行的 BeanDefinition 解析为 bean class
-	 *
+	 * <p>
 	 * Resolve the bean class for the specified bean definition,
 	 * resolving a bean class name into a Class reference (if necessary)
 	 * and storing the resolved Class in the bean definition for further use.
@@ -1701,7 +1704,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * 预测bean的类型
-	 *
+	 * <p>
 	 * Predict the eventual bean type (of the processed bean instance) for the
 	 * specified bean. Called by {@link #getType} and {@link #isTypeMatch}.
 	 * Does not need to handle FactoryBeans specifically, since it is only
@@ -1731,7 +1734,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * 检查给定的bean是否定义为FactoryBean
-	 *
+	 * <p>
 	 * Check whether the given bean is defined as a {@link FactoryBean}.
 	 *
 	 * @param beanName the name of the bean
@@ -1844,7 +1847,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * 标记指定的 bean 已经创建或正在创建
-	 *
+	 * <p>
 	 * Mark the specified bean as already created (or about to be created).
 	 * <p>This allows the bean factory to optimize its caching for repeated
 	 * creation of the specified bean.

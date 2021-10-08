@@ -85,7 +85,7 @@ public interface TypeConverter {
 	 */
 	@Nullable
 	<T> T convertIfNecessary(@Nullable Object value, @Nullable Class<T> requiredType,
-			@Nullable MethodParameter methodParam) throws TypeMismatchException;
+							 @Nullable MethodParameter methodParam) throws TypeMismatchException;
 
 	/**
 	 * 将值转换为所需的类型（如果需要，可从字符串转换）。
@@ -115,7 +115,7 @@ public interface TypeConverter {
 	/**
 	 * 将值转换为所需的类型（如果需要，可从字符串转换）。
 	 * 从字符串到任何类型的转换通常使用PropertyEditor类的setAsText方法，或者在ConversionService中使用Spring转换器。
-	 *
+	 * <p>
 	 * Convert the value to the required type (if necessary from a String).
 	 * <p>Conversions from String to any type will typically use the {@code setAsText}
 	 * method of the PropertyEditor class, or a Spring Converter in a ConversionService.
@@ -134,7 +134,7 @@ public interface TypeConverter {
 	 */
 	@Nullable
 	default <T> T convertIfNecessary(@Nullable Object value, @Nullable Class<T> requiredType,
-			@Nullable TypeDescriptor typeDescriptor) throws TypeMismatchException {
+									 @Nullable TypeDescriptor typeDescriptor) throws TypeMismatchException {
 
 		throw new UnsupportedOperationException("TypeDescriptor resolution not supported");
 	}

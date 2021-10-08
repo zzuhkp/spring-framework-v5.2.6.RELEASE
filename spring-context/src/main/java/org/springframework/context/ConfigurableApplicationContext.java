@@ -16,8 +16,6 @@
 
 package org.springframework.context;
 
-import java.io.Closeable;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -25,6 +23,8 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ProtocolResolver;
 import org.springframework.lang.Nullable;
+
+import java.io.Closeable;
 
 /**
  * 大多数应用上下文实现的 SPI 接口，添加了配置和生命周期的方法
@@ -224,6 +224,8 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 	void close();
 
 	/**
+	 * 应用上下文是否被激活，也就是说至少刷新了一次
+	 * <p>
 	 * Determine whether this application context is active, that is,
 	 * whether it has been refreshed at least once and has not been closed yet.
 	 *

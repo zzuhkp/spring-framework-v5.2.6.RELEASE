@@ -24,6 +24,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.util.WebUtils;
 
 /**
+ * 使用 Session 存储主题名的 ThemeResolver
+ * <p>
  * {@link org.springframework.web.servlet.ThemeResolver} implementation that
  * uses a theme attribute in the user's session in case of a custom setting,
  * with a fallback to the default theme. This is most appropriate if the
@@ -34,8 +36,8 @@ import org.springframework.web.util.WebUtils;
  *
  * @author Jean-Pierre Pawlak
  * @author Juergen Hoeller
- * @since 17.06.2003
  * @see #setThemeName
+ * @since 17.06.2003
  */
 public class SessionThemeResolver extends AbstractThemeResolver {
 
@@ -44,6 +46,7 @@ public class SessionThemeResolver extends AbstractThemeResolver {
 	 * Only used internally by this implementation.
 	 * Use {@code RequestContext(Utils).getTheme()}
 	 * to retrieve the current theme in controllers or views.
+	 *
 	 * @see org.springframework.web.servlet.support.RequestContext#getTheme
 	 * @see org.springframework.web.servlet.support.RequestContextUtils#getTheme
 	 */

@@ -17,6 +17,8 @@
 package org.springframework.web.bind.support;
 
 /**
+ * 会话状态
+ * <p>
  * Simple interface that can be injected into handler methods, allowing them to
  * signal that their session processing is complete. The handler invoker may
  * then follow up with appropriate cleanup, e.g. of session attributes which
@@ -26,9 +28,9 @@ package org.springframework.web.bind.support;
  * annotation).
  *
  * @author Juergen Hoeller
- * @since 2.5
  * @see org.springframework.web.bind.annotation.RequestMapping
  * @see org.springframework.web.bind.annotation.SessionAttributes
+ * @since 2.5
  */
 public interface SessionStatus {
 

@@ -27,6 +27,8 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.util.Assert;
 
 /**
+ * 基于 Jackson 2 的 HttpMessageConverter
+ * <p>
  * Implementation of {@link org.springframework.http.converter.HttpMessageConverter HttpMessageConverter}
  * that can read and write XML using <a href="https://github.com/FasterXML/jackson-dataformat-xml">
  * Jackson 2.x extension component for reading and writing XML encoded data</a>.
@@ -56,6 +58,7 @@ public class MappingJackson2XmlHttpMessageConverter extends AbstractJackson2Http
 	 * Construct a new {@code MappingJackson2XmlHttpMessageConverter} with a custom {@link ObjectMapper}
 	 * (must be a {@link XmlMapper} instance).
 	 * You can use {@link Jackson2ObjectMapperBuilder} to build it easily.
+	 *
 	 * @see Jackson2ObjectMapperBuilder#xml()
 	 */
 	public MappingJackson2XmlHttpMessageConverter(ObjectMapper objectMapper) {

@@ -16,29 +16,40 @@
 
 package org.springframework.web.context.request;
 
+import org.springframework.util.Assert;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.springframework.util.Assert;
-
 /**
+ * 抽象的请求参数
+ * <p>
  * Abstract support class for RequestAttributes implementations,
  * offering a request completion mechanism for request-specific destruction
  * callbacks and for updating accessed session attributes.
  *
  * @author Juergen Hoeller
- * @since 2.0
  * @see #requestCompleted()
+ * @since 2.0
  */
 public abstract class AbstractRequestAttributes implements RequestAttributes {
 
-	/** Map from attribute name String to destruction callback Runnable. */
+	/**
+	 * 销毁回调：bean name -> 回调
+	 * <p>
+	 * Map from attribute name String to destruction callback Runnable.
+	 */
 	protected final Map<String, Runnable> requestDestructionCallbacks = new LinkedHashMap<>(8);
 
+	/**
+	 * 请求是否未结束
+	 */
 	private volatile boolean requestActive = true;
 
 
 	/**
+	 * 请求完成回调
+	 * <p>
 	 * Signal that the request has been completed.
 	 * <p>Executes all request destruction callbacks and updates the
 	 * session attributes that have been accessed during request processing.
@@ -51,6 +62,7 @@ public abstract class AbstractRequestAttributes implements RequestAttributes {
 
 	/**
 	 * Determine whether the original request is still active.
+	 *
 	 * @see #requestCompleted()
 	 */
 	protected final boolean isRequestActive() {
@@ -58,8 +70,11 @@ public abstract class AbstractRequestAttributes implements RequestAttributes {
 	}
 
 	/**
+	 * 注册销毁回调
+	 * <p>
 	 * Register the given callback as to be executed after request completion.
-	 * @param name the name of the attribute to register the callback for
+	 *
+	 * @param name     the name of the attribute to register the callback for
 	 * @param callback the callback to be executed for destruction
 	 */
 	protected final void registerRequestDestructionCallback(String name, Runnable callback) {
@@ -72,6 +87,7 @@ public abstract class AbstractRequestAttributes implements RequestAttributes {
 
 	/**
 	 * Remove the request destruction callback for the specified attribute, if any.
+	 *
 	 * @param name the name of the attribute to remove the callback for
 	 */
 	protected final void removeRequestDestructionCallback(String name) {
@@ -82,6 +98,8 @@ public abstract class AbstractRequestAttributes implements RequestAttributes {
 	}
 
 	/**
+	 * 执行回调
+	 * <p>
 	 * Execute all callbacks that have been registered for execution
 	 * after request completion.
 	 */
@@ -95,6 +113,8 @@ public abstract class AbstractRequestAttributes implements RequestAttributes {
 	}
 
 	/**
+	 * 更新参数
+	 * <p>
 	 * Update all session attributes that have been accessed during request processing,
 	 * to expose their potentially updated state to the underlying session manager.
 	 */

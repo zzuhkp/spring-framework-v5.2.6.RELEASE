@@ -27,6 +27,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
+ * 抽象的 VersionStrategy
+ * <p>
  * Abstract base class for {@link VersionStrategy} implementations.
  *
  * <p>Supports versions as:
@@ -78,6 +80,8 @@ public abstract class AbstractVersionStrategy implements VersionStrategy {
 
 
 	/**
+	 * 版本作为路径前缀
+	 * <p>
 	 * A prefix-based {@code VersionPathStrategy},
 	 * e.g. {@code "{version}/path/foo.js"}.
 	 */
@@ -105,8 +109,7 @@ public abstract class AbstractVersionStrategy implements VersionStrategy {
 		public String addVersion(String path, String version) {
 			if (path.startsWith(".")) {
 				return path;
-			}
-			else {
+			} else {
 				return (this.prefix.endsWith("/") || path.startsWith("/") ?
 						this.prefix + path : this.prefix + '/' + path);
 			}
@@ -115,6 +118,8 @@ public abstract class AbstractVersionStrategy implements VersionStrategy {
 
 
 	/**
+	 * 版本号位于文件名中
+	 * <p>
 	 * File name-based {@code VersionPathStrategy},
 	 * e.g. {@code "path/foo-{version}.css"}.
 	 */
@@ -129,8 +134,7 @@ public abstract class AbstractVersionStrategy implements VersionStrategy {
 			if (matcher.find()) {
 				String match = matcher.group(1);
 				return (match.contains("-") ? match.substring(match.lastIndexOf('-') + 1) : match);
-			}
-			else {
+			} else {
 				return null;
 			}
 		}

@@ -26,6 +26,8 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.method.annotation.AbstractWebArgumentResolverAdapter;
 
 /**
+ * 基于 Servlet 的参数解析适配器
+ * <p>
  * A Servlet-specific
  * {@link org.springframework.web.method.annotation.AbstractWebArgumentResolverAdapter}
  * that creates a {@link NativeWebRequest} from {@link ServletRequestAttributes}.

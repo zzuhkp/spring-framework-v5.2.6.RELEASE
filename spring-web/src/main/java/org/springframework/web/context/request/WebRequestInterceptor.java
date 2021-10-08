@@ -20,6 +20,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.ui.ModelMap;
 
 /**
+ * 处理器拦截器
+ *
  * Interface for general web request interception. Allows for being applied
  * to Servlet request by building on the {@link WebRequest} abstraction.
  *

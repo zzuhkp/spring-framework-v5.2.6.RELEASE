@@ -31,6 +31,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 /**
+ * 基于 HttpServletResponse 实现的 ServerHttpResponse
+ * <p>
  * {@link ServerHttpResponse} implementation that is based on a {@link HttpServletResponse}.
  *
  * @author Arjen Poutsma
@@ -50,6 +52,7 @@ public class ServletServerHttpResponse implements ServerHttpResponse {
 
 	/**
 	 * Construct a new instance of the ServletServerHttpResponse based on the given {@link HttpServletResponse}.
+	 *
 	 * @param servletResponse the servlet response
 	 */
 	public ServletServerHttpResponse(HttpServletResponse servletResponse) {
@@ -118,6 +121,8 @@ public class ServletServerHttpResponse implements ServerHttpResponse {
 
 
 	/**
+	 * 基于 HttpServletResponse 的 HttpHeaders
+	 * <p>
 	 * Extends HttpHeaders with the ability to look up headers already present in
 	 * the underlying HttpServletResponse.
 	 *
@@ -143,8 +148,7 @@ public class ServletServerHttpResponse implements ServerHttpResponse {
 			String value = servletResponse.getHeader(headerName);
 			if (value != null) {
 				return value;
-			}
-			else {
+			} else {
 				return super.getFirst(headerName);
 			}
 		}

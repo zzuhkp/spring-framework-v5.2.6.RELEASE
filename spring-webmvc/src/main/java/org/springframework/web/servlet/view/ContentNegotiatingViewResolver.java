@@ -52,6 +52,8 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 
 /**
+ * 基于 ContentNegotiationManager 的 ViewResolver
+ * <p>
  * Implementation of {@link ViewResolver} that resolves a view based on the request file name
  * or {@code Accept} header.
  *
@@ -81,10 +83,10 @@ import org.springframework.web.servlet.ViewResolver;
  * @author Arjen Poutsma
  * @author Juergen Hoeller
  * @author Rossen Stoyanchev
- * @since 3.0
  * @see ViewResolver
  * @see InternalResourceViewResolver
  * @see BeanNameViewResolver
+ * @since 3.0
  */
 public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 		implements ViewResolver, Ordered, InitializingBean {
@@ -109,6 +111,7 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 	 * Set the {@link ContentNegotiationManager} to use to determine requested media types.
 	 * <p>If not set, ContentNegotiationManager's default constructor will be used,
 	 * applying a {@link org.springframework.web.accept.HeaderContentNegotiationStrategy}.
+	 *
 	 * @see ContentNegotiationManager#ContentNegotiationManager()
 	 */
 	public void setContentNegotiationManager(@Nullable ContentNegotiationManager contentNegotiationManager) {
@@ -117,6 +120,7 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 
 	/**
 	 * Return the {@link ContentNegotiationManager} to use to determine requested media types.
+	 *
 	 * @since 4.1.9
 	 */
 	@Nullable
@@ -191,8 +195,7 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 					this.viewResolvers.add(viewResolver);
 				}
 			}
-		}
-		else {
+		} else {
 			for (int i = 0; i < this.viewResolvers.size(); i++) {
 				ViewResolver vr = this.viewResolvers.get(i);
 				if (matchingBeans.contains(vr)) {
@@ -240,15 +243,17 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 				logger.debug("Using 406 NOT_ACCEPTABLE" + mediaTypeInfo);
 			}
 			return NOT_ACCEPTABLE_VIEW;
-		}
-		else {
+		} else {
 			logger.debug("View remains unresolved" + mediaTypeInfo);
 			return null;
 		}
 	}
 
 	/**
+	 * 获取内容类型
+	 * <p>
 	 * Determines the list of {@link MediaType} for the given {@link HttpServletRequest}.
+	 *
 	 * @param request the current servlet request
 	 * @return the list of media types requested, if any
 	 */
@@ -270,8 +275,7 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 			List<MediaType> selectedMediaTypes = new ArrayList<>(compatibleMediaTypes);
 			MediaType.sortBySpecificityAndQuality(selectedMediaTypes);
 			return selectedMediaTypes;
-		}
-		catch (HttpMediaTypeNotAcceptableException ex) {
+		} catch (HttpMediaTypeNotAcceptableException ex) {
 			if (logger.isDebugEnabled()) {
 				logger.debug(ex.getMessage());
 			}
@@ -279,19 +283,26 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 		}
 	}
 
+	/**
+	 * 获取可生产的内容类型
+	 *
+	 * @param request
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	private List<MediaType> getProducibleMediaTypes(HttpServletRequest request) {
 		Set<MediaType> mediaTypes = (Set<MediaType>)
 				request.getAttribute(HandlerMapping.PRODUCIBLE_MEDIA_TYPES_ATTRIBUTE);
 		if (!CollectionUtils.isEmpty(mediaTypes)) {
 			return new ArrayList<>(mediaTypes);
-		}
-		else {
+		} else {
 			return Collections.singletonList(MediaType.ALL);
 		}
 	}
 
 	/**
+	 * 获取更精确的内容类型
+	 * <p>
 	 * Return the more specific of the acceptable and the producible media types
 	 * with the q-value of the former.
 	 */
@@ -300,6 +311,15 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 		return (MediaType.SPECIFICITY_COMPARATOR.compare(acceptType, produceType) < 0 ? acceptType : produceType);
 	}
 
+	/**
+	 * 获取候选的视图
+	 *
+	 * @param viewName
+	 * @param locale
+	 * @param requestedMediaTypes
+	 * @return
+	 * @throws Exception
+	 */
 	private List<View> getCandidateViews(String viewName, Locale locale, List<MediaType> requestedMediaTypes)
 			throws Exception {
 
@@ -329,6 +349,14 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 		return candidateViews;
 	}
 
+	/**
+	 * 获取最合适的视图
+	 *
+	 * @param candidateViews
+	 * @param requestedMediaTypes
+	 * @param attrs
+	 * @return
+	 */
 	@Nullable
 	private View getBestView(List<View> candidateViews, List<MediaType> requestedMediaTypes, RequestAttributes attrs) {
 		for (View candidateView : candidateViews) {

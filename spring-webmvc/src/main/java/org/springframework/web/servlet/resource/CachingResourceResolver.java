@@ -33,6 +33,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
+ * 从缓存中解析资源的资源解析器
+ * <p>
  * A {@link org.springframework.web.servlet.resource.ResourceResolver} that
  * resolves resources from a {@link org.springframework.cache.Cache} or otherwise
  * delegates to the resolver chain and saves the result in the cache.
@@ -87,6 +89,7 @@ public class CachingResourceResolver extends AbstractResourceResolver {
 	 * configured on {@link EncodedResourceResolver#setContentCodings(List)}.
 	 * <p>By default this property is set to {@literal ["br", "gzip"]} based on
 	 * the value of {@link EncodedResourceResolver#DEFAULT_CODINGS}.
+	 *
 	 * @param codings one or more supported content codings
 	 * @since 5.1
 	 */
@@ -98,6 +101,7 @@ public class CachingResourceResolver extends AbstractResourceResolver {
 
 	/**
 	 * Return a read-only list with the supported content codings.
+	 *
 	 * @since 5.1
 	 */
 	public List<String> getContentCodings() {
@@ -107,7 +111,7 @@ public class CachingResourceResolver extends AbstractResourceResolver {
 
 	@Override
 	protected Resource resolveResourceInternal(@Nullable HttpServletRequest request, String requestPath,
-			List<? extends Resource> locations, ResourceResolverChain chain) {
+											   List<? extends Resource> locations, ResourceResolverChain chain) {
 
 		String key = computeKey(request, requestPath);
 		Resource resource = this.cache.get(key, Resource.class);
@@ -155,7 +159,7 @@ public class CachingResourceResolver extends AbstractResourceResolver {
 
 	@Override
 	protected String resolveUrlPathInternal(String resourceUrlPath,
-			List<? extends Resource> locations, ResourceResolverChain chain) {
+											List<? extends Resource> locations, ResourceResolverChain chain) {
 
 		String key = RESOLVED_URL_PATH_CACHE_KEY_PREFIX + resourceUrlPath;
 		String resolvedUrlPath = this.cache.get(key, String.class);

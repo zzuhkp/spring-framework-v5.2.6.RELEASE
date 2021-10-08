@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * HTTP 输入消息表示
+ *
  * Represents an HTTP input message, consisting of {@linkplain #getHeaders() headers}
  * and a readable {@linkplain #getBody() body}.
  *
@@ -33,6 +35,7 @@ public interface HttpInputMessage extends HttpMessage {
 
 	/**
 	 * Return the body of the message as an input stream.
+	 *
 	 * @return the input stream body (never {@code null})
 	 * @throws IOException in case of I/O errors
 	 */

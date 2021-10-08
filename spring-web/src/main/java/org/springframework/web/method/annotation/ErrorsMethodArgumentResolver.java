@@ -29,6 +29,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
+ * Errors 参数类型解析
+ *
  * Resolves {@link Errors} method arguments.
  *
  * <p>An {@code Errors} method argument is expected to appear immediately after

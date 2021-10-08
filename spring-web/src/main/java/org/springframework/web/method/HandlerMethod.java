@@ -43,6 +43,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
+ * 处理器方法
+ * <p>
  * Encapsulates information about a handler method consisting of a
  * {@linkplain #getMethod() method} and a {@linkplain #getBean() bean}.
  * Provides convenient access to method parameters, the method return value,
@@ -61,34 +63,66 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 public class HandlerMethod {
 
-	/** Logger that is available to subclasses. */
+	/**
+	 * Logger that is available to subclasses.
+	 */
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	/**
+	 * 方法所属类的 bean 实例
+	 */
 	private final Object bean;
 
+	/**
+	 * bean 工厂
+	 */
 	@Nullable
 	private final BeanFactory beanFactory;
 
+	/**
+	 * bean 类型
+	 */
 	private final Class<?> beanType;
 
+	/**
+	 * 处理器方法
+	 */
 	private final Method method;
 
+	/**
+	 * 处理器方法的桥接方法
+	 */
 	private final Method bridgedMethod;
 
+	/**
+	 * 方法参数
+	 */
 	private final MethodParameter[] parameters;
 
+	/**
+	 * 响应状态
+	 */
 	@Nullable
 	private HttpStatus responseStatus;
 
+	/**
+	 * 响应状态原因
+	 */
 	@Nullable
 	private String responseStatusReason;
 
 	@Nullable
 	private HandlerMethod resolvedFromHandlerMethod;
 
+	/**
+	 * 处理器实现的接口中处理器方法上的参数注解
+	 */
 	@Nullable
 	private volatile List<Annotation[][]> interfaceParameterAnnotations;
 
+	/**
+	 * 方法描述信息
+	 */
 	private final String description;
 
 
@@ -110,6 +144,7 @@ public class HandlerMethod {
 
 	/**
 	 * Create an instance from a bean instance, method name, and parameter types.
+	 *
 	 * @throws NoSuchMethodException when the method cannot be found
 	 */
 	public HandlerMethod(Object bean, String methodName, Class<?>... parameterTypes) throws NoSuchMethodException {
@@ -183,6 +218,11 @@ public class HandlerMethod {
 		this.description = handlerMethod.description;
 	}
 
+	/**
+	 * 初始化方法参数
+	 *
+	 * @return
+	 */
 	private MethodParameter[] initMethodParameters() {
 		int count = this.bridgedMethod.getParameterCount();
 		MethodParameter[] result = new MethodParameter[count];
@@ -192,6 +232,9 @@ public class HandlerMethod {
 		return result;
 	}
 
+	/**
+	 * 评估响应状态
+	 */
 	private void evaluateResponseStatus() {
 		ResponseStatus annotation = getMethodAnnotation(ResponseStatus.class);
 		if (annotation == null) {
@@ -203,6 +246,13 @@ public class HandlerMethod {
 		}
 	}
 
+	/**
+	 * 初始化方法描述信息
+	 *
+	 * @param beanType
+	 * @param method
+	 * @return
+	 */
 	private static String initDescription(Class<?> beanType, Method method) {
 		StringJoiner joiner = new StringJoiner(", ", "(", ")");
 		for (Class<?> paramType : method.getParameterTypes()) {
@@ -252,8 +302,9 @@ public class HandlerMethod {
 
 	/**
 	 * Return the specified response status, if any.
-	 * @since 4.3.8
+	 *
 	 * @see ResponseStatus#code()
+	 * @since 4.3.8
 	 */
 	@Nullable
 	protected HttpStatus getResponseStatus() {
@@ -262,8 +313,9 @@ public class HandlerMethod {
 
 	/**
 	 * Return the associated response status reason, if any.
-	 * @since 4.3.8
+	 *
 	 * @see ResponseStatus#reason()
+	 * @since 4.3.8
 	 */
 	@Nullable
 	protected String getResponseStatusReason() {
@@ -278,6 +330,8 @@ public class HandlerMethod {
 	}
 
 	/**
+	 * 获取方法返回值类型
+	 * <p>
 	 * Return the actual return value type.
 	 */
 	public MethodParameter getReturnValueType(@Nullable Object returnValue) {
@@ -292,10 +346,13 @@ public class HandlerMethod {
 	}
 
 	/**
+	 * 查找给定注解类型在方法上的注解实例
+	 * <p>
 	 * Return a single annotation on the underlying method traversing its super methods
 	 * if no annotation can be found on the given method itself.
 	 * <p>Also supports <em>merged</em> composed annotations with attribute
 	 * overrides as of Spring Framework 4.2.2.
+	 *
 	 * @param annotationType the type of annotation to introspect the method for
 	 * @return the annotation, or {@code null} if none found
 	 * @see AnnotatedElementUtils#findMergedAnnotation
@@ -306,10 +363,13 @@ public class HandlerMethod {
 	}
 
 	/**
+	 * 方法上是否存在给定类型的注解
+	 * <p>
 	 * Return whether the parameter is declared with the given annotation type.
+	 *
 	 * @param annotationType the annotation type to look for
-	 * @since 4.3
 	 * @see AnnotatedElementUtils#hasAnnotation
+	 * @since 4.3
 	 */
 	public <A extends Annotation> boolean hasMethodAnnotation(Class<A> annotationType) {
 		return AnnotatedElementUtils.hasAnnotation(this.method, annotationType);
@@ -325,6 +385,8 @@ public class HandlerMethod {
 	}
 
 	/**
+	 * 创建处理器方法实例
+	 * <p>
 	 * If the provided instance contains a bean name rather than an object instance,
 	 * the bean name is resolved before a {@link HandlerMethod} is created and returned.
 	 */
@@ -340,6 +402,7 @@ public class HandlerMethod {
 
 	/**
 	 * Return a short representation of this handler method for log message purposes.
+	 *
 	 * @since 4.3
 	 */
 	public String getShortLogMessage() {
@@ -348,6 +411,11 @@ public class HandlerMethod {
 	}
 
 
+	/**
+	 * 获取接口方法上的参数注解
+	 *
+	 * @return
+	 */
 	private List<Annotation[][]> getInterfaceParameterAnnotations() {
 		List<Annotation[][]> parameterAnnotations = this.interfaceParameterAnnotations;
 		if (parameterAnnotations == null) {
@@ -364,6 +432,12 @@ public class HandlerMethod {
 		return parameterAnnotations;
 	}
 
+	/**
+	 * 当前处理器方法是否覆盖了候选方法
+	 *
+	 * @param candidate
+	 * @return
+	 */
 	private boolean isOverrideFor(Method candidate) {
 		if (!candidate.getName().equals(this.method.getName()) ||
 				candidate.getParameterCount() != this.method.getParameterCount()) {
@@ -408,6 +482,13 @@ public class HandlerMethod {
 
 	// Support methods for use in "InvocableHandlerMethod" sub-class variants..
 
+	/**
+	 * 查询参数类型相同的值，优先使用该值作为方法参数值
+	 *
+	 * @param parameter
+	 * @param providedArgs
+	 * @return
+	 */
 	@Nullable
 	protected static Object findProvidedArgument(MethodParameter parameter, @Nullable Object... providedArgs) {
 		if (!ObjectUtils.isEmpty(providedArgs)) {
@@ -458,6 +539,8 @@ public class HandlerMethod {
 
 
 	/**
+	 * 处理器方法参数
+	 * <p>
 	 * A MethodParameter with HandlerMethod-specific behavior.
 	 */
 	protected class HandlerMethodParameter extends SynthesizingMethodParameter {
@@ -531,6 +614,8 @@ public class HandlerMethod {
 
 
 	/**
+	 * 处理器方法返回值参数
+	 * <p>
 	 * A MethodParameter for a HandlerMethod return type based on an actual return value.
 	 */
 	private class ReturnValueMethodParameter extends HandlerMethodParameter {

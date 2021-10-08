@@ -408,7 +408,7 @@ public abstract class AbstractBindingResult extends AbstractErrors implements Bi
 
 	/**
 	 * 获取包装的目标对象
-	 *
+	 * <p>
 	 * Return the wrapped target object.
 	 */
 	@Override
@@ -417,7 +417,7 @@ public abstract class AbstractBindingResult extends AbstractErrors implements Bi
 
 	/**
 	 * 提取给定字段的真实值
-	 *
+	 * <p>
 	 * Extract the actual field value for the given field.
 	 *
 	 * @param field the field to check
@@ -427,8 +427,8 @@ public abstract class AbstractBindingResult extends AbstractErrors implements Bi
 	protected abstract Object getActualFieldValue(String field);
 
 	/**
-	 * 格式化指定字段的真实值
-	 *
+	 * 格式化指定字段的真实值，转换为字符串
+	 * <p>
 	 * Format the given value for the specified field.
 	 * <p>The default implementation simply returns the field value as-is.
 	 *

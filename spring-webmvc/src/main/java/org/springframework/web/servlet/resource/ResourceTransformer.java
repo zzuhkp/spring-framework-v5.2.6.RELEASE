@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.io.Resource;
 
 /**
+ * 一种资源转换为另一种资源
+ * <p>
  * An abstraction for transforming the content of a resource.
  *
  * @author Jeremy Grelle
@@ -34,8 +36,9 @@ public interface ResourceTransformer {
 
 	/**
 	 * Transform the given resource.
-	 * @param request the current request
-	 * @param resource the resource to transform
+	 *
+	 * @param request          the current request
+	 * @param resource         the resource to transform
 	 * @param transformerChain the chain of remaining transformers to delegate to
 	 * @return the transformed resource (never {@code null})
 	 * @throws IOException if the transformation fails

@@ -32,6 +32,8 @@ import org.springframework.util.Assert;
 import org.springframework.web.context.request.ServletWebRequest;
 
 /**
+ * 基于 Servlet 3.0 的 AsyncWebRequest
+ *
  * A Servlet 3.0 implementation of {@link AsyncWebRequest}.
  *
  * <p>The servlet and all filters involved in an async request must have async

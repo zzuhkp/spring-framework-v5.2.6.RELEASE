@@ -21,21 +21,24 @@ import java.util.Locale;
 import org.springframework.lang.Nullable;
 
 /**
+ * Locale 上下文
+ * <p>
  * Strategy interface for determining the current Locale.
  *
  * <p>A LocaleContext instance can be associated with a thread
  * via the LocaleContextHolder class.
  *
  * @author Juergen Hoeller
- * @since 1.2
  * @see LocaleContextHolder#getLocale()
  * @see TimeZoneAwareLocaleContext
+ * @since 1.2
  */
 public interface LocaleContext {
 
 	/**
 	 * Return the current Locale, which can be fixed or determined dynamically,
 	 * depending on the implementation strategy.
+	 *
 	 * @return the current Locale, or {@code null} if no specific Locale associated
 	 */
 	@Nullable

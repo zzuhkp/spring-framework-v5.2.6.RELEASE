@@ -22,6 +22,8 @@ import java.util.List;
 import org.springframework.util.StringUtils;
 
 /**
+ * handler bean 名称及别名作为 URL 的处理器映射器
+ * <p>
  * Implementation of the {@link org.springframework.web.servlet.HandlerMapping}
  * interface that maps from URLs to beans with names that start with a slash ("/"),
  * similar to how Struts maps URLs to action names.

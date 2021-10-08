@@ -16,9 +16,6 @@
 
 package org.springframework.web.context.support;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.support.AbstractRefreshableConfigApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -34,7 +31,12 @@ import org.springframework.web.context.ConfigurableWebEnvironment;
 import org.springframework.web.context.ServletConfigAware;
 import org.springframework.web.context.ServletContextAware;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+
 /**
+ * 抽象的 web 应用上下文，添加了对 web 环境的支持
+ * <p>
  * {@link org.springframework.context.support.AbstractRefreshableApplicationContext}
  * subclass which implements the
  * {@link org.springframework.web.context.ConfigurableWebApplicationContext}
@@ -72,28 +74,36 @@ import org.springframework.web.context.ServletContextAware;
  * (for example, {@link org.springframework.context.support.GenericApplicationContext}).
  *
  * @author Juergen Hoeller
- * @since 1.1.3
  * @see #loadBeanDefinitions
  * @see org.springframework.web.context.ConfigurableWebApplicationContext#setConfigLocations
  * @see org.springframework.ui.context.ThemeSource
  * @see XmlWebApplicationContext
+ * @since 1.1.3
  */
 public abstract class AbstractRefreshableWebApplicationContext extends AbstractRefreshableConfigApplicationContext
 		implements ConfigurableWebApplicationContext, ThemeSource {
 
-	/** Servlet context that this context runs in. */
+	/**
+	 * Servlet context that this context runs in.
+	 */
 	@Nullable
 	private ServletContext servletContext;
 
-	/** Servlet config that this context runs in, if any. */
+	/**
+	 * Servlet config that this context runs in, if any.
+	 */
 	@Nullable
 	private ServletConfig servletConfig;
 
-	/** Namespace of this context, or {@code null} if root. */
+	/**
+	 * Namespace of this context, or {@code null} if root.
+	 */
 	@Nullable
 	private String namespace;
 
-	/** the ThemeSource for this ApplicationContext. */
+	/**
+	 * the ThemeSource for this ApplicationContext.
+	 */
 	@Nullable
 	private ThemeSource themeSource;
 
@@ -162,20 +172,27 @@ public abstract class AbstractRefreshableWebApplicationContext extends AbstractR
 	}
 
 	/**
+	 * 添加 web 相关支持
+	 *
 	 * Register request/session scopes, a {@link ServletContextAwareProcessor}, etc.
 	 */
 	@Override
 	protected void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
+
+		// ServletContextAware、ServletConfigAware 回调支持
 		beanFactory.addBeanPostProcessor(new ServletContextAwareProcessor(this.servletContext, this.servletConfig));
 		beanFactory.ignoreDependencyInterface(ServletContextAware.class);
 		beanFactory.ignoreDependencyInterface(ServletConfigAware.class);
 
+		// web 相关 scope 支持
 		WebApplicationContextUtils.registerWebApplicationScopes(beanFactory, this.servletContext);
+		// 注册 web 环境特有 bean
 		WebApplicationContextUtils.registerEnvironmentBeans(beanFactory, this.servletContext, this.servletConfig);
 	}
 
 	/**
 	 * This implementation supports file paths beneath the root of the ServletContext.
+	 *
 	 * @see ServletContextResource
 	 */
 	@Override
@@ -186,6 +203,7 @@ public abstract class AbstractRefreshableWebApplicationContext extends AbstractR
 
 	/**
 	 * This implementation supports pattern matching in unexpanded WARs too.
+	 *
 	 * @see ServletContextResourcePatternResolver
 	 */
 	@Override

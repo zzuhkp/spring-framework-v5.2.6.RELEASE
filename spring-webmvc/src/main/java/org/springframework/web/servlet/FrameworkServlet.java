@@ -16,28 +16,8 @@
 
 package org.springframework.web.servlet;
 
-import java.io.IOException;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ApplicationContextException;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.*;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.SourceFilteringListener;
 import org.springframework.context.i18n.LocaleContext;
@@ -69,6 +49,20 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.util.NestedServletException;
 import org.springframework.web.util.WebUtils;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+import java.io.IOException;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 /**
  * Base servlet for Spring's web framework. Provides integration with
@@ -170,93 +164,131 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 
 	/**
+	 * 从 ServletContext 中查找 WebApplicationContext 的属性名
+	 * <p>
 	 * ServletContext attribute to find the WebApplicationContext in.
 	 */
 	@Nullable
 	private String contextAttribute;
 
 	/**
+	 * 上下文的类型
+	 * <p>
 	 * WebApplicationContext implementation class to create.
 	 */
 	private Class<?> contextClass = DEFAULT_CONTEXT_CLASS;
 
 	/**
+	 * 应用上下文的 ID
+	 * <p>
 	 * WebApplicationContext id to assign.
 	 */
 	@Nullable
 	private String contextId;
 
 	/**
+	 * 命名空间
+	 *
+	 * @see ConfigurableWebApplicationContext#setNamespace(String)
+	 * <p>
 	 * Namespace for this servlet.
 	 */
 	@Nullable
 	private String namespace;
 
 	/**
+	 * 上下文的配置文件路径
+	 *
+	 * @see HttpServletBean#init()
+	 * <p>
 	 * Explicit context config location.
 	 */
 	@Nullable
 	private String contextConfigLocation;
 
 	/**
+	 * ApplicationContextInitializer 列表
+	 * <p>
 	 * Actual ApplicationContextInitializer instances to apply to the context.
 	 */
 	private final List<ApplicationContextInitializer<ConfigurableApplicationContext>> contextInitializers =
 			new ArrayList<>();
 
 	/**
+	 * ApplicationContextInitializer 类全限定名
+	 * <p>
 	 * Comma-delimited ApplicationContextInitializer class names set through init param.
 	 */
 	@Nullable
 	private String contextInitializerClasses;
 
 	/**
+	 * 是否应该将应用上下文存至 ServletContext 中
+	 * <p>
 	 * Should we publish the context as a ServletContext attribute?.
 	 */
 	private boolean publishContext = true;
 
 	/**
+	 * 请求处理结束后是否发布事件
+	 * <p>
 	 * Should we publish a ServletRequestHandledEvent at the end of each request?.
 	 */
 	private boolean publishEvents = true;
 
 	/**
+	 * 是否将 LocalContext 和 RequestAttribute 存放至 InheritableThreadLocal
+	 * <p>
 	 * Expose LocaleContext and RequestAttributes as inheritable for child threads?.
 	 */
 	private boolean threadContextInheritable = false;
 
 	/**
+	 * 是否处理 Options 请求
+	 * <p>
 	 * Should we dispatch an HTTP OPTIONS request to {@link #doService}?.
 	 */
 	private boolean dispatchOptionsRequest = false;
 
 	/**
+	 * 是否处理 Trace 请求
+	 * <p>
 	 * Should we dispatch an HTTP TRACE request to {@link #doService}?.
 	 */
 	private boolean dispatchTraceRequest = false;
 
 	/**
+	 * 是否打印请求参数及请求响应头
+	 * <p>
 	 * Whether to log potentially sensitive info (request params at DEBUG + headers at TRACE).
 	 */
 	private boolean enableLoggingRequestDetails = false;
 
 	/**
+	 * 当前 Servlet 的 Spring Web 环境应用上下文
+	 * <p>
 	 * WebApplicationContext for this servlet.
 	 */
 	@Nullable
 	private WebApplicationContext webApplicationContext;
 
 	/**
+	 * 是否通过 #setApplicationContext 注入了 WebApplicationContext
+	 * <p>
 	 * If the WebApplicationContext was injected via {@link #setApplicationContext}.
 	 */
 	private boolean webApplicationContextInjected = false;
 
 	/**
+	 * onRefresh 方法是否被调用过
+	 *
 	 * Flag used to detect whether onRefresh has already been called.
 	 */
 	private volatile boolean refreshEventReceived = false;
 
 	/**
+	 * onRefresh 方法执行时的锁对象
+	 * <p>
 	 * Monitor for synchronized onRefresh execution.
 	 */
 	private final Object onRefreshMonitor = new Object();
@@ -593,6 +625,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
+	 * 初始化 WebApplicationContext
+	 * <p>
 	 * Initialize and publish the WebApplicationContext for this servlet.
 	 * <p>Delegates to {@link #createWebApplicationContext} for actual creation
 	 * of the context. Can be overridden in subclasses.
@@ -616,6 +650,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 					// The context has not yet been refreshed -> provide services such as
 					// setting the parent context, setting the application context id, etc
 					if (cwac.getParent() == null) {
+						// 将根应用上下文设置为父上下文
 						// The context instance was injected without an explicit parent -> set
 						// the root application context (if any; may be null) as the parent
 						cwac.setParent(rootContext);
@@ -655,6 +690,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
+	 * 从 ServletContext 中获取 WebApplicationContext
+	 * <p>
 	 * Retrieve a {@code WebApplicationContext} from the {@code ServletContext}
 	 * attribute with the {@link #setContextAttribute configured name}. The
 	 * {@code WebApplicationContext} must have already been loaded and stored in the
@@ -680,6 +717,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
+	 * 创建应用上下文
+	 * <p>
 	 * Instantiate the WebApplicationContext for this servlet, either a default
 	 * {@link org.springframework.web.context.support.XmlWebApplicationContext}
 	 * or a {@link #setContextClass custom context class}, if set.
@@ -708,6 +747,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 		wac.setEnvironment(getEnvironment());
 		wac.setParent(parent);
+		// 此处可使用 servlet init 参数中的路径，如果没有配置，上下文 loadBeanDefinitions 时将会使用 /WEB-INF/{servlet-name}-servlet.xml 作为路径
 		String configLocation = getContextConfigLocation();
 		if (configLocation != null) {
 			wac.setConfigLocation(configLocation);
@@ -717,6 +757,11 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		return wac;
 	}
 
+	/**
+	 * 配置并刷新应用上下文
+	 *
+	 * @param wac
+	 */
 	protected void configureAndRefreshWebApplicationContext(ConfigurableWebApplicationContext wac) {
 		if (ObjectUtils.identityToString(wac).equals(wac.getId())) {
 			// The application context id is still set to its original default value
@@ -749,6 +794,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
+	 * 创建上下文的实例
+	 * <p>
 	 * Instantiate the WebApplicationContext for this servlet, either a default
 	 * {@link org.springframework.web.context.support.XmlWebApplicationContext}
 	 * or a {@link #setContextClass custom context class}, if set.
@@ -764,6 +811,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
+	 * 应用上下文刷新前调用，由子类扩展
+	 * <p>
 	 * Post-process the given WebApplicationContext before it is refreshed
 	 * and activated as context for this servlet.
 	 * <p>The default implementation is empty. {@code refresh()} will
@@ -782,6 +831,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
+	 * 应用上下文刷新前调用 ApplicationContextInitializer
+	 * <p>
 	 * Delegate the WebApplicationContext before it is refreshed to any
 	 * {@link ApplicationContextInitializer} instances specified by the
 	 * "contextInitializerClasses" servlet init-param.
@@ -838,6 +889,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
+	 * 获取 WebApplicationContext 在 ServletContext 中的属性名
+	 * <p>
 	 * Return the ServletContext attribute name for this servlet's WebApplicationContext.
 	 * <p>The default implementation returns
 	 * {@code SERVLET_CONTEXT_PREFIX + servlet name}.
@@ -859,6 +912,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 
 	/**
+	 * 初始化 FrameworkServlet 的回调
+	 * <p>
 	 * This method will be invoked after any bean properties have been set and
 	 * the WebApplicationContext has been loaded. The default implementation is empty;
 	 * subclasses may override this method to perform any initialization they require.
@@ -898,6 +953,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
+	 * 应用上下文刷新后的回调
+	 * <p>
 	 * Template method which can be overridden to add servlet-specific refresh work.
 	 * Called after successful context refresh.
 	 * <p>This implementation is empty.
@@ -910,6 +967,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
+	 * 当前应用上下文不是手动注入，则关闭
+	 * <p>
 	 * Close the WebApplicationContext of this servlet.
 	 *
 	 * @see org.springframework.context.ConfigurableApplicationContext#close()
@@ -1083,6 +1142,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
+	 * 构建 LocaleContext
 	 * Build a LocaleContext for the given request, exposing the request's
 	 * primary locale as current locale.
 	 *
@@ -1096,6 +1156,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	}
 
 	/**
+	 * 构建 ServletRequestAttributes
+	 * <p>
 	 * Build ServletRequestAttributes for the given request (potentially also
 	 * holding a reference to the response), taking pre-bound attributes
 	 * (and their type) into consideration.
@@ -1109,7 +1171,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	 */
 	@Nullable
 	protected ServletRequestAttributes buildRequestAttributes(HttpServletRequest request,
-			@Nullable HttpServletResponse response, @Nullable RequestAttributes previousAttributes) {
+															  @Nullable HttpServletResponse response, @Nullable RequestAttributes previousAttributes) {
 
 		if (previousAttributes == null || previousAttributes instanceof ServletRequestAttributes) {
 			return new ServletRequestAttributes(request, response);
@@ -1118,8 +1180,15 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		}
 	}
 
+	/**
+	 * 初始化上下文信息
+	 *
+	 * @param request
+	 * @param localeContext
+	 * @param requestAttributes
+	 */
 	private void initContextHolders(HttpServletRequest request,
-			@Nullable LocaleContext localeContext, @Nullable RequestAttributes requestAttributes) {
+									@Nullable LocaleContext localeContext, @Nullable RequestAttributes requestAttributes) {
 
 		if (localeContext != null) {
 			LocaleContextHolder.setLocaleContext(localeContext, this.threadContextInheritable);
@@ -1129,15 +1198,30 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		}
 	}
 
+	/**
+	 * 重置上下文信息
+	 *
+	 * @param request
+	 * @param prevLocaleContext
+	 * @param previousAttributes
+	 */
 	private void resetContextHolders(HttpServletRequest request,
-			@Nullable LocaleContext prevLocaleContext, @Nullable RequestAttributes previousAttributes) {
+									 @Nullable LocaleContext prevLocaleContext, @Nullable RequestAttributes previousAttributes) {
 
 		LocaleContextHolder.setLocaleContext(prevLocaleContext, this.threadContextInheritable);
 		RequestContextHolder.setRequestAttributes(previousAttributes, this.threadContextInheritable);
 	}
 
+	/**
+	 * 日志
+	 *
+	 * @param request
+	 * @param response
+	 * @param failureCause
+	 * @param asyncManager
+	 */
 	private void logResult(HttpServletRequest request, HttpServletResponse response,
-			@Nullable Throwable failureCause, WebAsyncManager asyncManager) {
+						   @Nullable Throwable failureCause, WebAsyncManager asyncManager) {
 
 		if (!logger.isDebugEnabled()) {
 			return;
@@ -1187,8 +1271,16 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		}
 	}
 
+	/**
+	 * 发布事件
+	 *
+	 * @param request
+	 * @param response
+	 * @param startTime
+	 * @param failureCause
+	 */
 	private void publishRequestHandledEvent(HttpServletRequest request, HttpServletResponse response,
-			long startTime, @Nullable Throwable failureCause) {
+											long startTime, @Nullable Throwable failureCause) {
 
 		if (this.publishEvents && this.webApplicationContext != null) {
 			// Whether or not we succeeded, publish an event.
@@ -1219,6 +1311,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 
 	/**
+	 * 处理请求
+	 * <p>
 	 * Subclasses must implement this method to do the work of request handling,
 	 * receiving a centralized callback for GET, POST, PUT and DELETE.
 	 * <p>The contract is essentially the same as that for the commonly overridden

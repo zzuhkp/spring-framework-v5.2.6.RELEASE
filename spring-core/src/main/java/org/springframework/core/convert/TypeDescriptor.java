@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -53,6 +54,9 @@ public class TypeDescriptor implements Serializable {
 
 	private static final Annotation[] EMPTY_ANNOTATION_ARRAY = new Annotation[0];
 
+	/**
+	 * 通用的类型缓存
+	 */
 	private static final Map<Class<?>, TypeDescriptor> commonTypesCache = new HashMap<>(32);
 
 	private static final Class<?>[] CACHED_COMMON_TYPES = {
@@ -324,7 +328,7 @@ public class TypeDescriptor implements Serializable {
 	}
 
 	private boolean isNestedAssignable(@Nullable TypeDescriptor nestedTypeDescriptor,
-			@Nullable TypeDescriptor otherNestedTypeDescriptor) {
+									   @Nullable TypeDescriptor otherNestedTypeDescriptor) {
 
 		return (nestedTypeDescriptor == null || otherNestedTypeDescriptor == null ||
 				nestedTypeDescriptor.isAssignableTo(otherNestedTypeDescriptor));
@@ -346,7 +350,7 @@ public class TypeDescriptor implements Serializable {
 
 	/**
 	 * 获取元素类型描述符
-	 *
+	 * <p>
 	 * If this type is an array, returns the array's component type.
 	 * If this type is a {@code Stream}, returns the stream's component type.
 	 * If this type is a {@link Collection} and it is parameterized, returns the Collection's element type.
@@ -622,7 +626,7 @@ public class TypeDescriptor implements Serializable {
 	 * @return the map type descriptor
 	 */
 	public static TypeDescriptor map(Class<?> mapType, @Nullable TypeDescriptor keyTypeDescriptor,
-			@Nullable TypeDescriptor valueTypeDescriptor) {
+									 @Nullable TypeDescriptor valueTypeDescriptor) {
 
 		Assert.notNull(mapType, "Map type must not be null");
 		if (!Map.class.isAssignableFrom(mapType)) {

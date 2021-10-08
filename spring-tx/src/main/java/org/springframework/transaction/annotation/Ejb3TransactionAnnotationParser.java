@@ -28,7 +28,7 @@ import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 import org.springframework.transaction.interceptor.TransactionAttribute;
 
 /**
- * javax.ejb.TransactionAttribute 注解解析
+ * @javax.ejb.TransactionAttribute 注解解析
  * <p>
  * Strategy implementation for parsing EJB3's {@link javax.ejb.TransactionAttribute}
  * annotation.

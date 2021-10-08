@@ -58,21 +58,28 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  */
 public final class ModelFactory {
 
+	/**
+	 * @ModelAttribute 标注的方法
+	 */
 	private final List<ModelMethod> modelMethods = new ArrayList<>();
 
 	private final WebDataBinderFactory dataBinderFactory;
 
+	/**
+	 * 适用于 handler method 的 SessionAttributesHandler
+	 */
 	private final SessionAttributesHandler sessionAttributesHandler;
 
 
 	/**
 	 * Create a new instance with the given {@code @ModelAttribute} methods.
-	 * @param handlerMethods the {@code @ModelAttribute} methods to invoke
-	 * @param binderFactory for preparation of {@link BindingResult} attributes
+	 *
+	 * @param handlerMethods   the {@code @ModelAttribute} methods to invoke
+	 * @param binderFactory    for preparation of {@link BindingResult} attributes
 	 * @param attributeHandler for access to session attributes
 	 */
 	public ModelFactory(@Nullable List<InvocableHandlerMethod> handlerMethods,
-			WebDataBinderFactory binderFactory, SessionAttributesHandler attributeHandler) {
+						WebDataBinderFactory binderFactory, SessionAttributesHandler attributeHandler) {
 
 		if (handlerMethods != null) {
 			for (InvocableHandlerMethod handlerMethod : handlerMethods) {
@@ -93,18 +100,21 @@ public final class ModelFactory {
 	 * {@code @SessionAttributes} and ensure they're present in the model raising
 	 * an exception if necessary.
 	 * </ol>
-	 * @param request the current request
-	 * @param container a container with the model to be initialized
+	 *
+	 * @param request       the current request
+	 * @param container     a container with the model to be initialized
 	 * @param handlerMethod the method for which the model is initialized
 	 * @throws Exception may arise from {@code @ModelAttribute} methods
 	 */
 	public void initModel(NativeWebRequest request, ModelAndViewContainer container, HandlerMethod handlerMethod)
 			throws Exception {
-
+		// @SessionAttribute 中的已知的参数合并到 model
 		Map<String, ?> sessionAttributes = this.sessionAttributesHandler.retrieveAttributes(request);
 		container.mergeAttributes(sessionAttributes);
+		// @ModelAttribute 标注的方法返回值合并到 model
 		invokeModelAttributeMethods(request, container);
 
+		// @ModelAttribute 标注的方法参数名或类型与 @SessionAttributes 指定的属性名或类型匹配的属性合并到 model
 		for (String name : findSessionAttributeArguments(handlerMethod)) {
 			if (!container.containsAttribute(name)) {
 				Object value = this.sessionAttributesHandler.retrieveAttribute(request, name);
@@ -117,6 +127,8 @@ public final class ModelFactory {
 	}
 
 	/**
+	 * 调用 @ModelAttribute 标注的方法，将返回值添加到 container 中的 model 属性中
+	 * <p>
 	 * Invoke model attribute methods to populate the model.
 	 * Attributes are added only if not already present in the model.
 	 */
@@ -135,7 +147,7 @@ public final class ModelFactory {
 			}
 
 			Object returnValue = modelMethod.invokeForRequest(request, container);
-			if (!modelMethod.isVoid()){
+			if (!modelMethod.isVoid()) {
 				String returnValueName = getNameForReturnValue(returnValue, modelMethod.getReturnType());
 				if (!ann.binding()) {
 					container.setBindingDisabled(returnValueName);
@@ -147,9 +159,16 @@ public final class ModelFactory {
 		}
 	}
 
+	/**
+	 * 获取列表中的下一个 ModelMethod
+	 *
+	 * @param container
+	 * @return
+	 */
 	private ModelMethod getNextModelMethod(ModelAndViewContainer container) {
 		for (ModelMethod modelMethod : this.modelMethods) {
 			if (modelMethod.checkDependencies(container)) {
+				// 优先返回依赖属性在 container 都存在的 ModelMethod
 				this.modelMethods.remove(modelMethod);
 				return modelMethod;
 			}
@@ -160,6 +179,8 @@ public final class ModelFactory {
 	}
 
 	/**
+	 * 获取 @SessionAttribute 中 handler 上 @ModelAttribute 指定的属性名称
+	 * <p>
 	 * Find {@code @ModelAttribute} arguments also listed as {@code @SessionAttributes}.
 	 */
 	private List<String> findSessionAttributeArguments(HandlerMethod handlerMethod) {
@@ -179,16 +200,17 @@ public final class ModelFactory {
 	/**
 	 * Promote model attributes listed as {@code @SessionAttributes} to the session.
 	 * Add {@link BindingResult} attributes where necessary.
-	 * @param request the current request
+	 *
+	 * @param request   the current request
 	 * @param container contains the model to update
 	 * @throws Exception if creating BindingResult attributes fails
 	 */
 	public void updateModel(NativeWebRequest request, ModelAndViewContainer container) throws Exception {
 		ModelMap defaultModel = container.getDefaultModel();
-		if (container.getSessionStatus().isComplete()){
+		if (container.getSessionStatus().isComplete()) {
 			this.sessionAttributesHandler.cleanupAttributes(request);
-		}
-		else {
+		} else {
+			// 合并 defaultModel 到 session attribute
 			this.sessionAttributesHandler.storeAttributes(request, defaultModel);
 		}
 		if (!container.isRequestHandled() && container.getModel() == defaultModel) {
@@ -207,6 +229,7 @@ public final class ModelFactory {
 				String bindingResultKey = BindingResult.MODEL_KEY_PREFIX + name;
 				if (!model.containsAttribute(bindingResultKey)) {
 					WebDataBinder dataBinder = this.dataBinderFactory.createBinder(request, value, name);
+					// model 添加新的属性
 					model.put(bindingResultKey, dataBinder.getBindingResult());
 				}
 			}
@@ -214,6 +237,8 @@ public final class ModelFactory {
 	}
 
 	/**
+	 * 是否为候选属性
+	 * <p>
 	 * Whether the given attribute requires a {@link BindingResult} in the model.
 	 */
 	private boolean isBindingCandidate(String attributeName, Object value) {
@@ -231,9 +256,12 @@ public final class ModelFactory {
 
 
 	/**
+	 * 获取参数名
+	 * <p>
 	 * Derive the model attribute name for the given method parameter based on
 	 * a {@code @ModelAttribute} parameter annotation (if present) or falling
 	 * back on parameter type based conventions.
+	 *
 	 * @param parameter a descriptor for the method parameter
 	 * @return the derived name
 	 * @see Conventions#getVariableNameForParameter(MethodParameter)
@@ -245,6 +273,8 @@ public final class ModelFactory {
 	}
 
 	/**
+	 * 获取返回值名称
+	 * <p>
 	 * Derive the model attribute name for the given return value. Results will be
 	 * based on:
 	 * <ol>
@@ -252,16 +282,16 @@ public final class ModelFactory {
 	 * <li>the declared return type if it is more specific than {@code Object}
 	 * <li>the actual return value type
 	 * </ol>
+	 *
 	 * @param returnValue the value returned from a method invocation
-	 * @param returnType a descriptor for the return type of the method
+	 * @param returnType  a descriptor for the return type of the method
 	 * @return the derived name (never {@code null} or empty String)
 	 */
 	public static String getNameForReturnValue(@Nullable Object returnValue, MethodParameter returnType) {
 		ModelAttribute ann = returnType.getMethodAnnotation(ModelAttribute.class);
 		if (ann != null && StringUtils.hasText(ann.value())) {
 			return ann.value();
-		}
-		else {
+		} else {
 			Method method = returnType.getMethod();
 			Assert.state(method != null, "No handler method");
 			Class<?> containingClass = returnType.getContainingClass();
@@ -275,6 +305,9 @@ public final class ModelFactory {
 
 		private final InvocableHandlerMethod handlerMethod;
 
+		/**
+		 * 依赖的属性名
+		 */
 		private final Set<String> dependencies = new HashSet<>();
 
 		public ModelMethod(InvocableHandlerMethod handlerMethod) {

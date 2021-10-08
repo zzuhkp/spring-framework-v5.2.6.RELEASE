@@ -27,13 +27,15 @@ import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
+ * WebRequestInterceptor 到 HandlerInterceptor 的适配器
+ * <p>
  * Adapter that implements the Servlet HandlerInterceptor interface
  * and wraps an underlying WebRequestInterceptor.
  *
  * @author Juergen Hoeller
- * @since 2.0
  * @see org.springframework.web.context.request.WebRequestInterceptor
  * @see org.springframework.web.servlet.HandlerInterceptor
+ * @since 2.0
  */
 public class WebRequestHandlerInterceptorAdapter implements AsyncHandlerInterceptor {
 
@@ -42,6 +44,7 @@ public class WebRequestHandlerInterceptorAdapter implements AsyncHandlerIntercep
 
 	/**
 	 * Create a new WebRequestHandlerInterceptorAdapter for the given WebRequestInterceptor.
+	 *
 	 * @param requestInterceptor the WebRequestInterceptor to wrap
 	 */
 	public WebRequestHandlerInterceptorAdapter(WebRequestInterceptor requestInterceptor) {
@@ -60,7 +63,7 @@ public class WebRequestHandlerInterceptorAdapter implements AsyncHandlerIntercep
 
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-			@Nullable ModelAndView modelAndView) throws Exception {
+						   @Nullable ModelAndView modelAndView) throws Exception {
 
 		this.requestInterceptor.postHandle(new DispatcherServletWebRequest(request, response),
 				(modelAndView != null && !modelAndView.wasCleared() ? modelAndView.getModelMap() : null));
@@ -68,7 +71,7 @@ public class WebRequestHandlerInterceptorAdapter implements AsyncHandlerIntercep
 
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
-			@Nullable Exception ex) throws Exception {
+								@Nullable Exception ex) throws Exception {
 
 		this.requestInterceptor.afterCompletion(new DispatcherServletWebRequest(request, response), ex);
 	}

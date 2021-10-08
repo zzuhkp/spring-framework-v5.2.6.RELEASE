@@ -32,6 +32,8 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 
 /**
+ * 将 handler 中 @SessionAttributes 中指定的参数存储至 session attribute 中
+ * <p>
  * Manages controller-specific session attributes declared via
  * {@link SessionAttributes @SessionAttributes}. Actual storage is
  * delegated to a {@link SessionAttributeStore} instance.
@@ -48,10 +50,19 @@ import org.springframework.web.context.request.WebRequest;
  */
 public class SessionAttributesHandler {
 
+	/**
+	 * @SessionAttributes 指定的属性名
+	 */
 	private final Set<String> attributeNames = new HashSet<>();
 
+	/**
+	 * @SessionAttributes 指定的类型
+	 */
 	private final Set<Class<?>> attributeTypes = new HashSet<>();
 
+	/**
+	 * 已知的属性名
+	 */
 	private final Set<String> knownAttributeNames = Collections.newSetFromMap(new ConcurrentHashMap<>(4));
 
 	private final SessionAttributeStore sessionAttributeStore;
@@ -61,7 +72,8 @@ public class SessionAttributesHandler {
 	 * Create a new session attributes handler. Session attribute names and types
 	 * are extracted from the {@code @SessionAttributes} annotation, if present,
 	 * on the given type.
-	 * @param handlerType the controller type
+	 *
+	 * @param handlerType           the controller type
 	 * @param sessionAttributeStore used for session access
 	 */
 	public SessionAttributesHandler(Class<?> handlerType, SessionAttributeStore sessionAttributeStore) {
@@ -86,11 +98,14 @@ public class SessionAttributesHandler {
 	}
 
 	/**
+	 * 给定的属性名和类型是否在 @knownAttributeNames 指定
+	 * <p>
 	 * Whether the attribute name or type match the names and types specified
 	 * via {@code @SessionAttributes} on the underlying controller.
 	 * <p>Attributes successfully resolved through this method are "remembered"
 	 * and subsequently used in {@link #retrieveAttributes(WebRequest)} and
 	 * {@link #cleanupAttributes(WebRequest)}.
+	 *
 	 * @param attributeName the attribute name to check
 	 * @param attributeType the type for the attribute
 	 */
@@ -99,8 +114,7 @@ public class SessionAttributesHandler {
 		if (this.attributeNames.contains(attributeName) || this.attributeTypes.contains(attributeType)) {
 			this.knownAttributeNames.add(attributeName);
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -108,7 +122,8 @@ public class SessionAttributesHandler {
 	/**
 	 * Store a subset of the given attributes in the session. Attributes not
 	 * declared as session attributes via {@code @SessionAttributes} are ignored.
-	 * @param request the current request
+	 *
+	 * @param request    the current request
 	 * @param attributes candidate attributes for session storage
 	 */
 	public void storeAttributes(WebRequest request, Map<String, ?> attributes) {
@@ -123,6 +138,7 @@ public class SessionAttributesHandler {
 	 * Retrieve "known" attributes from the session, i.e. attributes listed
 	 * by name in {@code @SessionAttributes} or attributes previously stored
 	 * in the model that matched by type.
+	 *
 	 * @param request the current request
 	 * @return a map with handler session attributes, possibly empty
 	 */
@@ -141,6 +157,7 @@ public class SessionAttributesHandler {
 	 * Remove "known" attributes from the session, i.e. attributes listed
 	 * by name in {@code @SessionAttributes} or attributes previously stored
 	 * in the model that matched by type.
+	 *
 	 * @param request the current request
 	 */
 	public void cleanupAttributes(WebRequest request) {
@@ -151,7 +168,8 @@ public class SessionAttributesHandler {
 
 	/**
 	 * A pass-through call to the underlying {@link SessionAttributeStore}.
-	 * @param request the current request
+	 *
+	 * @param request       the current request
 	 * @param attributeName the name of the attribute of interest
 	 * @return the attribute value, or {@code null} if none
 	 */

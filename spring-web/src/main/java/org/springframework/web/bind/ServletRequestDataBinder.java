@@ -25,6 +25,8 @@ import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.util.WebUtils;
 
 /**
+ * 使用请求参数进行数据绑定
+ * <p>
  * Special {@link org.springframework.validation.DataBinder} to perform data binding
  * from servlet request parameters to JavaBeans, including support for multipart files.
  *
@@ -61,8 +63,9 @@ public class ServletRequestDataBinder extends WebDataBinder {
 
 	/**
 	 * Create a new ServletRequestDataBinder instance, with default object name.
+	 *
 	 * @param target the target object to bind onto (or {@code null}
-	 * if the binder is just used to convert a plain parameter value)
+	 *               if the binder is just used to convert a plain parameter value)
 	 * @see #DEFAULT_OBJECT_NAME
 	 */
 	public ServletRequestDataBinder(@Nullable Object target) {
@@ -71,8 +74,9 @@ public class ServletRequestDataBinder extends WebDataBinder {
 
 	/**
 	 * Create a new ServletRequestDataBinder instance.
-	 * @param target the target object to bind onto (or {@code null}
-	 * if the binder is just used to convert a plain parameter value)
+	 *
+	 * @param target     the target object to bind onto (or {@code null}
+	 *                   if the binder is just used to convert a plain parameter value)
 	 * @param objectName the name of the target object
 	 */
 	public ServletRequestDataBinder(@Nullable Object target, String objectName) {
@@ -92,6 +96,7 @@ public class ServletRequestDataBinder extends WebDataBinder {
 	 * <p>The type of the target property for a multipart file can be MultipartFile,
 	 * byte[], or String. The latter two receive the contents of the uploaded file;
 	 * all metadata like original file name, content type, etc are lost in those cases.
+	 *
 	 * @param request the request with parameters to bind (can be multipart)
 	 * @see org.springframework.web.multipart.MultipartHttpServletRequest
 	 * @see org.springframework.web.multipart.MultipartFile
@@ -111,7 +116,8 @@ public class ServletRequestDataBinder extends WebDataBinder {
 	 * Extension point that subclasses can use to add extra bind values for a
 	 * request. Invoked before {@link #doBind(MutablePropertyValues)}.
 	 * The default implementation is empty.
-	 * @param mpvs the property values that will be used for data binding
+	 *
+	 * @param mpvs    the property values that will be used for data binding
 	 * @param request the current request
 	 */
 	protected void addBindValues(MutablePropertyValues mpvs, ServletRequest request) {
@@ -121,6 +127,7 @@ public class ServletRequestDataBinder extends WebDataBinder {
 	 * Treats errors as fatal.
 	 * <p>Use this method only if it's an error if the input isn't valid.
 	 * This might be appropriate if all input is from dropdowns, for example.
+	 *
 	 * @throws ServletRequestBindingException subclass of ServletException on any binding problem
 	 */
 	public void closeNoCatch() throws ServletRequestBindingException {

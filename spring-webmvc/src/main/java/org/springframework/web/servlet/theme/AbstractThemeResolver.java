@@ -19,6 +19,8 @@ package org.springframework.web.servlet.theme;
 import org.springframework.web.servlet.ThemeResolver;
 
 /**
+ * 抽象的 ThemeResolver，可以设置主题名
+ * <p>
  * Abstract base class for {@link ThemeResolver} implementations.
  * Provides support for a default theme name.
  *

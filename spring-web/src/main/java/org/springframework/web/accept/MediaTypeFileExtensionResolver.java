@@ -21,6 +21,8 @@ import java.util.List;
 import org.springframework.http.MediaType;
 
 /**
+ * 将 MediaType 解析为文件扩展名的解析器
+ *
  * Strategy to resolve a {@link MediaType} to a list of file extensions &mdash;
  * for example, to resolve "application/json" to "json".
  *
@@ -31,6 +33,7 @@ public interface MediaTypeFileExtensionResolver {
 
 	/**
 	 * Resolve the given media type to a list of file extensions.
+	 *
 	 * @param mediaType the media type to resolve
 	 * @return a list of extensions or an empty list (never {@code null})
 	 */
@@ -38,6 +41,7 @@ public interface MediaTypeFileExtensionResolver {
 
 	/**
 	 * Get all registered file extensions.
+	 *
 	 * @return a list of extensions or an empty list (never {@code null})
 	 */
 	List<String> getAllFileExtensions();

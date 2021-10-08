@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.context.request.NativeWebRequest;
 
 /**
+ * 注解 @RequestHeader 参数支持
+ * <p>
  * Resolves method arguments annotated with {@code @RequestHeader} except for
  * {@link Map} arguments. See {@link RequestHeaderMapMethodArgumentResolver} for
  * details on {@link Map} arguments annotated with {@code @RequestHeader}.
@@ -48,9 +50,10 @@ public class RequestHeaderMethodArgumentResolver extends AbstractNamedValueMetho
 
 	/**
 	 * Create a new {@link RequestHeaderMethodArgumentResolver} instance.
+	 *
 	 * @param beanFactory a bean factory to use for resolving  ${...}
-	 * placeholder and #{...} SpEL expressions in default values;
-	 * or {@code null} if default values are not expected to have expressions
+	 *                    placeholder and #{...} SpEL expressions in default values;
+	 *                    or {@code null} if default values are not expected to have expressions
 	 */
 	public RequestHeaderMethodArgumentResolver(@Nullable ConfigurableBeanFactory beanFactory) {
 		super(beanFactory);
@@ -76,8 +79,7 @@ public class RequestHeaderMethodArgumentResolver extends AbstractNamedValueMetho
 		String[] headerValues = request.getHeaderValues(name);
 		if (headerValues != null) {
 			return (headerValues.length == 1 ? headerValues[0] : headerValues);
-		}
-		else {
+		} else {
 			return null;
 		}
 	}

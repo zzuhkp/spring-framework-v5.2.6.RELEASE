@@ -243,7 +243,6 @@ public interface TransactionDefinition {
 	default int getPropagationBehavior() {
 		return PROPAGATION_REQUIRED;
 	}
-
 	/**
 	 * 获取事务隔离级别
 	 * <p>
@@ -265,6 +264,7 @@ public interface TransactionDefinition {
 	 * @see #ISOLATION_DEFAULT
 	 * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#setValidateExistingTransaction
 	 */
+
 	default int getIsolationLevel() {
 		return ISOLATION_DEFAULT;
 	}

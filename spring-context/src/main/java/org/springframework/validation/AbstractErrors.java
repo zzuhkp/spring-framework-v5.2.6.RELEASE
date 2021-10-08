@@ -16,16 +16,11 @@
 
 package org.springframework.validation;
 
-import java.io.Serializable;
-import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.NoSuchElementException;
-
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * Errors 接口的抽象实现，提供了评估错误的通用实现
@@ -42,12 +37,12 @@ import org.springframework.util.StringUtils;
 public abstract class AbstractErrors implements Errors, Serializable {
 
 	/**
-	 * 最后嵌套的路径，如 a.b.c
+	 * 最后嵌套的路径，如 a.b.c.
 	 */
 	private String nestedPath = "";
 
 	/**
-	 * 中间的嵌套路径，如[a,a.b]
+	 * 中间的嵌套路径，如[a.,a.b.]
 	 */
 	private final Deque<String> nestedPathStack = new ArrayDeque<>();
 
@@ -80,6 +75,8 @@ public abstract class AbstractErrors implements Errors, Serializable {
 	}
 
 	/**
+	 * 设置嵌套路径
+	 * <p>
 	 * Actually set the nested path.
 	 * Delegated to by setNestedPath and pushNestedPath.
 	 */
@@ -96,7 +93,7 @@ public abstract class AbstractErrors implements Errors, Serializable {
 
 	/**
 	 * 将给定字段转换为完整的嵌套路径
-	 *
+	 * <p>
 	 * Transform the given field into its full path,
 	 * regarding the nested path of this instance.
 	 */
@@ -112,7 +109,7 @@ public abstract class AbstractErrors implements Errors, Serializable {
 
 	/**
 	 * 确定给定字段的规范化的字段名称
-	 *
+	 * <p>
 	 * Determine the canonical field name for the given field.
 	 * <p>The default implementation simply returns the field name as-is.
 	 *
@@ -236,7 +233,7 @@ public abstract class AbstractErrors implements Errors, Serializable {
 
 	/**
 	 * 检查 FieldError 是否匹配给定的字段
-	 *
+	 * <p>
 	 * Check whether the given FieldError matches the given field.
 	 *
 	 * @param field      the field that we are looking up FieldErrors for

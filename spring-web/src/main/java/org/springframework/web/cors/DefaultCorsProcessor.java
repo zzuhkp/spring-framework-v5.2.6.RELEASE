@@ -39,6 +39,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 
 /**
+ * 默认的 CORS 处理
+ * <p>
  * The default implementation of {@link CorsProcessor}, as defined by the
  * <a href="https://www.w3.org/TR/cors/">CORS W3C recommendation</a>.
  *
@@ -59,7 +61,7 @@ public class DefaultCorsProcessor implements CorsProcessor {
 	@Override
 	@SuppressWarnings("resource")
 	public boolean processRequest(@Nullable CorsConfiguration config, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+								  HttpServletResponse response) throws IOException {
 
 		Collection<String> varyHeaders = response.getHeaders(HttpHeaders.VARY);
 		if (!varyHeaders.contains(HttpHeaders.ORIGIN)) {
@@ -86,8 +88,7 @@ public class DefaultCorsProcessor implements CorsProcessor {
 			if (preFlightRequest) {
 				rejectRequest(new ServletServerHttpResponse(response));
 				return false;
-			}
-			else {
+			} else {
 				return true;
 			}
 		}
@@ -96,6 +97,8 @@ public class DefaultCorsProcessor implements CorsProcessor {
 	}
 
 	/**
+	 * COSR 检查失败时设置响应内容
+	 * <p>
 	 * Invoked when one of the CORS checks failed.
 	 * The default implementation sets the response status to 403 and writes
 	 * "Invalid CORS request" to the response.
@@ -107,10 +110,12 @@ public class DefaultCorsProcessor implements CorsProcessor {
 	}
 
 	/**
+	 * 处理请求，响应头中添加允许的 CORS 头部信息
+	 * <p>
 	 * Handle the given request.
 	 */
 	protected boolean handleInternal(ServerHttpRequest request, ServerHttpResponse response,
-			CorsConfiguration config, boolean preFlightRequest) throws IOException {
+									 CorsConfiguration config, boolean preFlightRequest) throws IOException {
 
 		String requestOrigin = request.getHeaders().getOrigin();
 		String allowOrigin = checkOrigin(config, requestOrigin);
@@ -165,6 +170,8 @@ public class DefaultCorsProcessor implements CorsProcessor {
 	}
 
 	/**
+	 * 检查请求中的 Origin 是否为配置中允许的 Origin
+	 * <p>
 	 * Check the origin and determine the origin for the response. The default
 	 * implementation simply delegates to
 	 * {@link org.springframework.web.cors.CorsConfiguration#checkOrigin(String)}.
@@ -175,6 +182,8 @@ public class DefaultCorsProcessor implements CorsProcessor {
 	}
 
 	/**
+	 * 检查给定方法是否为配置中允许的请求方法
+	 * <p>
 	 * Check the HTTP method and determine the methods for the response of a
 	 * pre-flight request. The default implementation simply delegates to
 	 * {@link org.springframework.web.cors.CorsConfiguration#checkHttpMethod(HttpMethod)}.
@@ -184,12 +193,21 @@ public class DefaultCorsProcessor implements CorsProcessor {
 		return config.checkHttpMethod(requestMethod);
 	}
 
+	/**
+	 * 获取检测的请求方法
+	 *
+	 * @param request
+	 * @param isPreFlight
+	 * @return
+	 */
 	@Nullable
 	private HttpMethod getMethodToUse(ServerHttpRequest request, boolean isPreFlight) {
 		return (isPreFlight ? request.getHeaders().getAccessControlRequestMethod() : request.getMethod());
 	}
 
 	/**
+	 * 获取配置中允许的请求头
+	 * <p>
 	 * Check the headers and determine the headers for the response of a
 	 * pre-flight request. The default implementation simply delegates to
 	 * {@link org.springframework.web.cors.CorsConfiguration#checkOrigin(String)}.
@@ -199,6 +217,13 @@ public class DefaultCorsProcessor implements CorsProcessor {
 		return config.checkHeaders(requestHeaders);
 	}
 
+	/**
+	 * 获取请求头
+	 *
+	 * @param request
+	 * @param isPreFlight
+	 * @return
+	 */
 	private List<String> getHeadersToUse(ServerHttpRequest request, boolean isPreFlight) {
 		HttpHeaders headers = request.getHeaders();
 		return (isPreFlight ? headers.getAccessControlRequestHeaders() : new ArrayList<>(headers.keySet()));

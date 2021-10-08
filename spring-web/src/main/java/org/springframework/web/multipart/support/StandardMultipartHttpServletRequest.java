@@ -16,26 +16,6 @@
 
 package org.springframework.web.multipart.support;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.mail.internet.MimeUtility;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
-
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.Nullable;
@@ -46,15 +26,25 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.internet.MimeUtility;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+
 /**
+ * 标准的表示 multipart 类型的请求
+ * <p>
  * Spring MultipartHttpServletRequest adapter, wrapping a Servlet 3.0 HttpServletRequest
  * and its Part objects. Parameters get exposed through the native request's getParameter
  * methods - without any custom processing on our side.
  *
  * @author Juergen Hoeller
  * @author Rossen Stoyanchev
- * @since 3.1
  * @see StandardServletMultipartResolver
+ * @since 3.1
  */
 public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpServletRequest {
 
@@ -65,6 +55,7 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 	/**
 	 * Create a new StandardMultipartHttpServletRequest wrapper for the given request,
 	 * immediately parsing the multipart content.
+	 *
 	 * @param request the servlet request to wrap
 	 * @throws MultipartException if parsing failed
 	 */
@@ -74,9 +65,10 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 
 	/**
 	 * Create a new StandardMultipartHttpServletRequest wrapper for the given request.
-	 * @param request the servlet request to wrap
+	 *
+	 * @param request     the servlet request to wrap
 	 * @param lazyParsing whether multipart parsing should be triggered lazily on
-	 * first access of multipart files or parameters
+	 *                    first access of multipart files or parameters
 	 * @throws MultipartException if an immediate parsing attempt failed
 	 * @since 3.2.9
 	 */
@@ -89,7 +81,11 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 		}
 	}
 
-
+	/**
+	 * 解析请求参数
+	 *
+	 * @param request
+	 */
 	private void parseRequest(HttpServletRequest request) {
 		try {
 			Collection<Part> parts = request.getParts();
@@ -104,14 +100,12 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 						filename = MimeDelegate.decode(filename);
 					}
 					files.add(part.getName(), new StandardMultipartFile(part, filename));
-				}
-				else {
+				} else {
 					this.multipartParameterNames.add(part.getName());
 				}
 			}
 			setMultipartFiles(files);
-		}
-		catch (Throwable ex) {
+		} catch (Throwable ex) {
 			handleParseFailure(ex);
 		}
 	}
@@ -174,8 +168,7 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 		try {
 			Part part = getPart(paramOrFileName);
 			return (part != null ? part.getContentType() : null);
-		}
-		catch (Throwable ex) {
+		} catch (Throwable ex) {
 			throw new MultipartException("Could not access multipart servlet request", ex);
 		}
 	}
@@ -190,12 +183,10 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 					headers.put(headerName, new ArrayList<>(part.getHeaders(headerName)));
 				}
 				return headers;
-			}
-			else {
+			} else {
 				return null;
 			}
-		}
-		catch (Throwable ex) {
+		} catch (Throwable ex) {
 			throw new MultipartException("Could not access multipart servlet request", ex);
 		}
 	}
@@ -280,8 +271,7 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 		public static String decode(String value) {
 			try {
 				return MimeUtility.decodeText(value);
-			}
-			catch (UnsupportedEncodingException ex) {
+			} catch (UnsupportedEncodingException ex) {
 				throw new IllegalStateException(ex);
 			}
 		}

@@ -36,6 +36,8 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * css 资源文件转换
+ * <p>
  * A {@link ResourceTransformer} implementation that modifies links in a CSS
  * file to match the public URL paths that should be exposed to clients (e.g.
  * with an MD5 content-based hash inserted in the URL).
@@ -126,11 +128,15 @@ public class CssLinkResourceTransformer extends ResourceTransformerSupport {
 
 
 	/**
+	 * 抽象的 LinkParser
+	 * <p>
 	 * Abstract base class for {@link LinkParser} implementations.
 	 */
 	protected abstract static class AbstractLinkParser implements LinkParser {
 
-		/** Return the keyword to use to search for links, e.g. "@import", "url(" */
+		/**
+		 * Return the keyword to use to search for links, e.g. "@import", "url("
+		 */
 		protected abstract String getKeyword();
 
 		@Override
@@ -147,16 +153,23 @@ public class CssLinkResourceTransformer extends ResourceTransformerSupport {
 				}
 				if (content.charAt(position) == '\'') {
 					position = extractLink(position, "'", content, result);
-				}
-				else if (content.charAt(position) == '"') {
+				} else if (content.charAt(position) == '"') {
 					position = extractLink(position, "\"", content, result);
-				}
-				else {
+				} else {
 					position = extractLink(position, content, result);
 				}
 			}
 		}
 
+		/**
+		 * 抽取链接
+		 *
+		 * @param index
+		 * @param endKey
+		 * @param content
+		 * @param linksToAdd
+		 * @return
+		 */
 		protected int extractLink(int index, String endKey, String content, SortedSet<ContentChunkInfo> linksToAdd) {
 			int start = index + 1;
 			int end = content.indexOf(endKey, start);
@@ -165,6 +178,8 @@ public class CssLinkResourceTransformer extends ResourceTransformerSupport {
 		}
 
 		/**
+		 * 抽取链接
+		 * <p>
 		 * Invoked after a keyword match, after whitespace has been removed, and when
 		 * the next char is neither a single nor double quote.
 		 */
@@ -172,6 +187,9 @@ public class CssLinkResourceTransformer extends ResourceTransformerSupport {
 	}
 
 
+	/**
+	 * 抽取 @import 后的链接
+	 */
 	private static class ImportStatementLinkParser extends AbstractLinkParser {
 
 		@Override
@@ -183,15 +201,16 @@ public class CssLinkResourceTransformer extends ResourceTransformerSupport {
 		protected int extractLink(int index, String content, SortedSet<ContentChunkInfo> linksToAdd) {
 			if (content.startsWith("url(", index)) {
 				// Ignore: UrlFunctionLinkParser will handle it.
-			}
-			else if (logger.isTraceEnabled()) {
+			} else if (logger.isTraceEnabled()) {
 				logger.trace("Unexpected syntax for @import link at index " + index);
 			}
 			return index;
 		}
 	}
 
-
+	/**
+	 * 抽取 url( 后的链接
+	 */
 	private static class UrlFunctionLinkParser extends AbstractLinkParser {
 
 		@Override

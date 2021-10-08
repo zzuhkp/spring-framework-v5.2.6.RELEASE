@@ -21,6 +21,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.context.request.NativeWebRequest;
 
 /**
+ * web 参数解析
+ * <p>
  * SPI for resolving custom arguments for a specific handler method parameter.
  * Typically implemented to detect special parameter types, resolving
  * well-known argument values for them.
@@ -39,8 +41,8 @@ import org.springframework.web.context.request.NativeWebRequest;
  * }</pre>
  *
  * @author Juergen Hoeller
- * @since 2.5.2
  * @see org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter#setCustomArgumentResolvers
+ * @since 2.5.2
  */
 @FunctionalInterface
 public interface WebArgumentResolver {
@@ -54,8 +56,9 @@ public interface WebArgumentResolver {
 
 	/**
 	 * Resolve an argument for the given handler method parameter within the given web request.
+	 *
 	 * @param methodParameter the handler method parameter to resolve
-	 * @param webRequest the current web request, allowing access to the native request as well
+	 * @param webRequest      the current web request, allowing access to the native request as well
 	 * @return the argument value, or {@code UNRESOLVED} if not resolvable
 	 * @throws Exception in case of resolution failure
 	 */

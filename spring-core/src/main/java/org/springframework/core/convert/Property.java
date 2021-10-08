@@ -22,6 +22,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ConcurrentReferenceHashMap;
@@ -175,6 +176,7 @@ public final class Property {
 				return read;
 			}
 		}
+		// read 和 write 类型不一致，以 write 类型为准
 		return write;
 	}
 

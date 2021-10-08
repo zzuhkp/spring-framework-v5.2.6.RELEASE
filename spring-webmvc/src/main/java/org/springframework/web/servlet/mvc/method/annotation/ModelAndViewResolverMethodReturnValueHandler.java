@@ -31,6 +31,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.annotation.ModelAndViewResolver;
 
 /**
+ * 基于 ModelAndViewResolver 的返回类型解析
+ * <p>
  * This return value handler is intended to be ordered after all others as it
  * attempts to handle _any_ return value type (i.e. returns {@code true} for
  * all return types).
@@ -79,7 +81,7 @@ public class ModelAndViewResolverMethodReturnValueHandler implements HandlerMeth
 
 	@Override
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
-			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
+								  ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
 
 		if (this.mavResolvers != null) {
 			for (ModelAndViewResolver mavResolver : this.mavResolvers) {
@@ -102,8 +104,7 @@ public class ModelAndViewResolverMethodReturnValueHandler implements HandlerMeth
 		// No suitable ModelAndViewResolver...
 		if (this.modelAttributeProcessor.supportsReturnType(returnType)) {
 			this.modelAttributeProcessor.handleReturnValue(returnValue, returnType, mavContainer, webRequest);
-		}
-		else {
+		} else {
 			throw new UnsupportedOperationException("Unexpected return type: " +
 					returnType.getParameterType().getName() + " in method: " + returnType.getMethod());
 		}

@@ -17,6 +17,8 @@
 package org.springframework.web.bind.support;
 
 /**
+ * 会话状态的简单实现
+ * <p>
  * Simple implementation of the {@link SessionStatus} interface,
  * keeping the {@code complete} flag as an instance variable.
  *

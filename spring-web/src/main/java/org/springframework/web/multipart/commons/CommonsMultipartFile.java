@@ -35,12 +35,14 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
+ * 基于 apache commons file upload 的 MultipartFile
+ * <p>
  * {@link MultipartFile} implementation for Apache Commons FileUpload.
  *
  * @author Trevor D. Cook
  * @author Juergen Hoeller
- * @since 29.09.2003
  * @see CommonsMultipartResolver
+ * @since 29.09.2003
  */
 @SuppressWarnings("serial")
 public class CommonsMultipartFile implements MultipartFile, Serializable {
@@ -56,6 +58,7 @@ public class CommonsMultipartFile implements MultipartFile, Serializable {
 
 	/**
 	 * Create an instance wrapping the given FileItem.
+	 *
 	 * @param fileItem the FileItem to wrap
 	 */
 	public CommonsMultipartFile(FileItem fileItem) {
@@ -78,9 +81,10 @@ public class CommonsMultipartFile implements MultipartFile, Serializable {
 	 * <p>Default is "false", stripping off path information that may prefix the
 	 * actual filename e.g. from Opera. Switch this to "true" for preserving the
 	 * client-specified filename as-is, including potential path separators.
-	 * @since 4.3.5
+	 *
 	 * @see #getOriginalFilename()
 	 * @see CommonsMultipartResolver#setPreserveFilename(boolean)
+	 * @since 4.3.5
 	 */
 	public void setPreserveFilename(boolean preserveFilename) {
 		this.preserveFilename = preserveFilename;
@@ -110,11 +114,10 @@ public class CommonsMultipartFile implements MultipartFile, Serializable {
 		int winSep = filename.lastIndexOf('\\');
 		// Cut off at latest possible point
 		int pos = Math.max(winSep, unixSep);
-		if (pos != -1)  {
+		if (pos != -1) {
 			// Any sort of path separator found...
 			return filename.substring(pos + 1);
-		}
-		else {
+		} else {
 			// A plain name
 			return filename;
 		}
@@ -175,16 +178,13 @@ public class CommonsMultipartFile implements MultipartFile, Serializable {
 						(traceOn ? ", stored " + getStorageDescription() : "") +
 						": " + action + " to [" + dest.getAbsolutePath() + "]";
 			});
-		}
-		catch (FileUploadException ex) {
+		} catch (FileUploadException ex) {
 			throw new IllegalStateException(ex.getMessage(), ex);
-		}
-		catch (IllegalStateException | IOException ex) {
+		} catch (IllegalStateException | IOException ex) {
 			// Pass through IllegalStateException when coming from FileItem directly,
 			// or propagate an exception from I/O operations within FileItem.write
 			throw ex;
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			throw new IOException("File transfer failed", ex);
 		}
 	}
@@ -223,11 +223,9 @@ public class CommonsMultipartFile implements MultipartFile, Serializable {
 	public String getStorageDescription() {
 		if (this.fileItem.isInMemory()) {
 			return "in memory";
-		}
-		else if (this.fileItem instanceof DiskFileItem) {
+		} else if (this.fileItem instanceof DiskFileItem) {
 			return "at [" + ((DiskFileItem) this.fileItem).getStoreLocation().getAbsolutePath() + "]";
-		}
-		else {
+		} else {
 			return "on disk";
 		}
 	}

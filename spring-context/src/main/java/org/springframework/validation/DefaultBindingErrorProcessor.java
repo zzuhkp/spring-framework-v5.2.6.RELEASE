@@ -84,6 +84,8 @@ public class DefaultBindingErrorProcessor implements BindingErrorProcessor {
 	}
 
 	/**
+	 * 获取参数
+	 * <p>
 	 * Return FieldError arguments for a binding error on the given field.
 	 * Invoked for each missing required field and each type mismatch.
 	 * <p>The default implementation returns a single argument indicating the field name

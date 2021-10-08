@@ -21,6 +21,8 @@ import org.springframework.ui.context.Theme;
 import org.springframework.util.Assert;
 
 /**
+ * 默认的 Theme 实现
+ * <p>
  * Default {@link Theme} implementation, wrapping a name and an
  * underlying {@link org.springframework.context.MessageSource}.
  *
@@ -36,7 +38,8 @@ public class SimpleTheme implements Theme {
 
 	/**
 	 * Create a SimpleTheme.
-	 * @param name the name of the theme
+	 *
+	 * @param name          the name of the theme
 	 * @param messageSource the MessageSource that resolves theme messages
 	 */
 	public SimpleTheme(String name, MessageSource messageSource) {

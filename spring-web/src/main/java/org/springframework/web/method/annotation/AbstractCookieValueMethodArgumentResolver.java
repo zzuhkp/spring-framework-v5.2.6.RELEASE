@@ -26,6 +26,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.CookieValue;
 
 /**
+ * 注解 @CookieValue 标注的参数解析
+ * <p>
  * A base abstract class to resolve method arguments annotated with
  * {@code @CookieValue}. Subclasses extract the cookie value from the request.
  *
@@ -44,9 +46,10 @@ public abstract class AbstractCookieValueMethodArgumentResolver extends Abstract
 
 	/**
 	 * Crate a new {@link AbstractCookieValueMethodArgumentResolver} instance.
+	 *
 	 * @param beanFactory a bean factory to use for resolving  ${...}
-	 * placeholder and #{...} SpEL expressions in default values;
-	 * or {@code null} if default values are not expected to contain expressions
+	 *                    placeholder and #{...} SpEL expressions in default values;
+	 *                    or {@code null} if default values are not expected to contain expressions
 	 */
 	public AbstractCookieValueMethodArgumentResolver(@Nullable ConfigurableBeanFactory beanFactory) {
 		super(beanFactory);

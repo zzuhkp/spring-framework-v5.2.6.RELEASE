@@ -26,6 +26,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StreamUtils;
 
 /**
+ * 支持字节数组的 HttpMessageConverter
+ * <p>
  * Implementation of {@link HttpMessageConverter} that can read and write byte arrays.
  *
  * <p>By default, this converter supports all media types (<code>&#42;/&#42;</code>), and

@@ -22,6 +22,8 @@ import java.util.Map;
 import org.springframework.lang.Nullable;
 
 /**
+ * ModelMap 子类，方法返回值为 this
+ * <p>
  * Subclass of {@link ModelMap} that implements the {@link Model} interface.
  * Java 5 specific like the {@code Model} interface itself.
  *

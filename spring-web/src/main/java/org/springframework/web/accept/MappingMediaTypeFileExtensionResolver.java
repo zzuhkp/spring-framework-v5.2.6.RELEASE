@@ -31,6 +31,8 @@ import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 
 /**
+ * MediaTypeFileExtensionResolver 实现，使用给定的 map 维护扩展名与媒体类型的对应关系
+ * <p>
  * An implementation of {@code MediaTypeFileExtensionResolver} that maintains
  * lookups between file extensions and MediaTypes in both directions.
  *
@@ -43,10 +45,16 @@ import org.springframework.lang.Nullable;
  */
 public class MappingMediaTypeFileExtensionResolver implements MediaTypeFileExtensionResolver {
 
+	/**
+	 * 扩展名 -> 媒体类型
+	 */
 	private final ConcurrentMap<String, MediaType> mediaTypes = new ConcurrentHashMap<>(64);
 
 	private final ConcurrentMap<MediaType, List<String>> fileExtensions = new ConcurrentHashMap<>(64);
 
+	/**
+	 * 所有的扩展名
+	 */
 	private final List<String> allFileExtensions = new CopyOnWriteArrayList<>();
 
 
@@ -105,6 +113,7 @@ public class MappingMediaTypeFileExtensionResolver implements MediaTypeFileExten
 
 	/**
 	 * Use this method for a reverse lookup from extension to MediaType.
+	 *
 	 * @return a MediaType for the extension, or {@code null} if none found
 	 */
 	@Nullable

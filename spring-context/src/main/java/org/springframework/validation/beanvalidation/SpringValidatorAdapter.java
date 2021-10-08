@@ -46,6 +46,8 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.SmartValidator;
 
 /**
+ * Spring 和 JSR-303 Validator 的适配器
+ * <p>
  * Adapter that takes a JSR-303 {@code javax.validator.Validator} and
  * exposes it as a Spring {@link org.springframework.validation.Validator}
  * while also exposing the original JSR-303 Validator interface itself.
@@ -314,7 +316,7 @@ public class SpringValidatorAdapter implements SmartValidator, javax.validation.
 
 	/**
 	 * 提取违反约束后的拒绝值
-	 *
+	 * <p>
 	 * Extract the rejected value behind the given constraint violation,
 	 * for exposure through the Spring errors representation.
 	 *

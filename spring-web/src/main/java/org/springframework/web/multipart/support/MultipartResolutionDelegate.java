@@ -69,6 +69,12 @@ public final class MultipartResolutionDelegate {
 				isMultipartContent(request));
 	}
 
+	/**
+	 * 内容类型是否为 multipart
+	 *
+	 * @param request
+	 * @return
+	 */
 	private static boolean isMultipartContent(HttpServletRequest request) {
 		String contentType = request.getContentType();
 		return (contentType != null && contentType.toLowerCase().startsWith("multipart/"));
@@ -83,6 +89,12 @@ public final class MultipartResolutionDelegate {
 	}
 
 
+	/**
+	 * 是否为 multipart 参数
+	 *
+	 * @param parameter
+	 * @return
+	 */
 	public static boolean isMultipartArgument(MethodParameter parameter) {
 		Class<?> paramType = parameter.getNestedParameterType();
 		return (MultipartFile.class == paramType ||
@@ -103,35 +115,28 @@ public final class MultipartResolutionDelegate {
 				multipartRequest = new StandardMultipartHttpServletRequest(request);
 			}
 			return (multipartRequest != null ? multipartRequest.getFile(name) : null);
-		}
-		else if (isMultipartFileCollection(parameter)) {
+		} else if (isMultipartFileCollection(parameter)) {
 			if (multipartRequest == null && isMultipart) {
 				multipartRequest = new StandardMultipartHttpServletRequest(request);
 			}
 			return (multipartRequest != null ? multipartRequest.getFiles(name) : null);
-		}
-		else if (isMultipartFileArray(parameter)) {
+		} else if (isMultipartFileArray(parameter)) {
 			if (multipartRequest == null && isMultipart) {
 				multipartRequest = new StandardMultipartHttpServletRequest(request);
 			}
 			if (multipartRequest != null) {
 				List<MultipartFile> multipartFiles = multipartRequest.getFiles(name);
 				return multipartFiles.toArray(new MultipartFile[0]);
-			}
-			else {
+			} else {
 				return null;
 			}
-		}
-		else if (Part.class == parameter.getNestedParameterType()) {
-			return (isMultipart ? request.getPart(name): null);
-		}
-		else if (isPartCollection(parameter)) {
+		} else if (Part.class == parameter.getNestedParameterType()) {
+			return (isMultipart ? request.getPart(name) : null);
+		} else if (isPartCollection(parameter)) {
 			return (isMultipart ? resolvePartList(request, name) : null);
-		}
-		else if (isPartArray(parameter)) {
+		} else if (isPartArray(parameter)) {
 			return (isMultipart ? resolvePartList(request, name).toArray(new Part[0]) : null);
-		}
-		else {
+		} else {
 			return UNRESOLVABLE;
 		}
 	}
@@ -152,10 +157,16 @@ public final class MultipartResolutionDelegate {
 		return (Part.class == methodParam.getNestedParameterType().getComponentType());
 	}
 
+	/**
+	 * 获取集合泛型参数实际类型
+	 *
+	 * @param methodParam
+	 * @return
+	 */
 	@Nullable
 	private static Class<?> getCollectionParameterType(MethodParameter methodParam) {
 		Class<?> paramType = methodParam.getNestedParameterType();
-		if (Collection.class == paramType || List.class.isAssignableFrom(paramType)){
+		if (Collection.class == paramType || List.class.isAssignableFrom(paramType)) {
 			Class<?> valueType = ResolvableType.forMethodParameter(methodParam).asCollection().resolveGeneric();
 			if (valueType != null) {
 				return valueType;
@@ -164,6 +175,14 @@ public final class MultipartResolutionDelegate {
 		return null;
 	}
 
+	/**
+	 * 解析 part 列表
+	 *
+	 * @param request
+	 * @param name
+	 * @return
+	 * @throws Exception
+	 */
 	private static List<Part> resolvePartList(HttpServletRequest request, String name) throws Exception {
 		Collection<Part> parts = request.getParts();
 		List<Part> result = new ArrayList<>(parts.size());

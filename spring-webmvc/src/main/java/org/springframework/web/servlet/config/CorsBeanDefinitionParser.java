@@ -32,6 +32,8 @@ import org.springframework.util.xml.DomUtils;
 import org.springframework.web.cors.CorsConfiguration;
 
 /**
+ * mvc:cors 节点解析
+ * <p>
  * {@link org.springframework.beans.factory.xml.BeanDefinitionParser} that parses a
  * {@code cors} element in order to set the CORS configuration in the various
  * {AbstractHandlerMapping} beans created by {@link AnnotationDrivenBeanDefinitionParser},
@@ -52,8 +54,7 @@ public class CorsBeanDefinitionParser implements BeanDefinitionParser {
 		if (mappings.isEmpty()) {
 			CorsConfiguration config = new CorsConfiguration().applyPermitDefaultValues();
 			corsConfigurations.put("/**", config);
-		}
-		else {
+		} else {
 			for (Element mapping : mappings) {
 				CorsConfiguration config = new CorsConfiguration();
 				if (mapping.hasAttribute("allowed-origins")) {

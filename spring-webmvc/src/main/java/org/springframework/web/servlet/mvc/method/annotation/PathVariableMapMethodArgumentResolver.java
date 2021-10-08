@@ -33,13 +33,15 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.HandlerMapping;
 
 /**
+ * PathVariable 标注的 Map 类型的参数解析
+ * <p>
  * Resolves {@link Map} method arguments annotated with an @{@link PathVariable}
  * where the annotation does not specify a path variable name. The created
  * {@link Map} contains all URI template name/value pairs.
  *
  * @author Rossen Stoyanchev
- * @since 3.2
  * @see PathVariableMethodArgumentResolver
+ * @since 3.2
  */
 public class PathVariableMapMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -55,7 +57,7 @@ public class PathVariableMapMethodArgumentResolver implements HandlerMethodArgum
 	 */
 	@Override
 	public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
-			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
+								  NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
 
 		@SuppressWarnings("unchecked")
 		Map<String, String> uriTemplateVars =
@@ -64,8 +66,7 @@ public class PathVariableMapMethodArgumentResolver implements HandlerMethodArgum
 
 		if (!CollectionUtils.isEmpty(uriTemplateVars)) {
 			return new LinkedHashMap<>(uriTemplateVars);
-		}
-		else {
+		} else {
 			return Collections.emptyMap();
 		}
 	}

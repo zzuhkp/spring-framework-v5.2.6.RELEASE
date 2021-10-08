@@ -33,6 +33,8 @@ import org.springframework.web.servlet.function.ServerRequest;
 import org.springframework.web.servlet.function.ServerResponse;
 
 /**
+ * HandlerFunction 作为 Handler 的 HandlerAdapter
+ * <p>
  * {@code HandlerAdapter} implementation that supports {@link HandlerFunction}s.
  *
  * @author Arjen Poutsma
@@ -46,6 +48,7 @@ public class HandlerFunctionAdapter implements HandlerAdapter, Ordered {
 	/**
 	 * Specify the order value for this HandlerAdapter bean.
 	 * <p>The default value is {@code Ordered.LOWEST_PRECEDENCE}, meaning non-ordered.
+	 *
 	 * @see org.springframework.core.Ordered#getOrder()
 	 */
 	public void setOrder(int order) {
@@ -65,8 +68,8 @@ public class HandlerFunctionAdapter implements HandlerAdapter, Ordered {
 	@Nullable
 	@Override
 	public ModelAndView handle(HttpServletRequest servletRequest,
-			HttpServletResponse servletResponse,
-			Object handler) throws Exception {
+							   HttpServletResponse servletResponse,
+							   Object handler) throws Exception {
 
 
 		HandlerFunction<?> handlerFunction = (HandlerFunction<?>) handler;

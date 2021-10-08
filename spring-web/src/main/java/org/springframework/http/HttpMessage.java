@@ -17,6 +17,8 @@
 package org.springframework.http;
 
 /**
+ * 表示 HTTP 请求响应消息的基本接口
+ *
  * Represents the base interface for HTTP request and response messages.
  * Consists of {@link HttpHeaders}, retrievable via {@link #getHeaders()}.
  *
@@ -27,6 +29,7 @@ public interface HttpMessage {
 
 	/**
 	 * Return the headers of this message.
+	 *
 	 * @return a corresponding HttpHeaders object (never {@code null})
 	 */
 	HttpHeaders getHeaders();

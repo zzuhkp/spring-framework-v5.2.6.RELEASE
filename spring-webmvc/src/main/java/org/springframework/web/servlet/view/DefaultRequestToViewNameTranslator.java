@@ -26,6 +26,8 @@ import org.springframework.web.servlet.RequestToViewNameTranslator;
 import org.springframework.web.util.UrlPathHelper;
 
 /**
+ * 默认的 RequestToViewNameTranslator
+ * <p>
  * {@link RequestToViewNameTranslator} that simply transforms the URI of
  * the incoming request into a view name.
  *
@@ -51,25 +53,39 @@ import org.springframework.web.util.UrlPathHelper;
  *
  * @author Rob Harrop
  * @author Juergen Hoeller
- * @since 2.0
  * @see org.springframework.web.servlet.RequestToViewNameTranslator
  * @see org.springframework.web.servlet.ViewResolver
+ * @since 2.0
  */
 public class DefaultRequestToViewNameTranslator implements RequestToViewNameTranslator {
 
 	private static final String SLASH = "/";
 
-
+	/**
+	 * 视图名前缀
+	 */
 	private String prefix = "";
 
+	/**
+	 * 视图名后缀
+	 */
 	private String suffix = "";
 
 	private String separator = SLASH;
 
+	/**
+	 * 是否删除 URI 中的前导斜杠
+	 */
 	private boolean stripLeadingSlash = true;
 
+	/**
+	 * 是否删除 URI 中的尾部斜杠
+	 */
 	private boolean stripTrailingSlash = true;
 
+	/**
+	 * 是否删除 URI 中的文件扩展名
+	 */
 	private boolean stripExtension = true;
 
 	private UrlPathHelper urlPathHelper = new UrlPathHelper();
@@ -77,6 +93,7 @@ public class DefaultRequestToViewNameTranslator implements RequestToViewNameTran
 
 	/**
 	 * Set the prefix to prepend to generated view names.
+	 *
 	 * @param prefix the prefix to prepend to generated view names
 	 */
 	public void setPrefix(@Nullable String prefix) {
@@ -85,6 +102,7 @@ public class DefaultRequestToViewNameTranslator implements RequestToViewNameTran
 
 	/**
 	 * Set the suffix to append to generated view names.
+	 *
 	 * @param suffix the suffix to append to generated view names
 	 */
 	public void setSuffix(@Nullable String suffix) {
@@ -126,6 +144,7 @@ public class DefaultRequestToViewNameTranslator implements RequestToViewNameTran
 
 	/**
 	 * Shortcut to same property on underlying {@link #setUrlPathHelper UrlPathHelper}.
+	 *
 	 * @see org.springframework.web.util.UrlPathHelper#setAlwaysUseFullPath
 	 */
 	public void setAlwaysUseFullPath(boolean alwaysUseFullPath) {
@@ -134,6 +153,7 @@ public class DefaultRequestToViewNameTranslator implements RequestToViewNameTran
 
 	/**
 	 * Shortcut to same property on underlying {@link #setUrlPathHelper UrlPathHelper}.
+	 *
 	 * @see org.springframework.web.util.UrlPathHelper#setUrlDecode
 	 */
 	public void setUrlDecode(boolean urlDecode) {
@@ -142,6 +162,7 @@ public class DefaultRequestToViewNameTranslator implements RequestToViewNameTran
 
 	/**
 	 * Set if ";" (semicolon) content should be stripped from the request URI.
+	 *
 	 * @see org.springframework.web.util.UrlPathHelper#setRemoveSemicolonContent(boolean)
 	 */
 	public void setRemoveSemicolonContent(boolean removeSemicolonContent) {
@@ -163,6 +184,7 @@ public class DefaultRequestToViewNameTranslator implements RequestToViewNameTran
 	/**
 	 * Translates the request URI of the incoming {@link HttpServletRequest}
 	 * into the view name based on the configured parameters.
+	 *
 	 * @see org.springframework.web.util.UrlPathHelper#getLookupPathForRequest
 	 * @see #transformPath
 	 */
@@ -173,10 +195,13 @@ public class DefaultRequestToViewNameTranslator implements RequestToViewNameTran
 	}
 
 	/**
+	 * URI 路径转换
+	 * <p>
 	 * Transform the request URI (in the context of the webapp) stripping
 	 * slashes and extensions, and replacing the separator as required.
+	 *
 	 * @param lookupPath the lookup path for the current request,
-	 * as determined by the UrlPathHelper
+	 *                   as determined by the UrlPathHelper
 	 * @return the transformed path, with slashes and extensions stripped
 	 * if desired
 	 */

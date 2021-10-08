@@ -27,6 +27,8 @@ import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.util.WebUtils;
 
 /**
+ * 将 FlashMap 存储至 Session 的 FlashMapManager
+ * <p>
  * Store and retrieve {@link FlashMap} instances to and from the HTTP session.
  *
  * @author Rossen Stoyanchev
@@ -59,6 +61,7 @@ public class SessionFlashMapManager extends AbstractFlashMapManager {
 
 	/**
 	 * Exposes the best available session mutex.
+	 *
 	 * @see org.springframework.web.util.WebUtils#getSessionMutex
 	 * @see org.springframework.web.util.HttpSessionMutexListener
 	 */

@@ -61,6 +61,8 @@ public abstract class DataSourceUtils {
 
 
 	/**
+	 * 从数据源中获取连接，使用 DataSourceTransactionManager 时还会将连接存放到线程上下文中
+	 * <p>
 	 * Obtain a Connection from the given DataSource. Translates SQLExceptions into
 	 * the Spring hierarchy of unchecked generic data access exceptions, simplifying
 	 * calling code and making any exception that is thrown more meaningful.
@@ -99,7 +101,7 @@ public abstract class DataSourceUtils {
 	 */
 	public static Connection doGetConnection(DataSource dataSource) throws SQLException {
 		Assert.notNull(dataSource, "No DataSource specified");
-
+		// 从线程上下文中获取连接
 		ConnectionHolder conHolder = (ConnectionHolder) TransactionSynchronizationManager.getResource(dataSource);
 		if (conHolder != null && (conHolder.hasConnection() || conHolder.isSynchronizedWithTransaction())) {
 			conHolder.requested();
@@ -111,10 +113,12 @@ public abstract class DataSourceUtils {
 		}
 		// Else we either got no holder or an empty thread-bound holder here.
 
+		// 线程上下文不存在连接，创建连接
 		logger.debug("Fetching JDBC Connection from DataSource");
 		Connection con = fetchConnection(dataSource);
 
 		if (TransactionSynchronizationManager.isSynchronizationActive()) {
+			// PlatformTransactionManager 环境下将连接存放到线程上下文中
 			try {
 				// Use same Connection for further JDBC actions within the transaction.
 				// Thread-bound object will get removed by synchronization at transaction completion.
@@ -402,6 +406,8 @@ public abstract class DataSourceUtils {
 	}
 
 	/**
+	 * 关闭连接
+	 *
 	 * Close the Connection, unless a {@link SmartDataSource} doesn't want us to.
 	 *
 	 * @param con        the Connection to close if necessary

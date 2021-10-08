@@ -19,6 +19,8 @@ package org.springframework.web.context.request;
 import org.springframework.lang.Nullable;
 
 /**
+ * request scope 支持
+ *
  * Request-backed {@link org.springframework.beans.factory.config.Scope}
  * implementation.
  *
@@ -30,12 +32,12 @@ import org.springframework.lang.Nullable;
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @author Rob Harrop
- * @since 2.0
  * @see RequestContextHolder#currentRequestAttributes()
  * @see RequestAttributes#SCOPE_REQUEST
  * @see RequestContextListener
  * @see org.springframework.web.filter.RequestContextFilter
  * @see org.springframework.web.servlet.DispatcherServlet
+ * @since 2.0
  */
 public class RequestScope extends AbstractRequestAttributesScope {
 

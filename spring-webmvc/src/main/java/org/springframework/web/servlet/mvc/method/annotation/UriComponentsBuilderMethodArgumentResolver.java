@@ -30,6 +30,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 
 /**
+ * UriComponentsBuilder、ServletUriComponentsBuilder 参数类型解析
+ * <p>
  * Resolvers argument values of type {@link UriComponentsBuilder}.
  *
  * <p>The returned instance is initialized via
@@ -48,7 +50,7 @@ public class UriComponentsBuilderMethodArgumentResolver implements HandlerMethod
 
 	@Override
 	public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
-			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
+								  NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
 
 		HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
 		Assert.state(request != null, "No HttpServletRequest");

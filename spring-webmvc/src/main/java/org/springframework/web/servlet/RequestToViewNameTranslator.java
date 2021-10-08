@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.lang.Nullable;
 
 /**
+ * 根据请求获取视图名的类
+ * <p>
  * Strategy interface for translating an incoming
  * {@link javax.servlet.http.HttpServletRequest} into a
  * logical view name when no view name is explicitly supplied.
@@ -33,8 +35,9 @@ public interface RequestToViewNameTranslator {
 
 	/**
 	 * Translate the given {@link HttpServletRequest} into a view name.
+	 *
 	 * @param request the incoming {@link HttpServletRequest} providing
-	 * the context from which a view name is to be resolved
+	 *                the context from which a view name is to be resolved
 	 * @return the view name, or {@code null} if no default found
 	 * @throws Exception if view name translation fails
 	 */

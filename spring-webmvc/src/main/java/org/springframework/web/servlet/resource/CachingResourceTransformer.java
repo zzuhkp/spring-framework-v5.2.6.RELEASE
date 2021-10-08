@@ -29,6 +29,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 
 /**
+ * 从缓存中获取资源的转换器
+ * <p>
  * A {@link org.springframework.web.servlet.resource.ResourceTransformer} that checks a
  * {@link org.springframework.cache.Cache} to see if a previously transformed resource
  * exists in the cache and returns it if found, and otherwise delegates to the resolver

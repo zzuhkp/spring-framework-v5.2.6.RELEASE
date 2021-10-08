@@ -31,6 +31,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StreamUtils;
 
 /**
+ * 支持 String 转换的 HttpMessageConverter
+ * <p>
  * Implementation of {@link HttpMessageConverter} that can read and write strings.
  *
  * <p>By default, this converter supports all media types (<code>&#42;/&#42;</code>),
@@ -57,6 +59,7 @@ public class StringHttpMessageConverter extends AbstractHttpMessageConverter<Str
 
 	/**
 	 * A default constructor that uses {@code "ISO-8859-1"} as the default charset.
+	 *
 	 * @see #StringHttpMessageConverter(Charset)
 	 */
 	public StringHttpMessageConverter() {
@@ -103,7 +106,7 @@ public class StringHttpMessageConverter extends AbstractHttpMessageConverter<Str
 
 	@Override
 	protected void addDefaultHeaders(HttpHeaders headers, String s, @Nullable MediaType type) throws IOException {
-		if (headers.getContentType() == null ) {
+		if (headers.getContentType() == null) {
 			if (type != null && type.isConcrete() && type.isCompatibleWith(MediaType.APPLICATION_JSON)) {
 				// Prevent charset parameter for JSON..
 				headers.setContentType(type);
@@ -124,9 +127,12 @@ public class StringHttpMessageConverter extends AbstractHttpMessageConverter<Str
 
 
 	/**
+	 * 获取可接受的字符集
+	 * <p>
 	 * Return the list of supported {@link Charset Charsets}.
 	 * <p>By default, returns {@link Charset#availableCharsets()}.
 	 * Can be overridden in subclasses.
+	 *
 	 * @return the list of accepted charsets
 	 */
 	protected List<Charset> getAcceptedCharsets() {
@@ -138,15 +144,19 @@ public class StringHttpMessageConverter extends AbstractHttpMessageConverter<Str
 		return charsets;
 	}
 
+	/**
+	 * 获取字符集
+	 *
+	 * @param contentType
+	 * @return
+	 */
 	private Charset getContentTypeCharset(@Nullable MediaType contentType) {
 		if (contentType != null && contentType.getCharset() != null) {
 			return contentType.getCharset();
-		}
-		else if (contentType != null && contentType.isCompatibleWith(MediaType.APPLICATION_JSON)) {
+		} else if (contentType != null && contentType.isCompatibleWith(MediaType.APPLICATION_JSON)) {
 			// Matching to AbstractJackson2HttpMessageConverter#DEFAULT_CHARSET
 			return StandardCharsets.UTF_8;
-		}
-		else {
+		} else {
 			Charset charset = getDefaultCharset();
 			Assert.state(charset != null, "No default charset");
 			return charset;

@@ -25,6 +25,8 @@ import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 
 /**
+ * 基于 Jackson 2 的 HttpMessageConverter
+ * <p>
  * Implementation of {@link org.springframework.http.converter.HttpMessageConverter} that can read and
  * write JSON using <a href="https://github.com/FasterXML/jackson">Jackson 2.x's</a> {@link ObjectMapper}.
  *
@@ -62,6 +64,7 @@ public class MappingJackson2HttpMessageConverter extends AbstractJackson2HttpMes
 	/**
 	 * Construct a new {@link MappingJackson2HttpMessageConverter} with a custom {@link ObjectMapper}.
 	 * You can use {@link Jackson2ObjectMapperBuilder} to build it easily.
+	 *
 	 * @see Jackson2ObjectMapperBuilder#json()
 	 */
 	public MappingJackson2HttpMessageConverter(ObjectMapper objectMapper) {
@@ -72,6 +75,7 @@ public class MappingJackson2HttpMessageConverter extends AbstractJackson2HttpMes
 	/**
 	 * Specify a custom prefix to use for this view's JSON output.
 	 * Default is none.
+	 *
 	 * @see #setPrefixJson
 	 */
 	public void setJsonPrefix(String jsonPrefix) {
@@ -83,6 +87,7 @@ public class MappingJackson2HttpMessageConverter extends AbstractJackson2HttpMes
 	 * <p>Prefixing the JSON string in this manner is used to help prevent JSON Hijacking.
 	 * The prefix renders the string syntactically invalid as a script so that it cannot be hijacked.
 	 * This prefix should be stripped before parsing the string as JSON.
+	 *
 	 * @see #setJsonPrefix
 	 */
 	public void setPrefixJson(boolean prefixJson) {

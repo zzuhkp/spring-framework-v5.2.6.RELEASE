@@ -26,6 +26,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 生成 Cookie 的工具类
+ * <p>
  * Helper class for cookie generation, carrying cookie descriptor settings
  * as bean properties and being able to add and remove cookie to/from a
  * given response.
@@ -34,11 +36,11 @@ import org.springframework.util.Assert;
  * such as CookieLocaleResolver and CookieThemeResolver.
  *
  * @author Juergen Hoeller
- * @since 1.1.4
  * @see #addCookie
  * @see #removeCookie
  * @see org.springframework.web.servlet.i18n.CookieLocaleResolver
  * @see org.springframework.web.servlet.theme.CookieThemeResolver
+ * @since 1.1.4
  */
 public class CookieGenerator {
 
@@ -68,6 +70,7 @@ public class CookieGenerator {
 
 	/**
 	 * Use the given name for cookies created by this generator.
+	 *
 	 * @see javax.servlet.http.Cookie#getName()
 	 */
 	public void setCookieName(@Nullable String cookieName) {
@@ -85,6 +88,7 @@ public class CookieGenerator {
 	/**
 	 * Use the given domain for cookies created by this generator.
 	 * The cookie is only visible to servers in this domain.
+	 *
 	 * @see javax.servlet.http.Cookie#setDomain
 	 */
 	public void setCookieDomain(@Nullable String cookieDomain) {
@@ -102,6 +106,7 @@ public class CookieGenerator {
 	/**
 	 * Use the given path for cookies created by this generator.
 	 * The cookie is only visible to URLs in this path and below.
+	 *
 	 * @see javax.servlet.http.Cookie#setPath
 	 */
 	public void setCookiePath(String cookiePath) {
@@ -120,6 +125,7 @@ public class CookieGenerator {
 	 * Useful special value: -1 ... not persistent, deleted when client shuts down.
 	 * <p>Default is no specific maximum age at all, using the Servlet container's
 	 * default.
+	 *
 	 * @see javax.servlet.http.Cookie#setMaxAge
 	 */
 	public void setCookieMaxAge(@Nullable Integer cookieMaxAge) {
@@ -139,6 +145,7 @@ public class CookieGenerator {
 	 * such as HTTPS (SSL). This is an indication to the receiving browser,
 	 * not processed by the HTTP server itself.
 	 * <p>Default is "false".
+	 *
 	 * @see javax.servlet.http.Cookie#setSecure
 	 */
 	public void setCookieSecure(boolean cookieSecure) {
@@ -156,6 +163,7 @@ public class CookieGenerator {
 	/**
 	 * Set whether the cookie is supposed to be marked with the "HttpOnly" attribute.
 	 * <p>Default is "false".
+	 *
 	 * @see javax.servlet.http.Cookie#setHttpOnly
 	 */
 	public void setCookieHttpOnly(boolean cookieHttpOnly) {
@@ -174,7 +182,8 @@ public class CookieGenerator {
 	 * Add a cookie with the given value to the response,
 	 * using the cookie descriptor settings of this generator.
 	 * <p>Delegates to {@link #createCookie} for cookie creation.
-	 * @param response the HTTP response to add the cookie to
+	 *
+	 * @param response    the HTTP response to add the cookie to
 	 * @param cookieValue the value of the cookie to add
 	 * @see #setCookieName
 	 * @see #setCookieDomain
@@ -204,6 +213,7 @@ public class CookieGenerator {
 	 * Remove the cookie that this generator describes from the response.
 	 * Will generate a cookie with empty value and max age 0.
 	 * <p>Delegates to {@link #createCookie} for cookie creation.
+	 *
 	 * @param response the HTTP response to remove the cookie from
 	 * @see #setCookieName
 	 * @see #setCookieDomain
@@ -228,6 +238,7 @@ public class CookieGenerator {
 	/**
 	 * Create a cookie with the given value, using the cookie descriptor
 	 * settings of this generator (except for "cookieMaxAge").
+	 *
 	 * @param cookieValue the value of the cookie to crate
 	 * @return the cookie
 	 * @see #setCookieName

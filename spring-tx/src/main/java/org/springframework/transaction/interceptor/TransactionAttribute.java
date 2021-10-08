@@ -47,6 +47,8 @@ public interface TransactionAttribute extends TransactionDefinition {
 	String getQualifier();
 
 	/**
+	 * 遇到给定的异常是否应该回滚事务
+	 * <p>
 	 * Should we roll back on the given exception?
 	 *
 	 * @param ex the exception to evaluate

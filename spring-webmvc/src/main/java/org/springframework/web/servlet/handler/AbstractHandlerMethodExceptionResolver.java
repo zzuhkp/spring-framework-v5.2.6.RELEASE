@@ -24,6 +24,8 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
+ * HandlerExceptionResolver 抽象类，添加了对 HandlerMethod handler 的支持
+ * <p>
  * Abstract base class for
  * {@link org.springframework.web.servlet.HandlerExceptionResolver HandlerExceptionResolver}
  * implementations that support handling exceptions from handlers of type {@link HandlerMethod}.
@@ -42,13 +44,11 @@ public abstract class AbstractHandlerMethodExceptionResolver extends AbstractHan
 	protected boolean shouldApplyTo(HttpServletRequest request, @Nullable Object handler) {
 		if (handler == null) {
 			return super.shouldApplyTo(request, null);
-		}
-		else if (handler instanceof HandlerMethod) {
+		} else if (handler instanceof HandlerMethod) {
 			HandlerMethod handlerMethod = (HandlerMethod) handler;
 			handler = handlerMethod.getBean();
 			return super.shouldApplyTo(request, handler);
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -68,11 +68,12 @@ public abstract class AbstractHandlerMethodExceptionResolver extends AbstractHan
 	 * Note that this template method will be invoked <i>after</i> checking whether this
 	 * resolved applies ("mappedHandlers" etc), so an implementation may simply proceed
 	 * with its actual exception handling.
-	 * @param request current HTTP request
-	 * @param response current HTTP response
+	 *
+	 * @param request       current HTTP request
+	 * @param response      current HTTP response
 	 * @param handlerMethod the executed handler method, or {@code null} if none chosen at the time
-	 * of the exception (for example, if multipart resolution failed)
-	 * @param ex the exception that got thrown during handler execution
+	 *                      of the exception (for example, if multipart resolution failed)
+	 * @param ex            the exception that got thrown during handler execution
 	 * @return a corresponding ModelAndView to forward to, or {@code null} for default processing
 	 */
 	@Nullable

@@ -24,6 +24,8 @@ import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
+ * Controller 作为 Handler 的 HandlerAdapter
+ * <p>
  * Adapter to use the plain {@link Controller} workflow interface with
  * the generic {@link org.springframework.web.servlet.DispatcherServlet}.
  * Supports handlers that implement the {@link LastModified} interface.

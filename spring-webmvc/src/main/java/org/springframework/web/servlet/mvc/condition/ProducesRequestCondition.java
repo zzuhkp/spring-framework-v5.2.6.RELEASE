@@ -37,6 +37,8 @@ import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.mvc.condition.HeadersRequestCondition.HeaderExpression;
 
 /**
+ * 响应的内容类型条件
+ * <p>
  * A logical disjunction (' || ') request condition to match a request's 'Accept' header
  * to a list of media type expressions. Two kinds of media type expressions are
  * supported, which are described in {@link RequestMapping#produces()} and
@@ -68,6 +70,7 @@ public final class ProducesRequestCondition extends AbstractRequestCondition<Pro
 	/**
 	 * Creates a new instance from "produces" expressions. If 0 expressions
 	 * are provided in total, this condition will match to any request.
+	 *
 	 * @param produces expressions with syntax defined by {@link RequestMapping#produces()}
 	 */
 	public ProducesRequestCondition(String... produces) {
@@ -79,8 +82,9 @@ public final class ProducesRequestCondition extends AbstractRequestCondition<Pro
 	 * expressions where the header name is not 'Accept' or have no header value
 	 * defined are ignored. If 0 expressions are provided in total, this condition
 	 * will match to any request.
+	 *
 	 * @param produces expressions with syntax defined by {@link RequestMapping#produces()}
-	 * @param headers expressions with syntax defined by {@link RequestMapping#headers()}
+	 * @param headers  expressions with syntax defined by {@link RequestMapping#headers()}
 	 */
 	public ProducesRequestCondition(String[] produces, @Nullable String[] headers) {
 		this(produces, headers, null);
@@ -89,12 +93,13 @@ public final class ProducesRequestCondition extends AbstractRequestCondition<Pro
 	/**
 	 * Same as {@link #ProducesRequestCondition(String[], String[])} but also
 	 * accepting a {@link ContentNegotiationManager}.
+	 *
 	 * @param produces expressions with syntax defined by {@link RequestMapping#produces()}
-	 * @param headers expressions with syntax defined by {@link RequestMapping#headers()}
-	 * @param manager used to determine requested media types
+	 * @param headers  expressions with syntax defined by {@link RequestMapping#headers()}
+	 * @param manager  used to determine requested media types
 	 */
 	public ProducesRequestCondition(String[] produces, @Nullable String[] headers,
-			@Nullable ContentNegotiationManager manager) {
+									@Nullable ContentNegotiationManager manager) {
 
 		this.expressions = new ArrayList<>(parseExpressions(produces, headers));
 		if (this.expressions.size() > 1) {
@@ -112,7 +117,13 @@ public final class ProducesRequestCondition extends AbstractRequestCondition<Pro
 		this.contentNegotiationManager = other.contentNegotiationManager;
 	}
 
-
+	/**
+	 * 解析媒体类型
+	 *
+	 * @param produces
+	 * @param headers
+	 * @return
+	 */
 	private Set<ProduceMediaTypeExpression> parseExpressions(String[] produces, @Nullable String[] headers) {
 		Set<ProduceMediaTypeExpression> result = new LinkedHashSet<>();
 		if (headers != null) {
@@ -139,6 +150,8 @@ public final class ProducesRequestCondition extends AbstractRequestCondition<Pro
 	}
 
 	/**
+	 * 获取可生产的媒体类型
+	 * <p>
 	 * Return the contained producible media types excluding negated expressions.
 	 */
 	public Set<MediaType> getProducibleMediaTypes() {
@@ -180,10 +193,13 @@ public final class ProducesRequestCondition extends AbstractRequestCondition<Pro
 	}
 
 	/**
+	 * 返回当前实例中匹配给定请求的媒体类型
+	 * <p>
 	 * Checks if any of the contained media type expressions match the given
 	 * request 'Content-Type' header and returns an instance that is guaranteed
 	 * to contain matching expressions only. The match is performed via
 	 * {@link MediaType#isCompatibleWith(MediaType)}.
+	 *
 	 * @param request the current request
 	 * @return the same instance if there are no expressions;
 	 * or a new condition with matching expressions;
@@ -201,22 +217,25 @@ public final class ProducesRequestCondition extends AbstractRequestCondition<Pro
 		List<MediaType> acceptedMediaTypes;
 		try {
 			acceptedMediaTypes = getAcceptedMediaTypes(request);
-		}
-		catch (HttpMediaTypeException ex) {
+		} catch (HttpMediaTypeException ex) {
 			return null;
 		}
 		List<ProduceMediaTypeExpression> result = getMatchingExpressions(acceptedMediaTypes);
 		if (!CollectionUtils.isEmpty(result)) {
 			return new ProducesRequestCondition(result, this);
-		}
-		else if (MediaType.ALL.isPresentIn(acceptedMediaTypes)) {
+		} else if (MediaType.ALL.isPresentIn(acceptedMediaTypes)) {
 			return EMPTY_CONDITION;
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
 
+	/**
+	 * 根据媒体类型获取表达式
+	 *
+	 * @param acceptedMediaTypes
+	 * @return
+	 */
 	@Nullable
 	private List<ProduceMediaTypeExpression> getMatchingExpressions(List<MediaType> acceptedMediaTypes) {
 		List<ProduceMediaTypeExpression> result = null;
@@ -265,13 +284,19 @@ public final class ProducesRequestCondition extends AbstractRequestCondition<Pro
 				}
 			}
 			return 0;
-		}
-		catch (HttpMediaTypeNotAcceptableException ex) {
+		} catch (HttpMediaTypeNotAcceptableException ex) {
 			// should never happen
 			throw new IllegalStateException("Cannot compare without having any requested media types", ex);
 		}
 	}
 
+	/**
+	 * 根据请求获取媒体类型列表
+	 *
+	 * @param request
+	 * @return
+	 * @throws HttpMediaTypeNotAcceptableException
+	 */
 	@SuppressWarnings("unchecked")
 	private List<MediaType> getAcceptedMediaTypes(HttpServletRequest request)
 			throws HttpMediaTypeNotAcceptableException {
@@ -305,13 +330,12 @@ public final class ProducesRequestCondition extends AbstractRequestCondition<Pro
 	}
 
 	private int compareMatchingMediaTypes(ProducesRequestCondition condition1, int index1,
-			ProducesRequestCondition condition2, int index2) {
+										  ProducesRequestCondition condition2, int index2) {
 
 		int result = 0;
 		if (index1 != index2) {
 			result = index2 - index1;
-		}
-		else if (index1 != -1) {
+		} else if (index1 != -1) {
 			ProduceMediaTypeExpression expr1 = condition1.getExpressionsToCompare().get(index1);
 			ProduceMediaTypeExpression expr2 = condition2.getExpressionsToCompare().get(index2);
 			result = expr1.compareTo(expr2);
@@ -332,6 +356,7 @@ public final class ProducesRequestCondition extends AbstractRequestCondition<Pro
 	/**
 	 * Use this to clear {@link #MEDIA_TYPES_ATTRIBUTE} that contains the parsed,
 	 * requested media types.
+	 *
 	 * @param request the current request
 	 * @since 5.2
 	 */
@@ -353,11 +378,23 @@ public final class ProducesRequestCondition extends AbstractRequestCondition<Pro
 			super(expression);
 		}
 
+		/**
+		 * 当前媒体类型表达式是否与给定的媒体类型列表中的某一项匹配
+		 *
+		 * @param acceptedMediaTypes
+		 * @return
+		 */
 		public final boolean match(List<MediaType> acceptedMediaTypes) {
 			boolean match = matchMediaType(acceptedMediaTypes);
 			return !isNegated() == match;
 		}
 
+		/**
+		 * 媒体类型是否匹配
+		 *
+		 * @param acceptedMediaTypes
+		 * @return
+		 */
 		private boolean matchMediaType(List<MediaType> acceptedMediaTypes) {
 			for (MediaType acceptedMediaType : acceptedMediaTypes) {
 				if (getMediaType().isCompatibleWith(acceptedMediaType) && matchParameters(acceptedMediaType)) {
@@ -367,6 +404,12 @@ public final class ProducesRequestCondition extends AbstractRequestCondition<Pro
 			return false;
 		}
 
+		/**
+		 * 媒体类型中的参数是否匹配
+		 *
+		 * @param acceptedMediaType
+		 * @return
+		 */
 		private boolean matchParameters(MediaType acceptedMediaType) {
 			for (String name : getMediaType().getParameters().keySet()) {
 				String s1 = getMediaType().getParameter(name);

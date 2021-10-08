@@ -24,6 +24,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
+ * 抽象的 MediaTypeExpression
+ * <p>
  * Supports media type expressions as described in:
  * {@link RequestMapping#consumes()} and {@link RequestMapping#produces()}.
  *
@@ -35,8 +37,14 @@ abstract class AbstractMediaTypeExpression implements MediaTypeExpression, Compa
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	/**
+	 * 媒体类型
+	 */
 	private final MediaType mediaType;
 
+	/**
+	 * 是否取反
+	 */
 	private final boolean isNegated;
 
 
@@ -44,8 +52,7 @@ abstract class AbstractMediaTypeExpression implements MediaTypeExpression, Compa
 		if (expression.startsWith("!")) {
 			this.isNegated = true;
 			expression = expression.substring(1);
-		}
-		else {
+		} else {
 			this.isNegated = false;
 		}
 		this.mediaType = MediaType.parseMediaType(expression);

@@ -26,6 +26,8 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
+ * WebAsyncTask 返回类型处理
+ * <p>
  * Handles return values of type {@link WebAsyncTask}.
  *
  * @author Rossen Stoyanchev
@@ -49,7 +51,7 @@ public class AsyncTaskMethodReturnValueHandler implements HandlerMethodReturnVal
 
 	@Override
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
-			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
+								  ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
 
 		if (returnValue == null) {
 			mavContainer.setRequestHandled(true);

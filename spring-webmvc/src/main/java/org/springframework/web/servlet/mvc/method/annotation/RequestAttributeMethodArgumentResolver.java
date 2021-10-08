@@ -29,6 +29,8 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver;
 
 /**
+ * 基于 RequestAttribute 的 HandlerMethodArgumentResolver
+ * <p>
  * Resolves method arguments annotated with an @{@link RequestAttribute}.
  *
  * @author Rossen Stoyanchev
@@ -50,14 +52,14 @@ public class RequestAttributeMethodArgumentResolver extends AbstractNamedValueMe
 
 	@Override
 	@Nullable
-	protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest request){
+	protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest request) {
 		return request.getAttribute(name, RequestAttributes.SCOPE_REQUEST);
 	}
 
 	@Override
 	protected void handleMissingValue(String name, MethodParameter parameter) throws ServletException {
 		throw new ServletRequestBindingException("Missing request attribute '" + name +
-				"' of type " +  parameter.getNestedParameterType().getSimpleName());
+				"' of type " + parameter.getNestedParameterType().getSimpleName());
 	}
 
 }

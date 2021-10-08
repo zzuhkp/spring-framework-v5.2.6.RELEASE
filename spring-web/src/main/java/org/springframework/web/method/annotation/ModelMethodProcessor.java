@@ -27,6 +27,8 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
+ * 解析类型为 Model 的参数
+ * <p>
  * Resolves {@link Model} arguments and handles {@link Model} return values.
  *
  * <p>A {@link Model} return type has a set purpose. Therefore this handler
@@ -47,7 +49,7 @@ public class ModelMethodProcessor implements HandlerMethodArgumentResolver, Hand
 	@Override
 	@Nullable
 	public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
-			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
+								  NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
 
 		Assert.state(mavContainer != null, "ModelAndViewContainer is required for model exposure");
 		return mavContainer.getModel();
@@ -60,15 +62,14 @@ public class ModelMethodProcessor implements HandlerMethodArgumentResolver, Hand
 
 	@Override
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
-			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
+								  ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
 
 		if (returnValue == null) {
 			return;
-		}
-		else if (returnValue instanceof Model) {
+		} else if (returnValue instanceof Model) {
+			// 将 model 添加到 ModelAndView 中
 			mavContainer.addAllAttributes(((Model) returnValue).asMap());
-		}
-		else {
+		} else {
 			// should not happen
 			throw new UnsupportedOperationException("Unexpected return type: " +
 					returnType.getParameterType().getName() + " in method: " + returnType.getMethod());

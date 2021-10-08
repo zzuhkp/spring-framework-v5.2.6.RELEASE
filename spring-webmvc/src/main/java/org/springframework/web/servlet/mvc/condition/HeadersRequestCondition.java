@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.cors.CorsUtils;
 
 /**
+ * 请求头匹配条件
+ * <p>
  * A logical conjunction (' && ') request condition that matches a request against
  * a set of header expressions with syntax defined in {@link RequestMapping#headers()}.
  *
@@ -43,7 +45,9 @@ public final class HeadersRequestCondition extends AbstractRequestCondition<Head
 
 	private static final HeadersRequestCondition PRE_FLIGHT_MATCH = new HeadersRequestCondition();
 
-
+	/**
+	 * 请求头
+	 */
 	private final Set<HeaderExpression> expressions;
 
 
@@ -51,8 +55,9 @@ public final class HeadersRequestCondition extends AbstractRequestCondition<Head
 	 * Create a new instance from the given header expressions. Expressions with
 	 * header names 'Accept' or 'Content-Type' are ignored. See {@link ConsumesRequestCondition}
 	 * and {@link ProducesRequestCondition} for those.
+	 *
 	 * @param headers media type expressions with syntax defined in {@link RequestMapping#headers()};
-	 * if 0, the condition will match to every request
+	 *                if 0, the condition will match to every request
 	 */
 	public HeadersRequestCondition(String... headers) {
 		this(parseExpressions(headers));
@@ -104,6 +109,8 @@ public final class HeadersRequestCondition extends AbstractRequestCondition<Head
 	}
 
 	/**
+	 * 所有的请求头都匹配返回 this，否则返回 null
+	 * <p>
 	 * Returns "this" instance if the request matches all expressions;
 	 * or {@code null} otherwise.
 	 */

@@ -28,6 +28,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * ResourceResolverChain 默认实现
+ * <p>
  * Default immutable implementation of {@link ResourceResolverChain}.
  *
  * @author Rossen Stoyanchev
@@ -35,9 +37,15 @@ import org.springframework.util.Assert;
  */
 class DefaultResourceResolverChain implements ResourceResolverChain {
 
+	/**
+	 * 当前解析器
+	 */
 	@Nullable
 	private final ResourceResolver resolver;
 
+	/**
+	 * 下一个解析器链
+	 */
 	@Nullable
 	private final ResourceResolverChain nextChain;
 

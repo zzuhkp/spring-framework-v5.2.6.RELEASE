@@ -43,17 +43,26 @@ import org.springframework.util.StringUtils;
  * for an overview of using flash attributes in annotated controllers.
  *
  * @author Rossen Stoyanchev
- * @since 3.1
  * @see FlashMapManager
+ * @since 3.1
  */
 @SuppressWarnings("serial")
 public final class FlashMap extends HashMap<String, Object> implements Comparable<FlashMap> {
 
+	/**
+	 * 目标请求路径
+	 */
 	@Nullable
 	private String targetRequestPath;
 
+	/**
+	 * 目标请求路径后携带的参数
+	 */
 	private final MultiValueMap<String, String> targetRequestParams = new LinkedMultiValueMap<>(4);
 
+	/**
+	 * 过期时间戳
+	 */
 	private long expirationTime = -1;
 
 
@@ -76,6 +85,7 @@ public final class FlashMap extends HashMap<String, Object> implements Comparabl
 
 	/**
 	 * Provide request parameters identifying the request for this FlashMap.
+	 *
 	 * @param params a Map with the names and values of expected parameters
 	 */
 	public FlashMap addTargetRequestParams(@Nullable MultiValueMap<String, String> params) {
@@ -91,7 +101,8 @@ public final class FlashMap extends HashMap<String, Object> implements Comparabl
 
 	/**
 	 * Provide a request parameter identifying the request for this FlashMap.
-	 * @param name the expected parameter name (skipped if empty)
+	 *
+	 * @param name  the expected parameter name (skipped if empty)
 	 * @param value the expected value (skipped if empty)
 	 */
 	public FlashMap addTargetRequestParam(String name, String value) {
@@ -110,6 +121,7 @@ public final class FlashMap extends HashMap<String, Object> implements Comparabl
 
 	/**
 	 * Start the expiration period for this instance.
+	 *
 	 * @param timeToLive the number of seconds before expiration
 	 */
 	public void startExpirationPeriod(int timeToLive) {
@@ -119,6 +131,7 @@ public final class FlashMap extends HashMap<String, Object> implements Comparabl
 	/**
 	 * Set the expiration time for the FlashMap. This is provided for serialization
 	 * purposes but can also be used instead {@link #startExpirationPeriod(int)}.
+	 *
 	 * @since 4.2
 	 */
 	public void setExpirationTime(long expirationTime) {
@@ -128,6 +141,7 @@ public final class FlashMap extends HashMap<String, Object> implements Comparabl
 	/**
 	 * Return the expiration time for the FlashMap or -1 if the expiration
 	 * period has not started.
+	 *
 	 * @since 4.2
 	 */
 	public long getExpirationTime() {
@@ -135,6 +149,8 @@ public final class FlashMap extends HashMap<String, Object> implements Comparabl
 	}
 
 	/**
+	 * 当前实例是否已过期
+	 * <p>
 	 * Return whether this instance has expired depending on the amount of
 	 * elapsed time since the call to {@link #startExpirationPeriod}.
 	 */
@@ -154,8 +170,7 @@ public final class FlashMap extends HashMap<String, Object> implements Comparabl
 		int otherUrlPath = (other.targetRequestPath != null ? 1 : 0);
 		if (thisUrlPath != otherUrlPath) {
 			return otherUrlPath - thisUrlPath;
-		}
-		else {
+		} else {
 			return other.targetRequestParams.size() - this.targetRequestParams.size();
 		}
 	}

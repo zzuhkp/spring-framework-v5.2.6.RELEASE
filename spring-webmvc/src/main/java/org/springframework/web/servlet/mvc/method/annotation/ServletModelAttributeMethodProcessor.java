@@ -38,6 +38,8 @@ import org.springframework.web.method.annotation.ModelAttributeMethodProcessor;
 import org.springframework.web.servlet.HandlerMapping;
 
 /**
+ * 基于 ServletRequestDataBinder 的 ModelAttributeMethodProcessor
+ * <p>
  * A Servlet-specific {@link ModelAttributeMethodProcessor} that applies data
  * binding through a WebDataBinder of type {@link ServletRequestDataBinder}.
  *
@@ -53,9 +55,10 @@ public class ServletModelAttributeMethodProcessor extends ModelAttributeMethodPr
 
 	/**
 	 * Class constructor.
+	 *
 	 * @param annotationNotRequired if "true", non-simple method arguments and
-	 * return values are considered model attributes with or without a
-	 * {@code @ModelAttribute} annotation
+	 *                              return values are considered model attributes with or without a
+	 *                              {@code @ModelAttribute} annotation
 	 */
 	public ServletModelAttributeMethodProcessor(boolean annotationNotRequired) {
 		super(annotationNotRequired);
@@ -67,11 +70,12 @@ public class ServletModelAttributeMethodProcessor extends ModelAttributeMethodPr
 	 * request parameter if the name matches to the model attribute name and
 	 * if there is an appropriate type conversion strategy. If none of these
 	 * are true delegate back to the base class.
+	 *
 	 * @see #createAttributeFromRequestValue
 	 */
 	@Override
 	protected final Object createAttribute(String attributeName, MethodParameter parameter,
-			WebDataBinderFactory binderFactory, NativeWebRequest request) throws Exception {
+										   WebDataBinderFactory binderFactory, NativeWebRequest request) throws Exception {
 
 		String value = getRequestValueForAttribute(attributeName, request);
 		if (value != null) {
@@ -86,12 +90,15 @@ public class ServletModelAttributeMethodProcessor extends ModelAttributeMethodPr
 	}
 
 	/**
+	 * 从请求中获取参数
+	 * <p>
 	 * Obtain a value from the request that may be used to instantiate the
 	 * model attribute through type conversion from String to the target type.
 	 * <p>The default implementation looks for the attribute name to match
 	 * a URI variable first and then a request parameter.
+	 *
 	 * @param attributeName the model attribute name
-	 * @param request the current request
+	 * @param request       the current request
 	 * @return the request value to try to convert, or {@code null} if none
 	 */
 	@Nullable
@@ -108,6 +115,12 @@ public class ServletModelAttributeMethodProcessor extends ModelAttributeMethodPr
 		return null;
 	}
 
+	/**
+	 * 获取 URI 路径上的变量
+	 *
+	 * @param request
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	protected final Map<String, String> getUriTemplateVariables(NativeWebRequest request) {
 		Map<String, String> variables = (Map<String, String>) request.getAttribute(
@@ -116,21 +129,24 @@ public class ServletModelAttributeMethodProcessor extends ModelAttributeMethodPr
 	}
 
 	/**
+	 * 参数类型转换
+	 * <p>
 	 * Create a model attribute from a String request value (e.g. URI template
 	 * variable, request parameter) using type conversion.
 	 * <p>The default implementation converts only if there a registered
 	 * {@link Converter} that can perform the conversion.
-	 * @param sourceValue the source value to create the model attribute from
+	 *
+	 * @param sourceValue   the source value to create the model attribute from
 	 * @param attributeName the name of the attribute (never {@code null})
-	 * @param parameter the method parameter
+	 * @param parameter     the method parameter
 	 * @param binderFactory for creating WebDataBinder instance
-	 * @param request the current request
+	 * @param request       the current request
 	 * @return the created model attribute, or {@code null} if no suitable
 	 * conversion found
 	 */
 	@Nullable
 	protected Object createAttributeFromRequestValue(String sourceValue, String attributeName,
-			MethodParameter parameter, WebDataBinderFactory binderFactory, NativeWebRequest request)
+													 MethodParameter parameter, WebDataBinderFactory binderFactory, NativeWebRequest request)
 			throws Exception {
 
 		DataBinder binder = binderFactory.createBinder(request, null, attributeName);
@@ -148,6 +164,7 @@ public class ServletModelAttributeMethodProcessor extends ModelAttributeMethodPr
 	/**
 	 * This implementation downcasts {@link WebDataBinder} to
 	 * {@link ServletRequestDataBinder} before binding.
+	 *
 	 * @see ServletRequestDataBinderFactory
 	 */
 	@Override

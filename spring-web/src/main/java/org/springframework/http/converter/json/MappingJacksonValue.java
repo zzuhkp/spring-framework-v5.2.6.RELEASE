@@ -21,6 +21,8 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import org.springframework.lang.Nullable;
 
 /**
+ * 简单的 POJO 类的持有者
+ * <p>
  * A simple holder for the POJO to serialize via
  * {@link MappingJackson2HttpMessageConverter} along with further
  * serialization instructions to be passed in to the converter.
@@ -37,6 +39,7 @@ import org.springframework.lang.Nullable;
  */
 public class MappingJacksonValue {
 
+
 	private Object value;
 
 	@Nullable
@@ -48,6 +51,7 @@ public class MappingJacksonValue {
 
 	/**
 	 * Create a new instance wrapping the given POJO to be serialized.
+	 *
 	 * @param value the Object to be serialized
 	 */
 	public MappingJacksonValue(Object value) {
@@ -71,6 +75,7 @@ public class MappingJacksonValue {
 
 	/**
 	 * Set the serialization view to serialize the POJO with.
+	 *
 	 * @see com.fasterxml.jackson.databind.ObjectMapper#writerWithView(Class)
 	 * @see com.fasterxml.jackson.annotation.JsonView
 	 */
@@ -80,6 +85,7 @@ public class MappingJacksonValue {
 
 	/**
 	 * Return the serialization view to use.
+	 *
 	 * @see com.fasterxml.jackson.databind.ObjectMapper#writerWithView(Class)
 	 * @see com.fasterxml.jackson.annotation.JsonView
 	 */
@@ -90,10 +96,11 @@ public class MappingJacksonValue {
 
 	/**
 	 * Set the Jackson filter provider to serialize the POJO with.
-	 * @since 4.2
+	 *
 	 * @see com.fasterxml.jackson.databind.ObjectMapper#writer(FilterProvider)
 	 * @see com.fasterxml.jackson.annotation.JsonFilter
 	 * @see Jackson2ObjectMapperBuilder#filters(FilterProvider)
+	 * @since 4.2
 	 */
 	public void setFilters(@Nullable FilterProvider filters) {
 		this.filters = filters;
@@ -101,9 +108,10 @@ public class MappingJacksonValue {
 
 	/**
 	 * Return the Jackson filter provider to use.
-	 * @since 4.2
+	 *
 	 * @see com.fasterxml.jackson.databind.ObjectMapper#writer(FilterProvider)
 	 * @see com.fasterxml.jackson.annotation.JsonFilter
+	 * @since 4.2
 	 */
 	@Nullable
 	public FilterProvider getFilters() {

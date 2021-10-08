@@ -28,11 +28,14 @@ import org.springframework.lang.Nullable;
 public abstract class PatternMatchUtils {
 
 	/**
+	 * 根据给定模式匹配字符串，支持以下简单模式样式：“xxx*”、“*xxx”、“*xxx*”和“xxx*yyy”匹配（具有任意数量的模式部分），以及直接相等。
+	 * <p>
 	 * Match a String against the given pattern, supporting the following simple
 	 * pattern styles: "xxx*", "*xxx", "*xxx*" and "xxx*yyy" matches (with an
 	 * arbitrary number of pattern parts), as well as direct equality.
+	 *
 	 * @param pattern the pattern to match against
-	 * @param str the String to match
+	 * @param str     the String to match
 	 * @return whether the String matches the given pattern
 	 */
 	public static boolean simpleMatch(@Nullable String pattern, @Nullable String str) {
@@ -73,11 +76,14 @@ public abstract class PatternMatchUtils {
 	}
 
 	/**
+	 * 字符串是否匹配模式
+	 * <p>
 	 * Match a String against the given patterns, supporting the following simple
 	 * pattern styles: "xxx*", "*xxx", "*xxx*" and "xxx*yyy" matches (with an
 	 * arbitrary number of pattern parts), as well as direct equality.
+	 *
 	 * @param patterns the patterns to match against
-	 * @param str the String to match
+	 * @param str      the String to match
 	 * @return whether the String matches any of the given patterns
 	 */
 	public static boolean simpleMatch(@Nullable String[] patterns, String str) {

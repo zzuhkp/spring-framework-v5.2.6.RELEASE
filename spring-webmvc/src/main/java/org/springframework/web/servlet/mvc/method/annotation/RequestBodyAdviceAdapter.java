@@ -24,6 +24,8 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.lang.Nullable;
 
 /**
+ * RequestBodyAdvice 适配器，提供了默认的实现
+ * <p>
  * A convenient starting point for implementing
  * {@link org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice
  * ResponseBodyAdvice} with default method implementations.
@@ -41,7 +43,7 @@ public abstract class RequestBodyAdviceAdapter implements RequestBodyAdvice {
 	 */
 	@Override
 	public HttpInputMessage beforeBodyRead(HttpInputMessage inputMessage, MethodParameter parameter,
-			Type targetType, Class<? extends HttpMessageConverter<?>> converterType)
+										   Type targetType, Class<? extends HttpMessageConverter<?>> converterType)
 			throws IOException {
 
 		return inputMessage;
@@ -52,7 +54,7 @@ public abstract class RequestBodyAdviceAdapter implements RequestBodyAdvice {
 	 */
 	@Override
 	public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter,
-			Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
+								Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
 
 		return body;
 	}
@@ -63,8 +65,8 @@ public abstract class RequestBodyAdviceAdapter implements RequestBodyAdvice {
 	@Override
 	@Nullable
 	public Object handleEmptyBody(@Nullable Object body, HttpInputMessage inputMessage,
-			MethodParameter parameter, Type targetType,
-			Class<? extends HttpMessageConverter<?>> converterType) {
+								  MethodParameter parameter, Type targetType,
+								  Class<? extends HttpMessageConverter<?>> converterType) {
 
 		return body;
 	}

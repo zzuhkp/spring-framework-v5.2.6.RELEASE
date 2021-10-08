@@ -28,6 +28,8 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 
 /**
+ * HandlerMethodArgumentResolver 组合
+ *
  * Resolves method parameters by delegating to a list of registered
  * {@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}.
  * Previously resolved method parameters are cached for faster lookups.

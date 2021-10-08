@@ -24,6 +24,8 @@ import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
+ * 拦截器适配器类，提供了空实现
+ * <p>
  * Abstract adapter class for the {@link AsyncHandlerInterceptor} interface,
  * for simplified implementation of pre-only/post-only interceptors.
  *
@@ -47,7 +49,7 @@ public abstract class HandlerInterceptorAdapter implements AsyncHandlerIntercept
 	 */
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-			@Nullable ModelAndView modelAndView) throws Exception {
+						   @Nullable ModelAndView modelAndView) throws Exception {
 	}
 
 	/**
@@ -55,7 +57,7 @@ public abstract class HandlerInterceptorAdapter implements AsyncHandlerIntercept
 	 */
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
-			@Nullable Exception ex) throws Exception {
+								@Nullable Exception ex) throws Exception {
 	}
 
 	/**
@@ -63,7 +65,7 @@ public abstract class HandlerInterceptorAdapter implements AsyncHandlerIntercept
 	 */
 	@Override
 	public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response,
-			Object handler) throws Exception {
+											   Object handler) throws Exception {
 	}
 
 }

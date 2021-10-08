@@ -52,6 +52,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 /**
+ * HttpEntity 支持
+ * <p>
  * Resolves {@link HttpEntity} and {@link RequestEntity} method argument values
  * and also handles {@link HttpEntity} and {@link ResponseEntity} return values.
  *
@@ -82,7 +84,7 @@ public class HttpEntityMethodProcessor extends AbstractMessageConverterMethodPro
 	 * without {@code Request~} or {@code ResponseBodyAdvice}.
 	 */
 	public HttpEntityMethodProcessor(List<HttpMessageConverter<?>> converters,
-			ContentNegotiationManager manager) {
+									 ContentNegotiationManager manager) {
 
 		super(converters, manager);
 	}
@@ -91,10 +93,11 @@ public class HttpEntityMethodProcessor extends AbstractMessageConverterMethodPro
 	 * Complete constructor for resolving {@code HttpEntity} method arguments.
 	 * For handling {@code ResponseEntity} consider also providing a
 	 * {@code ContentNegotiationManager}.
+	 *
 	 * @since 4.2
 	 */
 	public HttpEntityMethodProcessor(List<HttpMessageConverter<?>> converters,
-			List<Object> requestResponseBodyAdvice) {
+									 List<Object> requestResponseBodyAdvice) {
 
 		super(converters, null, requestResponseBodyAdvice);
 	}
@@ -104,7 +107,7 @@ public class HttpEntityMethodProcessor extends AbstractMessageConverterMethodPro
 	 * {@code ResponseEntity}.
 	 */
 	public HttpEntityMethodProcessor(List<HttpMessageConverter<?>> converters,
-			@Nullable ContentNegotiationManager manager, List<Object> requestResponseBodyAdvice) {
+									 @Nullable ContentNegotiationManager manager, List<Object> requestResponseBodyAdvice) {
 
 		super(converters, manager, requestResponseBodyAdvice);
 	}
@@ -125,7 +128,7 @@ public class HttpEntityMethodProcessor extends AbstractMessageConverterMethodPro
 	@Override
 	@Nullable
 	public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
-			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory)
+								  NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory)
 			throws IOException, HttpMediaTypeNotSupportedException {
 
 		ServletServerHttpRequest inputMessage = createInputMessage(webRequest);
@@ -139,12 +142,17 @@ public class HttpEntityMethodProcessor extends AbstractMessageConverterMethodPro
 		if (RequestEntity.class == parameter.getParameterType()) {
 			return new RequestEntity<>(body, inputMessage.getHeaders(),
 					inputMessage.getMethod(), inputMessage.getURI());
-		}
-		else {
+		} else {
 			return new HttpEntity<>(body, inputMessage.getHeaders());
 		}
 	}
 
+	/**
+	 * 获取 HttpEntity 泛型参数实际类型
+	 *
+	 * @param parameter
+	 * @return
+	 */
 	@Nullable
 	private Type getHttpEntityType(MethodParameter parameter) {
 		Assert.isAssignable(HttpEntity.class, parameter.getParameterType());
@@ -156,18 +164,16 @@ public class HttpEntityMethodProcessor extends AbstractMessageConverterMethodPro
 						parameter.getParameterName() + "' in method " + parameter.getMethod());
 			}
 			return type.getActualTypeArguments()[0];
-		}
-		else if (parameterType instanceof Class) {
+		} else if (parameterType instanceof Class) {
 			return Object.class;
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
 
 	@Override
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
-			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
+								  ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
 
 		mavContainer.setRequestHandled(true);
 		if (returnValue == null) {
@@ -189,8 +195,7 @@ public class HttpEntityMethodProcessor extends AbstractMessageConverterMethodPro
 					if (!values.isEmpty()) {
 						outputHeaders.setVary(values);
 					}
-				}
-				else {
+				} else {
 					outputHeaders.put(key, value);
 				}
 			});
@@ -206,8 +211,7 @@ public class HttpEntityMethodProcessor extends AbstractMessageConverterMethodPro
 					outputMessage.flush();
 					return;
 				}
-			}
-			else if (returnStatus / 100 == 3) {
+			} else if (returnStatus / 100 == 3) {
 				String location = outputHeaders.getFirst("location");
 				if (location != null) {
 					saveFlashAttributes(mavContainer, webRequest, location);
@@ -280,8 +284,7 @@ public class HttpEntityMethodProcessor extends AbstractMessageConverterMethodPro
 	protected Class<?> getReturnValueType(@Nullable Object returnValue, MethodParameter returnType) {
 		if (returnValue != null) {
 			return returnValue.getClass();
-		}
-		else {
+		} else {
 			Type type = getHttpEntityType(returnType);
 			type = (type != null ? type : Object.class);
 			return ResolvableType.forMethodParameter(returnType, type).toClass();

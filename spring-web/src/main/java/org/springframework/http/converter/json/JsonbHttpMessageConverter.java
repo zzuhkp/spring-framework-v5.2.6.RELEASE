@@ -29,6 +29,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 基于 Jsonb 的 HttpMessageConverter
+ * <p>
  * Implementation of {@link org.springframework.http.converter.HttpMessageConverter}
  * that can read and write JSON using the
  * <a href="http://json-b.net/">JSON Binding API</a>.
@@ -38,10 +40,10 @@ import org.springframework.util.Assert;
  * {@code UTF-8} character set.
  *
  * @author Juergen Hoeller
- * @since 5.0
  * @see javax.json.bind.Jsonb
  * @see javax.json.bind.JsonbBuilder
  * @see #setJsonb
+ * @since 5.0
  */
 public class JsonbHttpMessageConverter extends AbstractJsonHttpMessageConverter {
 
@@ -57,6 +59,7 @@ public class JsonbHttpMessageConverter extends AbstractJsonHttpMessageConverter 
 
 	/**
 	 * Construct a new {@code JsonbHttpMessageConverter} with the given configuration.
+	 *
 	 * @param config the {@code JsonbConfig} for the underlying delegate
 	 */
 	public JsonbHttpMessageConverter(JsonbConfig config) {
@@ -65,6 +68,7 @@ public class JsonbHttpMessageConverter extends AbstractJsonHttpMessageConverter 
 
 	/**
 	 * Construct a new {@code JsonbHttpMessageConverter} with the given delegate.
+	 *
 	 * @param jsonb the Jsonb instance to use
 	 */
 	public JsonbHttpMessageConverter(Jsonb jsonb) {
@@ -78,6 +82,7 @@ public class JsonbHttpMessageConverter extends AbstractJsonHttpMessageConverter 
 	 * If not set, a default {@code Jsonb} instance will be created.
 	 * <p>Setting a custom-configured {@code Jsonb} is one way to take further
 	 * control of the JSON serialization process.
+	 *
 	 * @see #JsonbHttpMessageConverter(Jsonb)
 	 * @see #JsonbHttpMessageConverter(JsonbConfig)
 	 * @see JsonbBuilder
@@ -104,8 +109,7 @@ public class JsonbHttpMessageConverter extends AbstractJsonHttpMessageConverter 
 	protected void writeInternal(Object o, @Nullable Type type, Writer writer) throws Exception {
 		if (type instanceof ParameterizedType) {
 			getJsonb().toJson(o, type, writer);
-		}
-		else {
+		} else {
 			getJsonb().toJson(o, writer);
 		}
 	}

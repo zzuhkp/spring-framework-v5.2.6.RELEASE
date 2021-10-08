@@ -31,6 +31,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.lang.Nullable;
 
 /**
+ * 将路径解析为 gzip 资源文件
+ * <p>
  * A {@code ResourceResolver} that delegates to the chain to locate a resource
  * and then attempts to find a variation with the ".gz" extension.
  *
@@ -48,7 +50,7 @@ public class GzipResourceResolver extends AbstractResourceResolver {
 
 	@Override
 	protected Resource resolveResourceInternal(@Nullable HttpServletRequest request, String requestPath,
-			List<? extends Resource> locations, ResourceResolverChain chain) {
+											   List<? extends Resource> locations, ResourceResolverChain chain) {
 
 		Resource resource = chain.resolveResource(request, requestPath, locations);
 		if (resource == null || (request != null && !isGzipAccepted(request))) {
@@ -60,8 +62,7 @@ public class GzipResourceResolver extends AbstractResourceResolver {
 			if (gzipped.exists()) {
 				return gzipped;
 			}
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			logger.trace("No gzip resource for [" + resource.getFilename() + "]", ex);
 		}
 
@@ -75,7 +76,7 @@ public class GzipResourceResolver extends AbstractResourceResolver {
 
 	@Override
 	protected String resolveUrlPathInternal(String resourceUrlPath,
-			List<? extends Resource> locations, ResourceResolverChain chain) {
+											List<? extends Resource> locations, ResourceResolverChain chain) {
 
 		return chain.resolveUrlPath(resourceUrlPath, locations);
 	}

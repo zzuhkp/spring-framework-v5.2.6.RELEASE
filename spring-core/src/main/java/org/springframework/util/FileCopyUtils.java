@@ -97,6 +97,8 @@ public abstract class FileCopyUtils {
 	//---------------------------------------------------------------------
 
 	/**
+	 * 复制
+	 *
 	 * Copy the contents of the given InputStream to the given OutputStream.
 	 * Closes both streams when done.
 	 * @param in the stream to copy from

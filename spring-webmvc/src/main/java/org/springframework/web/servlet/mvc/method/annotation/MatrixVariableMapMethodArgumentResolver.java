@@ -38,6 +38,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.HandlerMapping;
 
 /**
+ * 解析 @MatrixVariable 标注的 Map 类型的参数
+ * <p>
  * Resolves arguments of type {@link Map} annotated with {@link MatrixVariable @MatrixVariable}
  * where the annotation does not specify a name. In other words the purpose of this resolver
  * is to provide access to multiple matrix variables, either all or associated with a specific
@@ -61,7 +63,7 @@ public class MatrixVariableMapMethodArgumentResolver implements HandlerMethodArg
 	@Override
 	@Nullable
 	public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
-			NativeWebRequest request, @Nullable WebDataBinderFactory binderFactory) throws Exception {
+								  NativeWebRequest request, @Nullable WebDataBinderFactory binderFactory) throws Exception {
 
 		@SuppressWarnings("unchecked")
 		Map<String, MultiValueMap<String, String>> matrixVariables =
@@ -83,8 +85,7 @@ public class MatrixVariableMapMethodArgumentResolver implements HandlerMethodArg
 				return Collections.emptyMap();
 			}
 			map.putAll(mapForPathVariable);
-		}
-		else {
+		} else {
 			for (MultiValueMap<String, String> vars : matrixVariables.values()) {
 				vars.forEach((name, values) -> {
 					for (String value : values) {

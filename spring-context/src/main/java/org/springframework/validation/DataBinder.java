@@ -16,28 +16,9 @@
 
 package org.springframework.validation;
 
-import java.beans.PropertyEditor;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.ConfigurablePropertyAccessor;
-import org.springframework.beans.MutablePropertyValues;
-import org.springframework.beans.PropertyAccessException;
-import org.springframework.beans.PropertyAccessorUtils;
-import org.springframework.beans.PropertyBatchUpdateException;
-import org.springframework.beans.PropertyEditorRegistry;
-import org.springframework.beans.PropertyValue;
-import org.springframework.beans.PropertyValues;
-import org.springframework.beans.SimpleTypeConverter;
-import org.springframework.beans.TypeConverter;
-import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.*;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
@@ -48,6 +29,10 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.PatternMatchUtils;
 import org.springframework.util.StringUtils;
+
+import java.beans.PropertyEditor;
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * 允许设置属性到目标对象的 Binder，包括验证和绑定结果分析的支持。
@@ -816,6 +801,8 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 	}
 
 	/**
+	 * 检查字段是否允许绑定
+	 * <p>
 	 * Check the given property values against the allowed fields,
 	 * removing values for fields that are not allowed.
 	 *
@@ -863,6 +850,8 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 	}
 
 	/**
+	 * 检查必须的字段是否存在值
+	 * <p>
 	 * Check the given property values against the required fields,
 	 * generating missing field errors where appropriate.
 	 *
@@ -906,6 +895,8 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 	}
 
 	/**
+	 * 设置字段值
+	 * <p>
 	 * Apply given property values to the target object.
 	 * <p>Default implementation applies all of the supplied property
 	 * values as bean property values. By default, unknown fields will

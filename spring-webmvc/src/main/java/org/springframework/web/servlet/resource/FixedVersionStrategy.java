@@ -19,6 +19,8 @@ package org.springframework.web.servlet.resource;
 import org.springframework.core.io.Resource;
 
 /**
+ * 固定版本号
+ * <p>
  * A {@code VersionStrategy} that relies on a fixed version applied as a request
  * path prefix, e.g. reduced SHA, version name, release date, etc.
  *
@@ -28,8 +30,8 @@ import org.springframework.core.io.Resource;
  *
  * @author Brian Clozel
  * @author Rossen Stoyanchev
- * @since 4.1
  * @see VersionResourceResolver
+ * @since 4.1
  */
 public class FixedVersionStrategy extends AbstractVersionStrategy {
 
@@ -38,6 +40,7 @@ public class FixedVersionStrategy extends AbstractVersionStrategy {
 
 	/**
 	 * Create a new FixedVersionStrategy with the given version string.
+	 *
 	 * @param version the fixed version string to use
 	 */
 	public FixedVersionStrategy(String version) {

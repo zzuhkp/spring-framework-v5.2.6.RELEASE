@@ -28,6 +28,8 @@ import org.springframework.web.util.CookieGenerator;
 import org.springframework.web.util.WebUtils;
 
 /**
+ * 将主题名存储至 Cookie 的 ThemeResolver
+ * <p>
  * {@link ThemeResolver} implementation that uses a cookie sent back to the user
  * in case of a custom setting, with a fallback to the default theme.
  * This is particularly useful for stateless applications without user sessions.
@@ -37,8 +39,8 @@ import org.springframework.web.util.WebUtils;
  *
  * @author Jean-Pierre Pawlak
  * @author Juergen Hoeller
- * @since 17.06.2003
  * @see #setThemeName
+ * @since 17.06.2003
  */
 public class CookieThemeResolver extends CookieGenerator implements ThemeResolver {
 
@@ -52,16 +54,21 @@ public class CookieThemeResolver extends CookieGenerator implements ThemeResolve
 	 * for overriding a cookie value if the theme has been changed in the
 	 * course of the current request! Use RequestContext.getTheme() to
 	 * retrieve the current theme in controllers or views.
+	 *
 	 * @see org.springframework.web.servlet.support.RequestContext#getTheme
 	 */
 	public static final String THEME_REQUEST_ATTRIBUTE_NAME = CookieThemeResolver.class.getName() + ".THEME";
 
 	/**
+	 * 存至 cookie 中的 name
+	 * <p>
 	 * The default name of the cookie that holds the theme name.
 	 */
 	public static final String DEFAULT_COOKIE_NAME = CookieThemeResolver.class.getName() + ".THEME";
 
-
+	/**
+	 * 默认的主题名
+	 */
 	private String defaultThemeName = ORIGINAL_DEFAULT_THEME_NAME;
 
 
@@ -123,8 +130,7 @@ public class CookieThemeResolver extends CookieGenerator implements ThemeResolve
 			// Set request attribute and add cookie.
 			request.setAttribute(THEME_REQUEST_ATTRIBUTE_NAME, themeName);
 			addCookie(response, themeName);
-		}
-		else {
+		} else {
 			// Set request attribute to fallback theme and remove cookie.
 			request.setAttribute(THEME_REQUEST_ATTRIBUTE_NAME, getDefaultThemeName());
 			removeCookie(response);

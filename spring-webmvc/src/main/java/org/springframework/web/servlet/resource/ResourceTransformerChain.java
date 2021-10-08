@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.io.Resource;
 
 /**
+ * 资源转换器链
+ * <p>
  * A contract for invoking a chain of {@link ResourceTransformer ResourceTransformers} where each resolver
  * is given a reference to the chain allowing it to delegate when necessary.
  *
@@ -40,7 +42,8 @@ public interface ResourceTransformerChain {
 
 	/**
 	 * Transform the given resource.
-	 * @param request the current request
+	 *
+	 * @param request  the current request
 	 * @param resource the candidate resource to transform
 	 * @return the transformed or the same resource, never {@code null}
 	 * @throws IOException if transformation fails

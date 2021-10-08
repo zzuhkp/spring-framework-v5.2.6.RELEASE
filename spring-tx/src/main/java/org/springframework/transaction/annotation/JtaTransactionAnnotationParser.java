@@ -16,11 +16,6 @@
 
 package org.springframework.transaction.annotation;
 
-import java.io.Serializable;
-import java.lang.reflect.AnnotatedElement;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -30,12 +25,16 @@ import org.springframework.transaction.interceptor.RollbackRuleAttribute;
 import org.springframework.transaction.interceptor.RuleBasedTransactionAttribute;
 import org.springframework.transaction.interceptor.TransactionAttribute;
 
+import java.io.Serializable;
+import java.lang.reflect.AnnotatedElement;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * javax.transaction.Transactional 注解解析
+ * @author Juergen Hoeller
+ * @javax.transaction.Transactional 注解解析
  * <p>
  * Strategy implementation for parsing JTA 1.2's {@link javax.transaction.Transactional} annotation.
- *
- * @author Juergen Hoeller
  * @since 4.0
  */
 @SuppressWarnings("serial")

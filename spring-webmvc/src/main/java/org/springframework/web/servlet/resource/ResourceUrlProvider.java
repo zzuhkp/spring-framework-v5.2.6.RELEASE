@@ -40,6 +40,8 @@ import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.util.UrlPathHelper;
 
 /**
+ * 使用请求路径对应的 ResourceHttpRequestHandler 确定 URL 路径
+ * <p>
  * A central component to use to obtain the public URL path that clients should
  * use to access a static resource.
  *
@@ -58,8 +60,14 @@ public class ResourceUrlProvider implements ApplicationListener<ContextRefreshed
 
 	private PathMatcher pathMatcher = new AntPathMatcher();
 
+	/**
+	 * 请求路径 -> 处理器
+	 */
 	private final Map<String, ResourceHttpRequestHandler> handlerMap = new LinkedHashMap<>();
 
+	/**
+	 * 是否自动从应用上下文中获取 ResourceHttpRequestHandler
+	 */
 	private boolean autodetect = true;
 
 
@@ -74,6 +82,7 @@ public class ResourceUrlProvider implements ApplicationListener<ContextRefreshed
 
 	/**
 	 * Return the configured {@code UrlPathHelper}.
+	 *
 	 * @since 4.2.8
 	 */
 	public UrlPathHelper getUrlPathHelper() {
@@ -137,6 +146,11 @@ public class ResourceUrlProvider implements ApplicationListener<ContextRefreshed
 	}
 
 
+	/**
+	 * 从应用上下文中探测 ResourceHttpRequestHandler
+	 *
+	 * @param appContext
+	 */
 	protected void detectResourceHandlers(ApplicationContext appContext) {
 		Map<String, SimpleUrlHandlerMapping> beans = appContext.getBeansOfType(SimpleUrlHandlerMapping.class);
 		List<SimpleUrlHandlerMapping> mappings = new ArrayList<>(beans.values());
@@ -161,7 +175,8 @@ public class ResourceUrlProvider implements ApplicationListener<ContextRefreshed
 	 * A variation on {@link #getForLookupPath(String)} that accepts a full request
 	 * URL path (i.e. including context and servlet path) and returns the full request
 	 * URL path to expose for public use.
-	 * @param request the current request
+	 *
+	 * @param request    the current request
 	 * @param requestUrl the request URL path to resolve
 	 * @return the resolved public URL path, or {@code null} if unresolved
 	 */
@@ -179,6 +194,12 @@ public class ResourceUrlProvider implements ApplicationListener<ContextRefreshed
 		return (resolvedLookupPath != null ? prefix + resolvedLookupPath + suffix : null);
 	}
 
+	/**
+	 * 获取查找的路径在 URI 中的索引位置
+	 *
+	 * @param request
+	 * @return
+	 */
 	private int getLookupPathIndex(HttpServletRequest request) {
 		UrlPathHelper pathHelper = getUrlPathHelper();
 		String requestUri = pathHelper.getRequestUri(request);
@@ -186,6 +207,12 @@ public class ResourceUrlProvider implements ApplicationListener<ContextRefreshed
 		return requestUri.indexOf(lookupPath);
 	}
 
+	/**
+	 * 获取要查找的路径结束索引位置
+	 *
+	 * @param lookupPath
+	 * @return
+	 */
 	private int getEndPathIndex(String lookupPath) {
 		int suffixIndex = lookupPath.length();
 		int queryIndex = lookupPath.indexOf('?');
@@ -200,6 +227,8 @@ public class ResourceUrlProvider implements ApplicationListener<ContextRefreshed
 	}
 
 	/**
+	 * 查找 URL 路径
+	 * <p>
 	 * Compare the given path against configured resource handler mappings and
 	 * if a match is found use the {@code ResourceResolver} chain of the matched
 	 * {@code ResourceHttpRequestHandler} to resolve the URL path to expose for
@@ -208,6 +237,7 @@ public class ResourceUrlProvider implements ApplicationListener<ContextRefreshed
 	 * request mapping purposes, i.e. excluding context and servlet path portions.
 	 * <p>If several handler mappings match, the handler used will be the one
 	 * configured with the most specific pattern.
+	 *
 	 * @param lookupPath the lookup path to check
 	 * @return the resolved public URL path, or {@code null} if unresolved
 	 */

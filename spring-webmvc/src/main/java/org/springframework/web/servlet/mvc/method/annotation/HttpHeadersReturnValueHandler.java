@@ -28,6 +28,8 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
+ * HttpHeaders 返回类型处理
+ * <p>
  * Handles {@link HttpHeaders} return values.
  *
  * @author Stephane Nicoll
@@ -43,7 +45,7 @@ public class HttpHeadersReturnValueHandler implements HandlerMethodReturnValueHa
 	@Override
 	@SuppressWarnings("resource")
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
-			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
+								  ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
 
 		mavContainer.setRequestHandled(true);
 

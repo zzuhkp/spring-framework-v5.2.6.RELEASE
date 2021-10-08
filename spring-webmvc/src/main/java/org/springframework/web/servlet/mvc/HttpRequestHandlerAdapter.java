@@ -25,6 +25,8 @@ import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
+ * HttpRequestHandler 作为 Handler 的 HandlerAdapter
+ * <p>
  * Adapter to use the plain {@link org.springframework.web.HttpRequestHandler}
  * interface with the generic {@link org.springframework.web.servlet.DispatcherServlet}.
  * Supports handlers that implement the {@link LastModified} interface.
@@ -32,11 +34,11 @@ import org.springframework.web.servlet.ModelAndView;
  * <p>This is an SPI class, not used directly by application code.
  *
  * @author Juergen Hoeller
- * @since 2.0
  * @see org.springframework.web.servlet.DispatcherServlet
  * @see org.springframework.web.HttpRequestHandler
  * @see LastModified
  * @see SimpleControllerHandlerAdapter
+ * @since 2.0
  */
 public class HttpRequestHandlerAdapter implements HandlerAdapter {
 

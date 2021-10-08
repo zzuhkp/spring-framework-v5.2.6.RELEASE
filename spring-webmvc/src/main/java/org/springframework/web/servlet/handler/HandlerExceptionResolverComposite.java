@@ -28,6 +28,8 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
+ * HandlerExceptionResolver 组合
+ * <p>
  * A {@link HandlerExceptionResolver} that delegates to a list of other
  * {@link HandlerExceptionResolver HandlerExceptionResolvers}.
  *

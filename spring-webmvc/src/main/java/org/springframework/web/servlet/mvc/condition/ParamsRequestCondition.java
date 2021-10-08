@@ -30,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.util.WebUtils;
 
 /**
+ * 请求参数条件
+ * <p>
  * A logical conjunction (' && ') request condition that matches a request against
  * a set parameter expressions with syntax defined in {@link RequestMapping#params()}.
  *
@@ -44,8 +46,9 @@ public final class ParamsRequestCondition extends AbstractRequestCondition<Param
 
 	/**
 	 * Create a new instance from the given param expressions.
+	 *
 	 * @param params expressions with syntax defined in {@link RequestMapping#params()};
-	 * 	if 0, the condition will match to every request.
+	 *               if 0, the condition will match to every request.
 	 */
 	public ParamsRequestCondition(String... params) {
 		this(parseExpressions(params));
@@ -55,7 +58,12 @@ public final class ParamsRequestCondition extends AbstractRequestCondition<Param
 		this.expressions = Collections.unmodifiableSet(new LinkedHashSet<>(conditions));
 	}
 
-
+	/**
+	 * 解析参数表达式
+	 *
+	 * @param params
+	 * @return
+	 */
 	private static Collection<ParamExpression> parseExpressions(String... params) {
 		Set<ParamExpression> expressions = new LinkedHashSet<>();
 		for (String param : params) {
@@ -83,6 +91,8 @@ public final class ParamsRequestCondition extends AbstractRequestCondition<Param
 	}
 
 	/**
+	 * 参数拼接
+	 * <p>
 	 * Returns a new instance with the union of the param expressions
 	 * from "this" and the "other" instance.
 	 */
@@ -94,6 +104,8 @@ public final class ParamsRequestCondition extends AbstractRequestCondition<Param
 	}
 
 	/**
+	 * 如果所有参数名和值都匹配返回当前对象，否则返回 null
+	 * <p>
 	 * Returns "this" instance if the request matches all param expressions;
 	 * or {@code null} otherwise.
 	 */
@@ -109,6 +121,7 @@ public final class ParamsRequestCondition extends AbstractRequestCondition<Param
 	}
 
 	/**
+	 *
 	 * Compare to another condition based on parameter expressions. A condition
 	 * is considered to be a more specific match, if it has:
 	 * <ol>
@@ -140,6 +153,8 @@ public final class ParamsRequestCondition extends AbstractRequestCondition<Param
 
 
 	/**
+	 * 请求参数表达式
+	 * <p>
 	 * Parses and matches a single param expression to a request.
 	 */
 	static class ParamExpression extends AbstractNameValueExpression<String> {

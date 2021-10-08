@@ -28,6 +28,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
 /**
+ * 基于 FacesContext 的 WebRequest
+ * <p>
  * {@link WebRequest} adapter for a JSF {@link javax.faces.context.FacesContext}.
  *
  * <p>Requires JSF 2.0 or higher, as of Spring 4.0.
@@ -39,6 +41,7 @@ public class FacesWebRequest extends FacesRequestAttributes implements NativeWeb
 
 	/**
 	 * Create a new FacesWebRequest adapter for the given FacesContext.
+	 *
 	 * @param facesContext the current FacesContext
 	 * @see javax.faces.context.FacesContext#getCurrentInstance()
 	 */

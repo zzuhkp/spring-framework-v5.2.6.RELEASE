@@ -49,6 +49,8 @@ import org.springframework.web.servlet.mvc.condition.ProducesRequestCondition;
 import org.springframework.web.util.WebUtils;
 
 /**
+ * 基于 RequestMappingInfo 的 HandlerMapping
+ * <p>
  * Abstract base class for classes for which {@link RequestMappingInfo} defines
  * the mapping between a request and a handler method.
  *
@@ -63,8 +65,7 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 	static {
 		try {
 			HTTP_OPTIONS_HANDLE_METHOD = HttpOptionsHandler.class.getMethod("handle");
-		}
-		catch (NoSuchMethodException ex) {
+		} catch (NoSuchMethodException ex) {
 			// Should never happen
 			throw new IllegalStateException("Failed to retrieve internal handler method for HTTP OPTIONS", ex);
 		}
@@ -88,6 +89,7 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 	 * Check if the given RequestMappingInfo matches the current request and
 	 * return a (potentially new) instance with conditions that match the
 	 * current request -- for example with a subset of URL patterns.
+	 *
 	 * @return an info in case of a match; or {@code null} otherwise.
 	 */
 	@Override
@@ -108,14 +110,16 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 		request.removeAttribute(PRODUCIBLE_MEDIA_TYPES_ATTRIBUTE);
 		try {
 			return super.getHandlerInternal(request);
-		}
-		finally {
+		} finally {
 			ProducesRequestCondition.clearMediaTypesAttribute(request);
 		}
 	}
 
 	/**
+	 * 暴露 URI 中的模板变量、矩阵变量、产生的媒体类型到 request attribute 中
+	 * <p>
 	 * Expose URI template variables, matrix variables, and producible media types in the request.
+	 *
 	 * @see HandlerMapping#URI_TEMPLATE_VARIABLES_ATTRIBUTE
 	 * @see HandlerMapping#MATRIX_VARIABLES_ATTRIBUTE
 	 * @see HandlerMapping#PRODUCIBLE_MEDIA_TYPES_ATTRIBUTE
@@ -131,8 +135,7 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 		if (patterns.isEmpty()) {
 			bestPattern = lookupPath;
 			uriVariables = Collections.emptyMap();
-		}
-		else {
+		} else {
 			bestPattern = patterns.iterator().next();
 			uriVariables = getPathMatcher().extractUriTemplateVariables(bestPattern, lookupPath);
 		}
@@ -157,6 +160,13 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 		return !getUrlPathHelper().shouldRemoveSemicolonContent();
 	}
 
+	/**
+	 * 抽取矩阵变量
+	 *
+	 * @param request
+	 * @param uriVariables
+	 * @return
+	 */
 	private Map<String, MultiValueMap<String, String>> extractMatrixVariables(
 			HttpServletRequest request, Map<String, String> uriVariables) {
 
@@ -176,8 +186,7 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 			String matrixVariables;
 			if (semicolonIndex == -1 || semicolonIndex == 0 || equalsIndex < semicolonIndex) {
 				matrixVariables = uriVarValue;
-			}
-			else {
+			} else {
 				matrixVariables = uriVarValue.substring(semicolonIndex + 1);
 			}
 
@@ -188,12 +197,15 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 	}
 
 	/**
+	 * 无法根据 URL 直接找到 HandlerMethod 的情况
+	 * <p>
 	 * Iterate all RequestMappingInfo's once again, look if any match by URL at
 	 * least and raise exceptions according to what doesn't match.
+	 *
 	 * @throws HttpRequestMethodNotSupportedException if there are matches by URL
-	 * but not by HTTP method
-	 * @throws HttpMediaTypeNotAcceptableException if there are matches by URL
-	 * but not by consumable/producible media types
+	 *                                                but not by HTTP method
+	 * @throws HttpMediaTypeNotAcceptableException    if there are matches by URL
+	 *                                                but not by consumable/producible media types
 	 */
 	@Override
 	protected HandlerMethod handleNoMatch(
@@ -205,6 +217,7 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 		}
 
 		if (helper.hasMethodsMismatch()) {
+			// HTTP 请求方法类型不匹配
 			Set<String> methods = helper.getAllowedMethods();
 			if (HttpMethod.OPTIONS.matches(request.getMethod())) {
 				HttpOptionsHandler handler = new HttpOptionsHandler(methods);
@@ -214,13 +227,13 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 		}
 
 		if (helper.hasConsumesMismatch()) {
+			// 消费的请求内容类型不匹配
 			Set<MediaType> mediaTypes = helper.getConsumableMediaTypes();
 			MediaType contentType = null;
 			if (StringUtils.hasLength(request.getContentType())) {
 				try {
 					contentType = MediaType.parseMediaType(request.getContentType());
-				}
-				catch (InvalidMediaTypeException ex) {
+				} catch (InvalidMediaTypeException ex) {
 					throw new HttpMediaTypeNotSupportedException(ex.getMessage());
 				}
 			}
@@ -228,11 +241,13 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 		}
 
 		if (helper.hasProducesMismatch()) {
+			// 生产的内容类型不匹配
 			Set<MediaType> mediaTypes = helper.getProducibleMediaTypes();
 			throw new HttpMediaTypeNotAcceptableException(new ArrayList<>(mediaTypes));
 		}
 
 		if (helper.hasParamsMismatch()) {
+			// 请求参数不匹配
 			List<String[]> conditions = helper.getParamConditions();
 			throw new UnsatisfiedServletRequestParameterException(conditions, request.getParameterMap());
 		}
@@ -392,7 +407,8 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 
 			/**
 			 * Create a new {@link PartialMatch} instance.
-			 * @param info the RequestMappingInfo that matches the URL path.
+			 *
+			 * @param info    the RequestMappingInfo that matches the URL path.
 			 * @param request the current request
 			 */
 			public PartialMatch(RequestMappingInfo info, HttpServletRequest request) {
@@ -450,8 +466,7 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 						result.add(method);
 					}
 				}
-			}
-			else {
+			} else {
 				for (String method : declaredMethods) {
 					HttpMethod httpMethod = HttpMethod.valueOf(method);
 					result.add(httpMethod);

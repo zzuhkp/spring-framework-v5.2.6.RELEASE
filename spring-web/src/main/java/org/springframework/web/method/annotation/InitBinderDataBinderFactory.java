@@ -31,6 +31,8 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.method.support.InvocableHandlerMethod;
 
 /**
+ * 获取到 WebDataBinder 前使用 @InitBinder 标注的方法初始化 WebDataBinder
+ * <p>
  * Adds initialization to a WebDataBinder via {@code @InitBinder} methods.
  *
  * @author Rossen Stoyanchev
@@ -43,11 +45,12 @@ public class InitBinderDataBinderFactory extends DefaultDataBinderFactory {
 
 	/**
 	 * Create a new InitBinderDataBinderFactory instance.
+	 *
 	 * @param binderMethods {@code @InitBinder} methods
-	 * @param initializer for global data binder initialization
+	 * @param initializer   for global data binder initialization
 	 */
 	public InitBinderDataBinderFactory(@Nullable List<InvocableHandlerMethod> binderMethods,
-			@Nullable WebBindingInitializer initializer) {
+									   @Nullable WebBindingInitializer initializer) {
 
 		super(initializer);
 		this.binderMethods = (binderMethods != null ? binderMethods : Collections.emptyList());
@@ -58,6 +61,7 @@ public class InitBinderDataBinderFactory extends DefaultDataBinderFactory {
 	 * Initialize a WebDataBinder with {@code @InitBinder} methods.
 	 * <p>If the {@code @InitBinder} annotation specifies attributes names,
 	 * it is invoked only if the names include the target object name.
+	 *
 	 * @throws Exception if one of the invoked @{@link InitBinder} methods fails
 	 * @see #isBinderMethodApplicable
 	 */
@@ -75,6 +79,8 @@ public class InitBinderDataBinderFactory extends DefaultDataBinderFactory {
 	}
 
 	/**
+	 * 使用应用当前方法对 Binder 初始化
+	 * <p>
 	 * Determine whether the given {@code @InitBinder} method should be used
 	 * to initialize the given {@link WebDataBinder} instance. By default we
 	 * check the specified attribute names in the annotation value, if any.

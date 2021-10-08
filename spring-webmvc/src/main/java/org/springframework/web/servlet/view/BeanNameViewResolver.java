@@ -27,6 +27,8 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 
 /**
+ * 将视图名作为 bean 名称，从 ApplicationContext 中查找 View 的 ViewResolver
+ * <p>
  * A simple implementation of {@link org.springframework.web.servlet.ViewResolver}
  * that interprets a view name as a bean name in the current application context,
  * i.e. typically in the XML file of the executing {@code DispatcherServlet}.
@@ -47,10 +49,10 @@ import org.springframework.web.servlet.ViewResolver;
  * a {@link UrlBasedViewResolver}.
  *
  * @author Juergen Hoeller
- * @since 18.06.2003
  * @see XmlViewResolver
  * @see ResourceBundleViewResolver
  * @see UrlBasedViewResolver
+ * @since 18.06.2003
  */
 public class BeanNameViewResolver extends WebApplicationObjectSupport implements ViewResolver, Ordered {
 
@@ -60,6 +62,7 @@ public class BeanNameViewResolver extends WebApplicationObjectSupport implements
 	/**
 	 * Specify the order value for this ViewResolver bean.
 	 * <p>The default value is {@code Ordered.LOWEST_PRECEDENCE}, meaning non-ordered.
+	 *
 	 * @see org.springframework.core.Ordered#getOrder()
 	 */
 	public void setOrder(int order) {

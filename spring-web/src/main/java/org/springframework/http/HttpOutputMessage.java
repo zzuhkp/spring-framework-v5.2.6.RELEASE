@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * HTTP 输出消息表示，除了获取响应头还可以获取响应体
+ * <p>
  * Represents an HTTP output message, consisting of {@linkplain #getHeaders() headers}
  * and a writable {@linkplain #getBody() body}.
  *
@@ -33,6 +35,7 @@ public interface HttpOutputMessage extends HttpMessage {
 
 	/**
 	 * Return the body of the message as an output stream.
+	 *
 	 * @return the output stream body (never {@code null})
 	 * @throws IOException in case of I/O errors
 	 */

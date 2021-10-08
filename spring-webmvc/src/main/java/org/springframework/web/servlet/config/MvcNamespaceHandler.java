@@ -20,6 +20,8 @@ import org.springframework.beans.factory.xml.NamespaceHandler;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
+ * mvc 标签处理
+ * <p>
  * {@link NamespaceHandler} for Spring MVC configuration namespace.
  *
  * @author Keith Donald

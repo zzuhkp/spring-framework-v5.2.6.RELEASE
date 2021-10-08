@@ -82,6 +82,8 @@ public abstract class AttributeAccessorSupport implements AttributeAccessor, Ser
 
 
 	/**
+	 * 复制属性到当前实例
+	 * <p>
 	 * Copy the attributes from the supplied AttributeAccessor to this accessor.
 	 *
 	 * @param source the AttributeAccessor to copy from

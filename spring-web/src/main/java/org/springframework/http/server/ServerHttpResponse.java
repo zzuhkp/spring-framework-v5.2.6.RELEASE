@@ -24,6 +24,8 @@ import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.HttpStatus;
 
 /**
+ * 服务端的 HTTP 响应表示
+ * <p>
  * Represents a server-side HTTP response.
  *
  * @author Arjen Poutsma
@@ -33,6 +35,7 @@ public interface ServerHttpResponse extends HttpOutputMessage, Flushable, Closea
 
 	/**
 	 * Set the HTTP status code of the response.
+	 *
 	 * @param status the HTTP status as an HttpStatus enum value
 	 */
 	void setStatusCode(HttpStatus status);
