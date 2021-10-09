@@ -28,6 +28,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.handler.WebRequestHandlerInterceptorAdapter;
 
 /**
+ * 拦截器注册
+ * <p>
  * Helps with configuring a list of mapped interceptors.
  *
  * @author Rossen Stoyanchev

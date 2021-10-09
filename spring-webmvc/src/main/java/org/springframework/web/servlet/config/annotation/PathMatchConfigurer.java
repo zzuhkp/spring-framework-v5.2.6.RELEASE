@@ -26,6 +26,8 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import org.springframework.web.util.UrlPathHelper;
 
 /**
+ * 路径匹配配置
+ * <p>
  * Helps with configuring HandlerMappings path matching options such as trailing
  * slash match, suffix registration, path matcher and path helper.
  *
@@ -43,12 +45,21 @@ import org.springframework.web.util.UrlPathHelper;
  */
 public class PathMatchConfigurer {
 
+	/**
+	 * 是否使用后缀模式匹配请求路径
+	 */
 	@Nullable
 	private Boolean suffixPatternMatch;
 
+	/**
+	 * 是否在请求路径后添加后缀模式后再匹配
+	 */
 	@Nullable
 	private Boolean registeredSuffixPatternMatch;
 
+	/**
+	 * 是否在请求路径后添加 / 再匹配
+	 */
 	@Nullable
 	private Boolean trailingSlashMatch;
 
@@ -58,6 +69,9 @@ public class PathMatchConfigurer {
 	@Nullable
 	private PathMatcher pathMatcher;
 
+	/**
+	 * 路径前缀 -> 处理器测试，将会为满足条件的处理器在处理的路径前添加前缀再进行匹配
+	 */
 	@Nullable
 	private Map<String, Predicate<Class<?>>> pathPrefixes;
 

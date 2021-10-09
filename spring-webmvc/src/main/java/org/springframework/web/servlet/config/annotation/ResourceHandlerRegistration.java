@@ -28,6 +28,8 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 /**
+ * ResourceHttpRequestHandler 注册
+ * <p>
  * Encapsulates information required to create a resource handler.
  *
  * @author Rossen Stoyanchev

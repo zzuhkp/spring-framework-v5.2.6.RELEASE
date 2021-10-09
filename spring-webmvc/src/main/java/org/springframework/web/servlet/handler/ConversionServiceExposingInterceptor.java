@@ -26,6 +26,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.util.Assert;
 
 /**
+ * 暴露 ConversionService 到 request attribute 的拦截器
+ * <p>
  * Interceptor that places the configured {@link ConversionService} in request scope
  * so it's available during request processing. The request attribute name is
  * "org.springframework.core.convert.ConversionService", the value of
@@ -43,6 +45,7 @@ public class ConversionServiceExposingInterceptor extends HandlerInterceptorAdap
 
 	/**
 	 * Creates a new {@link ConversionServiceExposingInterceptor}.
+	 *
 	 * @param conversionService the conversion service to export to request scope when this interceptor is invoked
 	 */
 	public ConversionServiceExposingInterceptor(ConversionService conversionService) {

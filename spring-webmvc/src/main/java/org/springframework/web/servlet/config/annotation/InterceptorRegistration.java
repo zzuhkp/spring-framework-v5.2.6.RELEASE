@@ -28,6 +28,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.handler.MappedInterceptor;
 
 /**
+ * 拦截器持有
+ * <p>
  * Assists with the creation of a {@link MappedInterceptor}.
  *
  * @author Rossen Stoyanchev

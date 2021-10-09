@@ -37,7 +37,7 @@ import org.springframework.web.util.UrlPathHelper;
 
 /**
  * 路径匹配条件
- *
+ * <p>
  * A logical disjunction (' || ') request condition that matches a request
  * against a set of URL path patterns.
  *
@@ -56,12 +56,12 @@ public final class PatternsRequestCondition extends AbstractRequestCondition<Pat
 	private final PathMatcher pathMatcher;
 
 	/**
-	 * 是否添加扩展路径后匹配
+	 * 是否在请求路径后添加扩展模式再匹配
 	 */
 	private final boolean useSuffixPatternMatch;
 
 	/**
-	 * 是否添加 / 后匹配
+	 * 是否在请求路径后添加 / 再匹配
 	 */
 	private final boolean useTrailingSlashMatch;
 
@@ -240,7 +240,6 @@ public final class PatternsRequestCondition extends AbstractRequestCondition<Pat
 	}
 
 	/**
-	 *
 	 * Checks if any of the patterns match the given request and returns an instance
 	 * that is guaranteed to contain matching patterns, sorted via
 	 * {@link PathMatcher#getPatternComparator(String)}.
@@ -270,7 +269,7 @@ public final class PatternsRequestCondition extends AbstractRequestCondition<Pat
 
 	/**
 	 * 获取匹配的路径
-	 *
+	 * <p>
 	 * Find the patterns matching the given lookup path. Invoking this method should
 	 * yield results equivalent to those of calling {@link #getMatchingCondition}.
 	 * This method is provided as an alternative to be used if no request is available
@@ -311,12 +310,14 @@ public final class PatternsRequestCondition extends AbstractRequestCondition<Pat
 		}
 		if (this.useSuffixPatternMatch) {
 			if (!this.fileExtensions.isEmpty() && lookupPath.indexOf('.') != -1) {
+				// 文件扩展名不为空则添加文件扩展名匹配
 				for (String extension : this.fileExtensions) {
 					if (this.pathMatcher.match(pattern + extension, lookupPath)) {
 						return pattern + extension;
 					}
 				}
 			} else {
+				// 否则尝试使用 .* 匹配
 				boolean hasSuffix = pattern.indexOf('.') != -1;
 				if (!hasSuffix && this.pathMatcher.match(pattern + ".*", lookupPath)) {
 					return pattern + ".*";

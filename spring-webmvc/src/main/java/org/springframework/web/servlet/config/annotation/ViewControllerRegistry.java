@@ -27,6 +27,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 
 /**
+ * ParameterizableViewController 注册
+ * <p>
  * Assists with the registration of simple automated controllers pre-configured
  * with status code and/or a view.
  *
@@ -48,6 +50,7 @@ public class ViewControllerRegistry {
 
 	/**
 	 * Class constructor with {@link ApplicationContext}.
+	 *
 	 * @since 4.3.12
 	 */
 	public ViewControllerRegistry(@Nullable ApplicationContext applicationContext) {
@@ -77,6 +80,7 @@ public class ViewControllerRegistry {
 	 * Map a view controller to the given URL path (or pattern) in order to redirect
 	 * to another URL. By default the redirect URL is expected to be relative to
 	 * the current ServletContext, i.e. as relative to the web application root.
+	 *
 	 * @since 4.1
 	 */
 	public RedirectViewControllerRegistration addRedirectViewController(String urlPath, String redirectUrl) {
@@ -89,6 +93,7 @@ public class ViewControllerRegistry {
 	/**
 	 * Map a simple controller to the given URL path (or pattern) in order to
 	 * set the response status to the given code without rendering a body.
+	 *
 	 * @since 4.1
 	 */
 	public void addStatusController(String urlPath, HttpStatus statusCode) {
@@ -113,6 +118,7 @@ public class ViewControllerRegistry {
 	/**
 	 * Return the {@code HandlerMapping} that contains the registered view
 	 * controller mappings, or {@code null} for no registrations.
+	 *
 	 * @since 4.3.12
 	 */
 	@Nullable

@@ -24,6 +24,8 @@ import org.springframework.web.servlet.mvc.ParameterizableViewController;
 import org.springframework.web.servlet.view.RedirectView;
 
 /**
+ * ParameterizableViewController 持有，使用重定向视图
+ * <p>
  * Assist with the registration of a single redirect view controller.
  *
  * @author Rossen Stoyanchev

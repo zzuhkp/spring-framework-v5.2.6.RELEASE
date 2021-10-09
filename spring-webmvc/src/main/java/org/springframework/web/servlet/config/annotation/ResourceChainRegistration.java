@@ -34,6 +34,8 @@ import org.springframework.web.servlet.resource.VersionResourceResolver;
 import org.springframework.web.servlet.resource.WebJarsResourceResolver;
 
 /**
+ * ResourceTransformer、ResourceResolver 注册
+ * <p>
  * Assists with the registration of resource resolvers and transformers.
  *
  * @author Rossen Stoyanchev
@@ -75,6 +77,7 @@ public class ResourceChainRegistration {
 
 	/**
 	 * Add a resource resolver to the chain.
+	 *
 	 * @param resolver the resolver to add
 	 * @return the current instance for chained method invocation
 	 */
@@ -83,11 +86,9 @@ public class ResourceChainRegistration {
 		this.resolvers.add(resolver);
 		if (resolver instanceof VersionResourceResolver) {
 			this.hasVersionResolver = true;
-		}
-		else if (resolver instanceof PathResourceResolver) {
+		} else if (resolver instanceof PathResourceResolver) {
 			this.hasPathResolver = true;
-		}
-		else if (resolver instanceof WebJarsResourceResolver) {
+		} else if (resolver instanceof WebJarsResourceResolver) {
 			this.hasWebjarsResolver = true;
 		}
 		return this;
@@ -95,6 +96,7 @@ public class ResourceChainRegistration {
 
 	/**
 	 * Add a resource transformer to the chain.
+	 *
 	 * @param transformer the transformer to add
 	 * @return the current instance for chained method invocation
 	 */

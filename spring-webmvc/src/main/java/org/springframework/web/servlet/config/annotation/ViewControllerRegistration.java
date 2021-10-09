@@ -24,6 +24,8 @@ import org.springframework.web.servlet.RequestToViewNameTranslator;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 /**
+ * ParameterizableViewController 持有
+ *
  * Assist with the registration of a single view controller.
  *
  * @author Rossen Stoyanchev

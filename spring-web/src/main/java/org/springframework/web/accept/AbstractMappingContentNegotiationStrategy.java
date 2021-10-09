@@ -137,6 +137,7 @@ public abstract class AbstractMappingContentNegotiationStrategy extends MappingM
 
 	/**
 	 * 获取 key 值，以便用来获取媒体类型
+	 *
 	 * Extract a key from the request to use to look up media types.
 	 *
 	 * @return the lookup key, or {@code null} if none

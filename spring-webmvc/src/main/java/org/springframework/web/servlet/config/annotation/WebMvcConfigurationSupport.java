@@ -321,6 +321,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 创建 RequestMappingHandlerMapping
+	 * <p>
 	 * Protected method for plugging in a custom subclass of
 	 * {@link RequestMappingHandlerMapping}.
 	 *
@@ -331,6 +333,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 获取拦截器
+	 * <p>
 	 * Provide access to the shared handler interceptors used to configure
 	 * {@link HandlerMapping} instances with.
 	 * <p>This method cannot be overridden; use {@link #addInterceptors} instead.
@@ -349,6 +353,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 添加拦截器
+	 * <p>
 	 * Override this method to add Spring MVC interceptors for
 	 * pre- and post-processing of controller invocation.
 	 *
@@ -358,6 +364,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 获取路径匹配的配置
+	 * <p>
 	 * Callback for building the {@link PathMatchConfigurer}.
 	 * Delegates to {@link #configurePathMatch}.
 	 *
@@ -372,6 +380,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 配置路径
+	 * <p>
 	 * Override this method to configure path matching options.
 	 *
 	 * @see PathMatchConfigurer
@@ -381,6 +391,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 路径匹配
+	 * <p>
 	 * Return a global {@link PathMatcher} instance for path matching
 	 * patterns in {@link HandlerMapping HandlerMappings}.
 	 * This instance can be configured using the {@link PathMatchConfigurer}
@@ -395,6 +407,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 路径匹配帮助类
+	 * <p>
 	 * Return a global {@link UrlPathHelper} instance for path matching
 	 * patterns in {@link HandlerMapping HandlerMappings}.
 	 * This instance can be configured using the {@link PathMatchConfigurer}
@@ -409,6 +423,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 内容协商管理器
+	 * <p>
 	 * Return a {@link ContentNegotiationManager} instance to use to determine
 	 * requested {@linkplain MediaType media types} in a given request.
 	 */
@@ -423,6 +439,11 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 		return this.contentNegotiationManager;
 	}
 
+	/**
+	 * 获取默认的文件名->媒体类型
+	 *
+	 * @return
+	 */
 	protected Map<String, MediaType> getDefaultMediaTypes() {
 		Map<String, MediaType> map = new HashMap<>(4);
 		if (romePresent) {
@@ -453,6 +474,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * SimpleUrlHandlerMapping bean
+	 * <p>
 	 * Return a handler mapping ordered at 1 to map URL paths directly to
 	 * view names. To configure view controllers, override
 	 * {@link #addViewControllers}.
@@ -479,6 +502,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 添加视图控制器
+	 * <p>
 	 * Override this method to add view controllers.
 	 *
 	 * @see ViewControllerRegistry
@@ -487,6 +512,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * BeanNameUrlHandlerMapping bean
+	 * <p>
 	 * Return a {@link BeanNameUrlHandlerMapping} ordered at 2 to map URL
 	 * paths to controller bean names.
 	 */
@@ -503,6 +530,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * RouterFunctionMapping bean
+	 * <p>
 	 * Return a {@link RouterFunctionMapping} ordered at 3 to map
 	 * {@linkplain org.springframework.web.servlet.function.RouterFunction router functions}.
 	 * Consider overriding one of these other more fine-grained methods:
@@ -528,6 +557,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * SimpleUrlHandlerMapping bean
+	 * <p>
 	 * Return a handler mapping ordered at Integer.MAX_VALUE-1 with mapped
 	 * resource handlers. To configure resource handling, override
 	 * {@link #addResourceHandlers}.
@@ -587,6 +618,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 默认 HttpRequestHandler
+	 * <p>
 	 * Return a handler mapping ordered at Integer.MAX_VALUE with a mapped
 	 * default servlet handler. To configure "default" Servlet handling,
 	 * override {@link #configureDefaultServletHandling}.
@@ -609,6 +642,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * RequestMappingHandlerAdapter bean
+	 * <p>
 	 * Returns a {@link RequestMappingHandlerAdapter} for processing requests
 	 * through annotated controller methods. Consider overriding one of these
 	 * other more fine-grained methods:
@@ -651,6 +686,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 创建 RequestMappingHandlerAdapter
+	 * <p>
 	 * Protected method for plugging in a custom subclass of
 	 * {@link RequestMappingHandlerAdapter}.
 	 *
@@ -661,6 +698,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * HandlerFunctionAdapter bean
+	 * <p>
 	 * Returns a {@link HandlerFunctionAdapter} for processing requests through
 	 * {@linkplain org.springframework.web.servlet.function.HandlerFunction handler functions}.
 	 *
@@ -672,6 +711,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 创建 ConfigurableWebBindingInitializer
+	 * <p>
 	 * Return the {@link ConfigurableWebBindingInitializer} to use for
 	 * initializing all {@link WebDataBinder} instances.
 	 */
@@ -705,6 +746,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * FormattingConversionService bean 用于类型转换
+	 * <p>
 	 * Return a {@link FormattingConversionService} for use with annotated controllers.
 	 * <p>See {@link #addFormatters} as an alternative to overriding this method.
 	 */
@@ -725,6 +768,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 参数校验
+	 * <p>
 	 * Return a global {@link Validator} instance for example for validating
 	 * {@code @ModelAttribute} and {@code @RequestBody} method arguments.
 	 * Delegates to {@link #getValidator()} first and if that returns {@code null}
@@ -761,6 +806,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 获取参数解析器
+	 * <p>
 	 * Provide access to the shared custom argument resolvers used by the
 	 * {@link RequestMappingHandlerAdapter} and the {@link ExceptionHandlerExceptionResolver}.
 	 * <p>This method cannot be overridden; use {@link #addArgumentResolvers} instead.
@@ -776,6 +823,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 添加自定义参数解析器
+	 * <p>
 	 * Add custom {@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}
 	 * to use in addition to the ones registered by default.
 	 * <p>Custom argument resolvers are invoked before built-in resolvers except for
@@ -789,6 +838,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 获取返回值处理器
+	 * <p>
 	 * Provide access to the shared return value handlers used by the
 	 * {@link RequestMappingHandlerAdapter} and the {@link ExceptionHandlerExceptionResolver}.
 	 * <p>This method cannot be overridden; use {@link #addReturnValueHandlers} instead.
@@ -804,6 +855,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 添加自定义返回值处理器
+	 * <p>
 	 * Add custom {@link HandlerMethodReturnValueHandler HandlerMethodReturnValueHandlers}
 	 * in addition to the ones registered by default.
 	 * <p>Custom return value handlers are invoked before built-in ones except for
@@ -817,6 +870,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 获取消息转换器
+	 * <p>
 	 * Provides access to the shared {@link HttpMessageConverter HttpMessageConverters}
 	 * used by the {@link RequestMappingHandlerAdapter} and the
 	 * {@link ExceptionHandlerExceptionResolver}.
@@ -836,6 +891,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 配置自定义消息转换器
+	 * <p>
 	 * Override this method to add custom {@link HttpMessageConverter HttpMessageConverters}
 	 * to use with the {@link RequestMappingHandlerAdapter} and the
 	 * {@link ExceptionHandlerExceptionResolver}.
@@ -860,6 +917,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 添加默认的参数解析器
+	 * <p>
 	 * Adds a set of default HttpMessageConverter instances to the given list.
 	 * Subclasses can call this method from {@link #configureMessageConverters}.
 	 *
@@ -935,6 +994,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * HttpRequestHandlerAdapter bean
+	 * <p>
 	 * Returns a {@link HttpRequestHandlerAdapter} for processing requests
 	 * with {@link HttpRequestHandler HttpRequestHandlers}.
 	 */
@@ -944,6 +1005,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * SimpleControllerHandlerAdapter bean
+	 * <p>
 	 * Returns a {@link SimpleControllerHandlerAdapter} for processing requests
 	 * with interface-based controllers.
 	 */
@@ -953,6 +1016,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 异常解析
+	 * <p>
 	 * Returns a {@link HandlerExceptionResolverComposite} containing a list of exception
 	 * resolvers obtained either through {@link #configureHandlerExceptionResolvers} or
 	 * through {@link #addDefaultHandlerExceptionResolvers}.
@@ -1000,6 +1065,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 添加默认的异常解析
+	 * <p>
 	 * A method available to subclasses for adding default
 	 * {@link HandlerExceptionResolver HandlerExceptionResolvers}.
 	 * <p>Adds the following exception resolvers:
@@ -1037,6 +1104,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 创建异常解析器
+	 *
 	 * Protected method for plugging in a custom subclass of
 	 * {@link ExceptionHandlerExceptionResolver}.
 	 *
@@ -1047,6 +1116,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 视图解析器
+	 *
 	 * Register a {@link ViewResolverComposite} that contains a chain of view resolvers
 	 * to use for view resolution.
 	 * By default this resolver is ordered at 0 unless content negotiation view
@@ -1087,6 +1158,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 配置视图解析器
+	 *
 	 * Override this method to configure view resolution.
 	 *
 	 * @see ViewResolverRegistry
@@ -1095,6 +1168,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 获取跨域配置
+	 * <p>
 	 * Return the registered {@link CorsConfiguration} objects,
 	 * keyed by path pattern.
 	 *

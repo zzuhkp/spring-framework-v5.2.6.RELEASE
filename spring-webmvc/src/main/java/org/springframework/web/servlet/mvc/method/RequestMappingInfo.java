@@ -386,6 +386,8 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 
 
 	/**
+	 * RequestMappingInfo 构建
+	 * <p>
 	 * Defines a builder for creating a RequestMappingInfo.
 	 *
 	 * @since 4.2
@@ -434,6 +436,8 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 		Builder customCondition(RequestCondition<?> condition);
 
 		/**
+		 * 附加的配置
+		 * <p>
 		 * Provide additional configuration needed for request mapping purposes.
 		 */
 		Builder options(BuilderConfiguration options);
@@ -562,10 +566,19 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 		@Nullable
 		private PathMatcher pathMatcher;
 
+		/**
+		 * 是否在请求路径后添加 / 再匹配
+		 */
 		private boolean trailingSlashMatch = true;
 
+		/**
+		 * 是否在请求路径后添加扩展模式再匹配
+		 */
 		private boolean suffixPatternMatch = true;
 
+		/**
+		 * 是否在请求路径后添加注册的后缀模式再匹配
+		 */
 		private boolean registeredSuffixPatternMatch = false;
 
 		@Nullable
@@ -678,6 +691,8 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 		}
 
 		/**
+		 * 从请求中获取文件扩展名
+		 * <p>
 		 * Return the file extensions to use for suffix pattern matching. If
 		 * {@code registeredSuffixPatternMatch=true}, the extensions are obtained
 		 * from the configured {@code contentNegotiationManager}.

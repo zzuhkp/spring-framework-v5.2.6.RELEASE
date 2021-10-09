@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.handler.MatchableHandlerMapping;
 import org.springframework.web.servlet.handler.RequestMatchResult;
 import org.springframework.web.servlet.mvc.condition.AbstractRequestCondition;
@@ -76,12 +77,26 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMappi
 public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMapping
 		implements MatchableHandlerMapping, EmbeddedValueResolverAware {
 
+	/**
+	 * 是否使用后缀模式进行匹配
+	 */
 	private boolean useSuffixPatternMatch = true;
 
+	/**
+	 * 是否使用注册的后缀进行路径匹配
+	 *
+	 * @see ContentNegotiationConfigurer#mediaTypes
+	 */
 	private boolean useRegisteredSuffixPatternMatch = false;
 
+	/**
+	 * 是否在请求路径后添加 / 进行路径匹配
+	 */
 	private boolean useTrailingSlashMatch = true;
 
+	/**
+	 * 路径前缀 -> 处理器类型是否满足条件，将会为满足条件的处理器在处理的路径前添加前缀再进行匹配
+	 */
 	private Map<String, Predicate<Class<?>>> pathPrefixes = new LinkedHashMap<>();
 
 	private ContentNegotiationManager contentNegotiationManager = new ContentNegotiationManager();
@@ -89,6 +104,9 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 	@Nullable
 	private StringValueResolver embeddedValueResolver;
 
+	/**
+	 * 创建 RequestMappingInfo 使用的配置
+	 */
 	private RequestMappingInfo.BuilderConfiguration config = new RequestMappingInfo.BuilderConfiguration();
 
 
@@ -225,6 +243,8 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 	}
 
 	/**
+	 * 从请求中获取文件扩展名
+	 * <p>
 	 * Return the file extensions to use for suffix pattern matching.
 	 *
 	 * @deprecated as of 5.2.4. See class-level note on the deprecation of path

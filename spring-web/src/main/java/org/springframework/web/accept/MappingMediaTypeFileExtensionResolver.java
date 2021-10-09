@@ -50,6 +50,9 @@ public class MappingMediaTypeFileExtensionResolver implements MediaTypeFileExten
 	 */
 	private final ConcurrentMap<String, MediaType> mediaTypes = new ConcurrentHashMap<>(64);
 
+	/**
+	 * 媒体类型 -> 扩展名列表
+	 */
 	private final ConcurrentMap<MediaType, List<String>> fileExtensions = new ConcurrentHashMap<>(64);
 
 	/**

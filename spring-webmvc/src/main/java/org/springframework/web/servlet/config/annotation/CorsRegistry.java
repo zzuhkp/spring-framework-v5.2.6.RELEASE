@@ -24,13 +24,15 @@ import java.util.Map;
 import org.springframework.web.cors.CorsConfiguration;
 
 /**
+ * 跨域配置注册
+ * <p>
  * Assists with the registration of global, URL pattern based
  * {@link CorsConfiguration} mappings.
  *
  * @author Sebastien Deleuze
  * @author Rossen Stoyanchev
- * @since 4.2
  * @see CorsRegistration
+ * @since 4.2
  */
 public class CorsRegistry {
 
@@ -54,6 +56,8 @@ public class CorsRegistry {
 	}
 
 	/**
+	 * 获取跨域配置
+	 * <p>
 	 * Return the registered {@link CorsConfiguration} objects,
 	 * keyed by path pattern.
 	 */

@@ -21,15 +21,17 @@ import java.util.Arrays;
 import org.springframework.web.cors.CorsConfiguration;
 
 /**
+ * 跨域配置持有
+ * <p>
  * Assists with the creation of a {@link CorsConfiguration} instance for a given
  * URL path pattern.
  *
  * @author Sebastien Deleuze
  * @author Rossen Stoyanchev
  * @author Sam Brannen
- * @since 4.2
  * @see CorsConfiguration
  * @see CorsRegistry
+ * @since 4.2
  */
 public class CorsRegistration {
 

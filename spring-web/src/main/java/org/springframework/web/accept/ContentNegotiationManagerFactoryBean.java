@@ -104,17 +104,34 @@ public class ContentNegotiationManagerFactoryBean
 	@Nullable
 	private List<ContentNegotiationStrategy> strategies;
 
-
+	/**
+	 * 是否从路径中抽取文件扩展名
+	 */
 	private boolean favorPathExtension = true;
 
+	/**
+	 * 是否从请求参数中确定文件扩展名
+	 */
 	private boolean favorParameter = false;
 
+	/**
+	 * 是否忽略 Accept 请起头，忽略将不从请求头中获取内容类型
+	 */
 	private boolean ignoreAcceptHeader = false;
 
+	/**
+	 * 文件扩展名 -> 媒体类型，如 .json -> application/json
+	 */
 	private Map<String, MediaType> mediaTypes = new HashMap<>();
 
+	/**
+	 * 无法根据文件扩展名查找到媒体类型时是否忽略，否则将抛出异常
+	 */
 	private boolean ignoreUnknownPathExtensions = true;
 
+	/**
+	 * 是否仅使用注册的文件扩展名
+	 */
 	@Nullable
 	private Boolean useRegisteredExtensionsOnly;
 
