@@ -16,12 +16,12 @@
 
 package org.springframework.web.servlet.handler;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.lang.Nullable;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * HandlerExceptionResolver 抽象类，添加了对 HandlerMethod handler 的支持
@@ -62,6 +62,8 @@ public abstract class AbstractHandlerMethodExceptionResolver extends AbstractHan
 	}
 
 	/**
+	 * 解析 HandlerMethod 产生的异常
+	 * <p>
 	 * Actually resolve the given exception that got thrown during on handler execution,
 	 * returning a ModelAndView that represents a specific error page if appropriate.
 	 * <p>May be overridden in subclasses, in order to apply specific exception checks.

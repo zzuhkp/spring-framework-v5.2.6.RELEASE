@@ -209,7 +209,7 @@ public class DefaultHandlerExceptionResolver extends AbstractHandlerExceptionRes
 						(MethodArgumentNotValidException) ex, request, response, handler);
 			} else if (ex instanceof MissingServletRequestPartException) {
 				return handleMissingServletRequestPartException(
-						(MissingServletRequestPartException) ex, request, response, handler);
+						(MissingServletRequestPartException) ex, request, response, handler);m
 			} else if (ex instanceof BindException) {
 				return handleBindException((BindException) ex, request, response, handler);
 			} else if (ex instanceof NoHandlerFoundException) {

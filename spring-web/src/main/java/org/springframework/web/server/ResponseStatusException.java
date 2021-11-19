@@ -28,7 +28,7 @@ import org.springframework.util.Assert;
 
 /**
  * 指定 HTTP 响应码的异常
- *
+ * <p>
  * Base class for exceptions associated with specific HTTP response status codes.
  *
  * @author Rossen Stoyanchev

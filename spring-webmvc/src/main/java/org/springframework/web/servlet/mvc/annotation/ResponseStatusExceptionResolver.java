@@ -33,7 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
 
 /**
- * ResponseStatusException 异常处理
+ * ResponseStatusException 异常处理，从异常中解析状态码，然后进行响应
  * <p>
  * A {@link org.springframework.web.servlet.HandlerExceptionResolver
  * HandlerExceptionResolver} that uses the {@link ResponseStatus @ResponseStatus}

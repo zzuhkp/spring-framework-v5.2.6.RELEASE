@@ -31,7 +31,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * HandlerExceptionResolver 抽象类
+ * HandlerExceptionResolver 抽象类，允许处理全部 handler 或指定的 handler
  * <p>
  * Abstract base class for {@link HandlerExceptionResolver} implementations.
  *
@@ -56,9 +56,15 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 
 	private int order = Ordered.LOWEST_PRECEDENCE;
 
+	/**
+	 * 当前异常解析器处理的处理器
+	 */
 	@Nullable
 	private Set<?> mappedHandlers;
 
+	/**
+	 * 当前异常解析器处理的处理器
+	 */
 	@Nullable
 	private Class<?>[] mappedHandlerClasses;
 

@@ -15,15 +15,17 @@
  */
 package org.springframework.web.filter;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 import org.springframework.web.util.WebUtils;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
 /**
+ * 重定向响应
+ * <p>
  * A response wrapper used for the implementation of
  * {@link RelativeRedirectFilter} also shared with {@link ForwardedHeaderFilter}.
  *
@@ -50,7 +52,7 @@ final class RelativeRedirectResponseWrapper extends HttpServletResponseWrapper {
 
 
 	public static HttpServletResponse wrapIfNecessary(HttpServletResponse response,
-			HttpStatus redirectStatus) {
+													  HttpStatus redirectStatus) {
 
 		RelativeRedirectResponseWrapper wrapper =
 				WebUtils.getNativeResponse(response, RelativeRedirectResponseWrapper.class);
