@@ -17,6 +17,8 @@
 package org.springframework.web.context.request.async;
 
 /**
+ * 异步请求超时异常
+ *
  * Exception to be thrown when an async request times out.
  * Alternatively an applications can register a
  * {@link DeferredResultProcessingInterceptor} or a

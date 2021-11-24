@@ -33,7 +33,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 /**
  * MVC 配置
- *
+ * <p>
  * Defines callback methods to customize the Java-based configuration for
  * Spring MVC enabled via {@code @EnableWebMvc}.
  *
@@ -70,6 +70,8 @@ public interface WebMvcConfigurer {
 	}
 
 	/**
+	 * 异步请求处理配置
+	 *
 	 * Configure asynchronous request handling options.
 	 */
 	default void configureAsyncSupport(AsyncSupportConfigurer configurer) {

@@ -43,6 +43,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 public interface DeferredResultProcessingInterceptor {
 
 	/**
+	 * 原始线程开启并发处理前调用
+	 * <p>
 	 * Invoked immediately before the start of concurrent handling, in the same
 	 * thread that started it. This method may be used to capture state just prior
 	 * to the start of concurrent processing with the given {@code DeferredResult}.
@@ -56,6 +58,8 @@ public interface DeferredResultProcessingInterceptor {
 	}
 
 	/**
+	 * 异步线程并发处理前调用
+	 * <p>
 	 * Invoked immediately after the start of concurrent handling, in the same
 	 * thread that started it. This method may be used to detect the start of
 	 * concurrent processing with the given {@code DeferredResult}.
@@ -71,6 +75,8 @@ public interface DeferredResultProcessingInterceptor {
 	}
 
 	/**
+	 * 异步线程并发处理后调用
+	 * <p>
 	 * Invoked after a {@code DeferredResult} has been set, via
 	 * {@link DeferredResult#setResult(Object)} or
 	 * {@link DeferredResult#setErrorResult(Object)}, and is also ready to
@@ -89,6 +95,8 @@ public interface DeferredResultProcessingInterceptor {
 	}
 
 	/**
+	 * 处理超时
+	 * <p>
 	 * Invoked from a container thread when an async request times out before
 	 * the {@code DeferredResult} has been set. Implementations may invoke
 	 * {@link DeferredResult#setResult(Object) setResult} or
@@ -109,6 +117,8 @@ public interface DeferredResultProcessingInterceptor {
 	}
 
 	/**
+	 * 处理错误
+	 * <p>
 	 * Invoked from a container thread when an error occurred while processing an async request
 	 * before the {@code DeferredResult} has been set. Implementations may invoke
 	 * {@link DeferredResult#setResult(Object) setResult} or
@@ -130,6 +140,8 @@ public interface DeferredResultProcessingInterceptor {
 	}
 
 	/**
+	 * 处理完成
+	 * <p>
 	 * Invoked from a container thread when an async request completed for any
 	 * reason including timeout and network error. This method is useful for
 	 * detecting that a {@code DeferredResult} instance is no longer usable.

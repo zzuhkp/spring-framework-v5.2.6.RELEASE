@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * 流式响应，用于 controller 方法返回类型，异步处理用
+ * <p>
  * A controller method return value type for asynchronous request processing
  * where the application can write directly to the response {@code OutputStream}
  * without holding up the Servlet container thread.
@@ -40,6 +42,7 @@ public interface StreamingResponseBody {
 
 	/**
 	 * A callback for writing to the response body.
+	 *
 	 * @param outputStream the stream for the response body
 	 * @throws IOException an exception while writing
 	 */

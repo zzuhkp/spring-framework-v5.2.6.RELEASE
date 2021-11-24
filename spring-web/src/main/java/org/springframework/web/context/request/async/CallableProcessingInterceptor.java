@@ -65,6 +65,8 @@ public interface CallableProcessingInterceptor {
 
 
 	/**
+	 * 原始线程开启异步处理前调用
+	 * <p>
 	 * Invoked <em>before</em> the start of concurrent handling in the original
 	 * thread in which the {@code Callable} is submitted for concurrent handling.
 	 * <p>This is useful for capturing the state of the current thread just prior to
@@ -83,6 +85,8 @@ public interface CallableProcessingInterceptor {
 	}
 
 	/**
+	 * 原始线程开启并发处理后，异步线程并发处理前调用
+	 * <p>
 	 * Invoked <em>after</em> the start of concurrent handling in the async
 	 * thread in which the {@code Callable} is executed and <em>before</em> the
 	 * actual invocation of the {@code Callable}.
@@ -96,6 +100,8 @@ public interface CallableProcessingInterceptor {
 	}
 
 	/**
+	 * 异步线程并发处理后调用
+	 * <p>
 	 * Invoked <em>after</em> the {@code Callable} has produced a result in the
 	 * async thread in which the {@code Callable} is executed. This method may
 	 * be invoked later than {@code afterTimeout} or {@code afterCompletion}
@@ -113,6 +119,8 @@ public interface CallableProcessingInterceptor {
 	}
 
 	/**
+	 * 超时处理
+	 * <p>
 	 * Invoked from a container thread when the async request times out before
 	 * the {@code Callable} task completes. Implementations may return a value,
 	 * including an {@link Exception}, to use instead of the value the
@@ -131,6 +139,8 @@ public interface CallableProcessingInterceptor {
 	}
 
 	/**
+	 * 错误处理
+	 * <p>
 	 * Invoked from a container thread when an error occurred while processing
 	 * the async request before the {@code Callable} task completes.
 	 * Implementations may return a value, including an {@link Exception}, to
@@ -151,6 +161,8 @@ public interface CallableProcessingInterceptor {
 	}
 
 	/**
+	 * 完成处理
+	 * <p>
 	 * Invoked from a container thread when async processing completes for any
 	 * reason including timeout or network error.
 	 * <p>The default implementation is empty.

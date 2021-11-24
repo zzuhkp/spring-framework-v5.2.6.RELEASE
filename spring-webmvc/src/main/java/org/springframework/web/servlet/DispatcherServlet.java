@@ -1193,6 +1193,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		if (WebAsyncUtils.getAsyncManager(request).isConcurrentHandlingStarted()) {
 			// Concurrent handling started during a forward
+			// 异步处理已经开始
 			return;
 		}
 

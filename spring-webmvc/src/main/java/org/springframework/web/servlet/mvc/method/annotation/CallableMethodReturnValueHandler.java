@@ -26,7 +26,7 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
- * Callable 返回类型处理
+ * Callable 返回类型处理，用于异步处理
  * <p>
  * Handles return values of type {@link Callable}.
  *

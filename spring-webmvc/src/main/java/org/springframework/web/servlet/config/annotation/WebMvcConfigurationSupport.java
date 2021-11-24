@@ -671,6 +671,7 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 			adapter.setResponseBodyAdvice(Collections.singletonList(new JsonViewResponseBodyAdvice()));
 		}
 
+		// 异步请求配置
 		AsyncSupportConfigurer configurer = new AsyncSupportConfigurer();
 		configureAsyncSupport(configurer);
 		if (configurer.getTaskExecutor() != null) {
@@ -738,6 +739,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 异步处理配置
+	 * <p>
 	 * Override this method to configure asynchronous request processing options.
 	 *
 	 * @see AsyncSupportConfigurer
@@ -1105,7 +1108,7 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 
 	/**
 	 * 创建异常解析器
-	 *
+	 * <p>
 	 * Protected method for plugging in a custom subclass of
 	 * {@link ExceptionHandlerExceptionResolver}.
 	 *
@@ -1117,7 +1120,7 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 
 	/**
 	 * 视图解析器
-	 *
+	 * <p>
 	 * Register a {@link ViewResolverComposite} that contains a chain of view resolvers
 	 * to use for view resolution.
 	 * By default this resolver is ordered at 0 unless content negotiation view
@@ -1159,7 +1162,7 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 
 	/**
 	 * 配置视图解析器
-	 *
+	 * <p>
 	 * Override this method to configure view resolution.
 	 *
 	 * @see ViewResolverRegistry

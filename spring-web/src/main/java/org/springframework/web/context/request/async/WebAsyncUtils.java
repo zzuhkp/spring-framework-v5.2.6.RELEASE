@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 获取或创建 WebAsyncManager 的工具类
+ * <p>
  * Utility methods related to processing asynchronous web requests.
  *
  * @author Rossen Stoyanchev
@@ -59,6 +61,8 @@ public abstract class WebAsyncUtils {
 	}
 
 	/**
+	 * 获取 WebAsyncManager
+	 * <p>
 	 * Obtain the {@link WebAsyncManager} for the current request, or if not
 	 * found, create and associate it with the request.
 	 */

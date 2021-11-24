@@ -19,6 +19,8 @@ package org.springframework.web.context.request.async;
 import org.springframework.web.context.request.NativeWebRequest;
 
 /**
+ * 延迟结果超时拦截器
+ * <p>
  * Sends a 503 (SERVICE_UNAVAILABLE) in case of a timeout if the response is not
  * already committed. As of 4.2.8 this is done indirectly by returning
  * {@link AsyncRequestTimeoutException} as the result of processing which is

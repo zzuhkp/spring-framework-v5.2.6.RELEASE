@@ -53,11 +53,11 @@ import org.springframework.web.context.request.async.DeferredResult.DeferredResu
  *
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
- * @since 3.2
  * @see org.springframework.web.context.request.AsyncWebRequestInterceptor
  * @see org.springframework.web.servlet.AsyncHandlerInterceptor
  * @see org.springframework.web.filter.OncePerRequestFilter#shouldNotFilterAsyncDispatch
  * @see org.springframework.web.filter.OncePerRequestFilter#isAsyncDispatch
+ * @since 3.2
  */
 public final class WebAsyncManager {
 
@@ -76,29 +76,46 @@ public final class WebAsyncManager {
 
 	private static Boolean taskExecutorWarning = true;
 
-
+	/**
+	 * 异步请求抽象
+	 */
 	private AsyncWebRequest asyncWebRequest;
 
 	private AsyncTaskExecutor taskExecutor = DEFAULT_TASK_EXECUTOR;
 
+	/**
+	 * 异步处理结果
+	 */
 	private volatile Object concurrentResult = RESULT_NONE;
 
+	/**
+	 * 异步请求上下文
+	 */
 	private volatile Object[] concurrentResultContext;
 
-	/*
+	/**
+	 * 异步处理是否发生错误
+	 * <p>
 	 * Whether the concurrentResult is an error. If such errors remain unhandled, some
 	 * Servlet containers will call AsyncListener#onError at the end, after the ASYNC
 	 * and/or the ERROR dispatch (Boot's case), and we need to ignore those.
 	 */
 	private volatile boolean errorHandlingInProgress;
 
+	/**
+	 * 拦截器
+	 */
 	private final Map<Object, CallableProcessingInterceptor> callableInterceptors = new LinkedHashMap<>();
 
+	/**
+	 * 拦截器
+	 */
 	private final Map<Object, DeferredResultProcessingInterceptor> deferredResultInterceptors = new LinkedHashMap<>();
 
 
 	/**
 	 * Package-private constructor.
+	 *
 	 * @see WebAsyncUtils#getAsyncManager(javax.servlet.ServletRequest)
 	 * @see WebAsyncUtils#getAsyncManager(org.springframework.web.context.request.WebRequest)
 	 */
@@ -113,11 +130,13 @@ public final class WebAsyncManager {
 	 * wrapping, etc). However, it should not be set while concurrent handling
 	 * is in progress, i.e. while {@link #isConcurrentHandlingStarted()} is
 	 * {@code true}.
+	 *
 	 * @param asyncWebRequest the web request to use
 	 */
 	public void setAsyncWebRequest(AsyncWebRequest asyncWebRequest) {
 		Assert.notNull(asyncWebRequest, "AsyncWebRequest must not be null");
 		this.asyncWebRequest = asyncWebRequest;
+		// 异步请求完成后移除 request 属性
 		this.asyncWebRequest.addCompletionHandler(() -> asyncWebRequest.removeAttribute(
 				WebAsyncUtils.WEB_ASYNC_MANAGER_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST));
 	}
@@ -132,6 +151,8 @@ public final class WebAsyncManager {
 	}
 
 	/**
+	 * 是否已经开启异步处理
+	 * <p>
 	 * Whether the selected handler for the current request chose to handle the
 	 * request asynchronously. A return value of "true" indicates concurrent
 	 * handling is under way and the response will remain open. A return value
@@ -144,6 +165,8 @@ public final class WebAsyncManager {
 	}
 
 	/**
+	 * 是否已经产生异步处理结果
+	 * <p>
 	 * Whether a result value exists as a result of concurrent handling.
 	 */
 	public boolean hasConcurrentResult() {
@@ -151,7 +174,10 @@ public final class WebAsyncManager {
 	}
 
 	/**
+	 * 获取异步处理结果
+	 * <p>
 	 * Provides access to the result from concurrent handling.
+	 *
 	 * @return an Object, possibly an {@code Exception} or {@code Throwable} if
 	 * concurrent handling raised one.
 	 * @see #clearConcurrentResult()
@@ -163,6 +189,7 @@ public final class WebAsyncManager {
 	/**
 	 * Provides access to additional processing context saved at the start of
 	 * concurrent handling.
+	 *
 	 * @see #clearConcurrentResult()
 	 */
 	public Object[] getConcurrentResultContext() {
@@ -170,7 +197,10 @@ public final class WebAsyncManager {
 	}
 
 	/**
+	 * 根据给定的 key 获取注册的拦截器
+	 * <p>
 	 * Get the {@link CallableProcessingInterceptor} registered under the given key.
+	 *
 	 * @param key the key
 	 * @return the interceptor registered under that key, or {@code null} if none
 	 */
@@ -180,7 +210,10 @@ public final class WebAsyncManager {
 	}
 
 	/**
+	 * 根据给定的 key 获取注册的拦截器
+	 * <p>
 	 * Get the {@link DeferredResultProcessingInterceptor} registered under the given key.
+	 *
 	 * @param key the key
 	 * @return the interceptor registered under that key, or {@code null} if none
 	 */
@@ -190,8 +223,11 @@ public final class WebAsyncManager {
 	}
 
 	/**
+	 * 注册拦截器
+	 * <p>
 	 * Register a {@link CallableProcessingInterceptor} under the given key.
-	 * @param key the key
+	 *
+	 * @param key         the key
 	 * @param interceptor the interceptor to register
 	 */
 	public void registerCallableInterceptor(Object key, CallableProcessingInterceptor interceptor) {
@@ -201,8 +237,11 @@ public final class WebAsyncManager {
 	}
 
 	/**
+	 * 注册拦截器
+	 * <p>
 	 * Register a {@link CallableProcessingInterceptor} without a key.
 	 * The key is derived from the class name and hashcode.
+	 *
 	 * @param interceptors one or more interceptors to register
 	 */
 	public void registerCallableInterceptors(CallableProcessingInterceptor... interceptors) {
@@ -214,8 +253,11 @@ public final class WebAsyncManager {
 	}
 
 	/**
+	 * 注册拦截器
+	 * <p>
 	 * Register a {@link DeferredResultProcessingInterceptor} under the given key.
-	 * @param key the key
+	 *
+	 * @param key         the key
 	 * @param interceptor the interceptor to register
 	 */
 	public void registerDeferredResultInterceptor(Object key, DeferredResultProcessingInterceptor interceptor) {
@@ -225,8 +267,11 @@ public final class WebAsyncManager {
 	}
 
 	/**
+	 * 注册拦截器
+	 * <p>
 	 * Register one or more {@link DeferredResultProcessingInterceptor DeferredResultProcessingInterceptors} without a specified key.
 	 * The default key is derived from the interceptor class name and hash code.
+	 *
 	 * @param interceptors one or more interceptors to register
 	 */
 	public void registerDeferredResultInterceptors(DeferredResultProcessingInterceptor... interceptors) {
@@ -238,6 +283,8 @@ public final class WebAsyncManager {
 	}
 
 	/**
+	 * 清除异步处理结果
+	 * <p>
 	 * Clear {@linkplain #getConcurrentResult() concurrentResult} and
 	 * {@linkplain #getConcurrentResultContext() concurrentResultContext}.
 	 */
@@ -249,14 +296,17 @@ public final class WebAsyncManager {
 	}
 
 	/**
+	 * 开始异步处理，存储执行结果，并执行 dispatch
+	 * <p>
 	 * Start concurrent request processing and execute the given task with an
 	 * {@link #setTaskExecutor(AsyncTaskExecutor) AsyncTaskExecutor}. The result
 	 * from the task execution is saved and the request dispatched in order to
 	 * resume processing of that result. If the task raises an Exception then
 	 * the saved result will be the raised Exception.
-	 * @param callable a unit of work to be executed asynchronously
+	 *
+	 * @param callable          a unit of work to be executed asynchronously
 	 * @param processingContext additional context to save that can be accessed
-	 * via {@link #getConcurrentResultContext()}
+	 *                          via {@link #getConcurrentResultContext()}
 	 * @throws Exception if concurrent processing failed to start
 	 * @see #getConcurrentResult()
 	 * @see #getConcurrentResultContext()
@@ -271,9 +321,10 @@ public final class WebAsyncManager {
 	 * Use the given {@link WebAsyncTask} to configure the task executor as well as
 	 * the timeout value of the {@code AsyncWebRequest} before delegating to
 	 * {@link #startCallableProcessing(Callable, Object...)}.
-	 * @param webAsyncTask a WebAsyncTask containing the target {@code Callable}
+	 *
+	 * @param webAsyncTask      a WebAsyncTask containing the target {@code Callable}
 	 * @param processingContext additional context to save that can be accessed
-	 * via {@link #getConcurrentResultContext()}
+	 *                          via {@link #getConcurrentResultContext()}
 	 * @throws Exception if concurrent processing failed to start
 	 */
 	public void startCallableProcessing(final WebAsyncTask<?> webAsyncTask, Object... processingContext)
@@ -290,8 +341,7 @@ public final class WebAsyncManager {
 		AsyncTaskExecutor executor = webAsyncTask.getExecutor();
 		if (executor != null) {
 			this.taskExecutor = executor;
-		}
-		else {
+		} else {
 			logExecutorWarning();
 		}
 
@@ -326,33 +376,38 @@ public final class WebAsyncManager {
 
 		this.asyncWebRequest.addCompletionHandler(() ->
 				interceptorChain.triggerAfterCompletion(this.asyncWebRequest, callable));
-
+		// 开启异步前回调
 		interceptorChain.applyBeforeConcurrentHandling(this.asyncWebRequest, callable);
+		// 开启异步处理
 		startAsyncProcessing(processingContext);
 		try {
 			Future<?> future = this.taskExecutor.submit(() -> {
 				Object result = null;
 				try {
+					// 异步任务执行前回调
 					interceptorChain.applyPreProcess(this.asyncWebRequest, callable);
+					// 执行异步处理
 					result = callable.call();
-				}
-				catch (Throwable ex) {
+				} catch (Throwable ex) {
 					result = ex;
-				}
-				finally {
+				} finally {
+					// 异步任务执行后回调
 					result = interceptorChain.applyPostProcess(this.asyncWebRequest, callable, result);
 				}
 				setConcurrentResultAndDispatch(result);
 			});
 			interceptorChain.setTaskFuture(future);
-		}
-		catch (RejectedExecutionException ex) {
+		} catch (RejectedExecutionException ex) {
+			// 异步任务指定后回调
 			Object result = interceptorChain.applyPostProcess(this.asyncWebRequest, callable, ex);
 			setConcurrentResultAndDispatch(result);
 			throw ex;
 		}
 	}
 
+	/**
+	 * 没有配置线程池，使用默认线程池
+	 */
 	private void logExecutorWarning() {
 		if (taskExecutorWarning && logger.isWarnEnabled()) {
 			synchronized (DEFAULT_TASK_EXECUTOR) {
@@ -373,11 +428,21 @@ public final class WebAsyncManager {
 		}
 	}
 
+	/**
+	 * 获取请求路径
+	 *
+	 * @return
+	 */
 	private String formatRequestUri() {
 		HttpServletRequest request = this.asyncWebRequest.getNativeRequest(HttpServletRequest.class);
 		return request != null ? request.getRequestURI() : "servlet container";
 	}
 
+	/**
+	 * 设置异步处理结果，分派请求
+	 *
+	 * @param result
+	 */
 	private void setConcurrentResultAndDispatch(Object result) {
 		synchronized (WebAsyncManager.this) {
 			if (this.concurrentResult != RESULT_NONE) {
@@ -402,15 +467,18 @@ public final class WebAsyncManager {
 	}
 
 	/**
+	 * 开始异步处理
+	 * <p>
 	 * Start concurrent request processing and initialize the given
 	 * {@link DeferredResult} with a {@link DeferredResultHandler} that saves
 	 * the result and dispatches the request to resume processing of that
 	 * result. The {@code AsyncWebRequest} is also updated with a completion
 	 * handler that expires the {@code DeferredResult} and a timeout handler
 	 * assuming the {@code DeferredResult} has a default timeout result.
-	 * @param deferredResult the DeferredResult instance to initialize
+	 *
+	 * @param deferredResult    the DeferredResult instance to initialize
 	 * @param processingContext additional context to save that can be accessed
-	 * via {@link #getConcurrentResultContext()}
+	 *                          via {@link #getConcurrentResultContext()}
 	 * @throws Exception if concurrent processing failed to start
 	 * @see #getConcurrentResult()
 	 * @see #getConcurrentResultContext()
@@ -436,8 +504,7 @@ public final class WebAsyncManager {
 		this.asyncWebRequest.addTimeoutHandler(() -> {
 			try {
 				interceptorChain.triggerAfterTimeout(this.asyncWebRequest, deferredResult);
-			}
-			catch (Throwable ex) {
+			} catch (Throwable ex) {
 				setConcurrentResultAndDispatch(ex);
 			}
 		});
@@ -449,8 +516,7 @@ public final class WebAsyncManager {
 						return;
 					}
 					deferredResult.setErrorResult(ex);
-				}
-				catch (Throwable interceptorEx) {
+				} catch (Throwable interceptorEx) {
 					setConcurrentResultAndDispatch(interceptorEx);
 				}
 			}
@@ -459,21 +525,29 @@ public final class WebAsyncManager {
 		this.asyncWebRequest.addCompletionHandler(()
 				-> interceptorChain.triggerAfterCompletion(this.asyncWebRequest, deferredResult));
 
+		// 开启异步处理前回调
 		interceptorChain.applyBeforeConcurrentHandling(this.asyncWebRequest, deferredResult);
+		// 开启异步处理
 		startAsyncProcessing(processingContext);
 
 		try {
+			// 异步处理执行前回调
 			interceptorChain.applyPreProcess(this.asyncWebRequest, deferredResult);
 			deferredResult.setResultHandler(result -> {
+				// 异步处理执行后回调
 				result = interceptorChain.applyPostProcess(this.asyncWebRequest, deferredResult, result);
 				setConcurrentResultAndDispatch(result);
 			});
-		}
-		catch (Throwable ex) {
+		} catch (Throwable ex) {
 			setConcurrentResultAndDispatch(ex);
 		}
 	}
 
+	/**
+	 * 开始异步请求
+	 *
+	 * @param processingContext
+	 */
 	private void startAsyncProcessing(Object[] processingContext) {
 		synchronized (WebAsyncManager.this) {
 			this.concurrentResult = RESULT_NONE;

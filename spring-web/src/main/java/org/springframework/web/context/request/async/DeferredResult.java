@@ -29,6 +29,8 @@ import org.springframework.util.Assert;
 import org.springframework.web.context.request.NativeWebRequest;
 
 /**
+ * 延迟结果
+ * <p>
  * {@code DeferredResult} provides an alternative to using a {@link Callable} for
  * asynchronous request processing. While a {@code Callable} is executed concurrently
  * on behalf of the application, with a {@code DeferredResult} the application can
@@ -57,22 +59,45 @@ public class DeferredResult<T> {
 
 	private static final Log logger = LogFactory.getLog(DeferredResult.class);
 
-
+	/**
+	 * 异步处理超时时间
+	 */
 	@Nullable
 	private final Long timeoutValue;
 
+	/**
+	 * 超时回调结果
+	 */
 	private final Supplier<?> timeoutResult;
 
+	/**
+	 * 超时回调
+	 */
 	private Runnable timeoutCallback;
 
+	/**
+	 * 错误回调
+	 */
 	private Consumer<Throwable> errorCallback;
 
+	/**
+	 * 完成回调
+	 */
 	private Runnable completionCallback;
 
+	/**
+	 * 结果处理器
+	 */
 	private DeferredResultHandler resultHandler;
 
+	/**
+	 * 异步执行结果
+	 */
 	private volatile Object result = RESULT_NONE;
 
+	/**
+	 * 异步处理是否已结束
+	 */
 	private volatile boolean expired = false;
 
 
@@ -199,6 +224,8 @@ public class DeferredResult<T> {
 	}
 
 	/**
+	 * 设置结果处理器
+	 * <p>
 	 * Provide a handler to use to handle the result value.
 	 *
 	 * @param resultHandler the handler
@@ -218,6 +245,7 @@ public class DeferredResult<T> {
 			}
 			resultToHandle = this.result;
 			if (resultToHandle == RESULT_NONE) {
+				// 如果异步处理还未完成，设置结果处理器
 				// No result yet: store handler for processing once it comes in
 				this.resultHandler = resultHandler;
 				return;
@@ -227,6 +255,7 @@ public class DeferredResult<T> {
 		// The decision is made within the result lock; just the handle call outside
 		// of it, avoiding any deadlock potential with Servlet container locks.
 		try {
+			// 如果异步处理已经完成，处理结果
 			resultHandler.handleResult(resultToHandle);
 		} catch (Throwable ex) {
 			logger.debug("Failed to process async result", ex);
@@ -245,6 +274,12 @@ public class DeferredResult<T> {
 		return setResultInternal(result);
 	}
 
+	/**
+	 * 设置结果
+	 *
+	 * @param result
+	 * @return
+	 */
 	private boolean setResultInternal(Object result) {
 		// Immediate expiration check outside of the result lock
 		if (isSetOrExpired()) {
@@ -260,6 +295,7 @@ public class DeferredResult<T> {
 			this.result = result;
 			resultHandlerToUse = this.resultHandler;
 			if (resultHandlerToUse == null) {
+				// 无结果处理器设置，暂不处理结果
 				// No result handler set yet -> let the setResultHandler implementation
 				// pick up the result object and invoke the result handler for it.
 				return true;
@@ -268,6 +304,7 @@ public class DeferredResult<T> {
 			// we don't need it anymore.
 			this.resultHandler = null;
 		}
+		// 其他线程设置了结果处理器，处理结果
 		// If we get here, we need to process an existing result object immediately.
 		// The decision is made within the result lock; just the handle call outside
 		// of it, avoiding any deadlock potential with Servlet container locks.
@@ -276,6 +313,8 @@ public class DeferredResult<T> {
 	}
 
 	/**
+	 * 设置错误结果
+	 * <p>
 	 * Set an error value for the {@link DeferredResult} and handle it.
 	 * The value may be an {@link Exception} or {@link Throwable} in which case
 	 * it will be processed as if a handler raised the exception.
@@ -342,6 +381,8 @@ public class DeferredResult<T> {
 
 
 	/**
+	 * 结果处理器
+	 * <p>
 	 * Handles a DeferredResult value when set.
 	 */
 	@FunctionalInterface

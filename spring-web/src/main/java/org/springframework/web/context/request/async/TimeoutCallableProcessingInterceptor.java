@@ -21,6 +21,8 @@ import java.util.concurrent.Callable;
 import org.springframework.web.context.request.NativeWebRequest;
 
 /**
+ * Callable 超时拦截器
+ * <p>
  * Sends a 503 (SERVICE_UNAVAILABLE) in case of a timeout if the response is not
  * already committed. As of 4.2.8 this is done indirectly by setting the result
  * to an {@link AsyncRequestTimeoutException} which is then handled by

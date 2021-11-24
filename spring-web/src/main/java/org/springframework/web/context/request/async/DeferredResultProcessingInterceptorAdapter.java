@@ -19,6 +19,8 @@ package org.springframework.web.context.request.async;
 import org.springframework.web.context.request.NativeWebRequest;
 
 /**
+ * 拦截器适配器
+ * <p>
  * Abstract adapter class for the {@link DeferredResultProcessingInterceptor}
  * interface for simplified implementation of individual methods.
  *
@@ -50,7 +52,7 @@ public abstract class DeferredResultProcessingInterceptorAdapter implements Defe
 	 */
 	@Override
 	public <T> void postProcess(NativeWebRequest request, DeferredResult<T> deferredResult,
-			Object concurrentResult) throws Exception {
+								Object concurrentResult) throws Exception {
 	}
 
 	/**

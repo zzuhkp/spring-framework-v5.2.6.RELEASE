@@ -49,8 +49,7 @@ public class StreamingResponseBodyReturnValueHandler implements HandlerMethodRet
 	public boolean supportsReturnType(MethodParameter returnType) {
 		if (StreamingResponseBody.class.isAssignableFrom(returnType.getParameterType())) {
 			return true;
-		}
-		else if (ResponseEntity.class.isAssignableFrom(returnType.getParameterType())) {
+		} else if (ResponseEntity.class.isAssignableFrom(returnType.getParameterType())) {
 			Class<?> bodyType = ResolvableType.forMethodParameter(returnType).getGeneric().resolve();
 			return (bodyType != null && StreamingResponseBody.class.isAssignableFrom(bodyType));
 		}
@@ -60,7 +59,7 @@ public class StreamingResponseBodyReturnValueHandler implements HandlerMethodRet
 	@Override
 	@SuppressWarnings("resource")
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
-			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
+								  ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
 
 		if (returnValue == null) {
 			mavContainer.setRequestHandled(true);
@@ -85,11 +84,13 @@ public class StreamingResponseBodyReturnValueHandler implements HandlerMethodRet
 
 		ServletRequest request = webRequest.getNativeRequest(ServletRequest.class);
 		Assert.state(request != null, "No ServletRequest");
+		// 禁用缓存
 		ShallowEtagHeaderFilter.disableContentCaching(request);
 
 		Assert.isInstanceOf(StreamingResponseBody.class, returnValue, "StreamingResponseBody expected");
 		StreamingResponseBody streamingBody = (StreamingResponseBody) returnValue;
 
+		// 开始异步处理
 		Callable<Void> callable = new StreamingResponseBodyTask(outputMessage.getBody(), streamingBody);
 		WebAsyncUtils.getAsyncManager(webRequest).startCallableProcessing(callable, mavContainer);
 	}
@@ -108,6 +109,7 @@ public class StreamingResponseBodyReturnValueHandler implements HandlerMethodRet
 
 		@Override
 		public Void call() throws Exception {
+			// 异步处理向响应中输出
 			this.streamingBody.writeTo(this.outputStream);
 			this.outputStream.flush();
 			return null;

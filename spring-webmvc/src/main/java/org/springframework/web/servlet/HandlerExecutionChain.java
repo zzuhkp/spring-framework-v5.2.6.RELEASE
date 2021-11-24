@@ -196,6 +196,8 @@ public class HandlerExecutionChain {
 	}
 
 	/**
+	 * 异步处理后回调
+	 * <p>
 	 * 回调 AsyncHandlerInterceptor#afterConcurrentHandlingStarted 方法
 	 * <p>
 	 * Apply afterConcurrentHandlerStarted callback on mapped AsyncHandlerInterceptors.

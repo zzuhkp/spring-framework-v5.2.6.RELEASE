@@ -49,6 +49,8 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
+ * controller 方法返回类型 ResponseBodyEmitter 处理，用于支持异步处理用户多次写入响应内容
+ * <p>
  * Handler for return values of type {@link ResponseBodyEmitter} and sub-classes
  * such as {@link SseEmitter} including the same types wrapped with
  * {@link ResponseEntity}.
@@ -83,14 +85,15 @@ public class ResponseBodyEmitterReturnValueHandler implements HandlerMethodRetur
 
 	/**
 	 * Complete constructor with pluggable "reactive" type support.
+	 *
 	 * @param messageConverters converters to write emitted objects with
-	 * @param registry for reactive return value type support
-	 * @param executor for blocking I/O writes of items emitted from reactive types
-	 * @param manager for detecting streaming media types
+	 * @param registry          for reactive return value type support
+	 * @param executor          for blocking I/O writes of items emitted from reactive types
+	 * @param manager           for detecting streaming media types
 	 * @since 5.0
 	 */
 	public ResponseBodyEmitterReturnValueHandler(List<HttpMessageConverter<?>> messageConverters,
-			ReactiveAdapterRegistry registry, TaskExecutor executor, ContentNegotiationManager manager) {
+												 ReactiveAdapterRegistry registry, TaskExecutor executor, ContentNegotiationManager manager) {
 
 		Assert.notEmpty(messageConverters, "HttpMessageConverter List must not be empty");
 		this.messageConverters = messageConverters;
@@ -124,7 +127,7 @@ public class ResponseBodyEmitterReturnValueHandler implements HandlerMethodRetur
 	@Override
 	@SuppressWarnings("resource")
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
-			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
+								  ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
 
 		if (returnValue == null) {
 			mavContainer.setRequestHandled(true);
@@ -154,8 +157,7 @@ public class ResponseBodyEmitterReturnValueHandler implements HandlerMethodRetur
 		ResponseBodyEmitter emitter;
 		if (returnValue instanceof ResponseBodyEmitter) {
 			emitter = (ResponseBodyEmitter) returnValue;
-		}
-		else {
+		} else {
 			emitter = this.reactiveHandler.handleValue(returnValue, returnType, mavContainer, webRequest);
 			if (emitter == null) {
 				// Not streaming: write headers without committing response..
@@ -169,6 +171,7 @@ public class ResponseBodyEmitterReturnValueHandler implements HandlerMethodRetur
 		}
 		emitter.extendResponse(outputMessage);
 
+		// 禁用缓存
 		// At this point we know we're streaming..
 		ShallowEtagHeaderFilter.disableContentCaching(request);
 
@@ -176,9 +179,11 @@ public class ResponseBodyEmitterReturnValueHandler implements HandlerMethodRetur
 		// Headers will be flushed at the first write
 		outputMessage = new StreamingServletServerHttpResponse(outputMessage);
 
+		// 开始异步处理
 		DeferredResult<?> deferredResult = new DeferredResult<>(emitter.getTimeout());
 		WebAsyncUtils.getAsyncManager(webRequest).startDeferredResultProcessing(deferredResult, mavContainer);
 
+		// 初始化 emitter
 		HttpMessageConvertingHandler handler = new HttpMessageConvertingHandler(outputMessage, deferredResult);
 		emitter.initialize(handler);
 	}
@@ -220,8 +225,7 @@ public class ResponseBodyEmitterReturnValueHandler implements HandlerMethodRetur
 			try {
 				this.outputMessage.flush();
 				this.deferredResult.setResult(null);
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 				this.deferredResult.setErrorResult(ex);
 			}
 		}

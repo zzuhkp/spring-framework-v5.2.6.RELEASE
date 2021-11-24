@@ -22,12 +22,14 @@ import java.util.concurrent.Future;
 import org.springframework.util.Assert;
 
 /**
+ * 代理 Future 的 CompletableFuture
+ * <p>
  * Extension of {@link CompletableFuture} which allows for cancelling
  * a delegate along with the {@link CompletableFuture} itself.
  *
+ * @param <T> the result type returned by this Future's {@code get} method
  * @author Juergen Hoeller
  * @since 5.0
- * @param <T> the result type returned by this Future's {@code get} method
  */
 class DelegatingCompletableFuture<T> extends CompletableFuture<T> {
 

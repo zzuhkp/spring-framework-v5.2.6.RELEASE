@@ -31,6 +31,8 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
+ * controller 方法 DeferredResult 返回值处理
+ * <p>
  * Handler for return values of type {@link DeferredResult},
  * {@link ListenableFuture}, and {@link CompletionStage}.
  *
@@ -49,7 +51,7 @@ public class DeferredResultMethodReturnValueHandler implements HandlerMethodRetu
 
 	@Override
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
-			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
+								  ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
 
 		if (returnValue == null) {
 			mavContainer.setRequestHandled(true);
@@ -60,14 +62,11 @@ public class DeferredResultMethodReturnValueHandler implements HandlerMethodRetu
 
 		if (returnValue instanceof DeferredResult) {
 			result = (DeferredResult<?>) returnValue;
-		}
-		else if (returnValue instanceof ListenableFuture) {
+		} else if (returnValue instanceof ListenableFuture) {
 			result = adaptListenableFuture((ListenableFuture<?>) returnValue);
-		}
-		else if (returnValue instanceof CompletionStage) {
+		} else if (returnValue instanceof CompletionStage) {
 			result = adaptCompletionStage((CompletionStage<?>) returnValue);
-		}
-		else {
+		} else {
 			// Should not happen...
 			throw new IllegalStateException("Unexpected return value type: " + returnValue);
 		}
@@ -75,6 +74,12 @@ public class DeferredResultMethodReturnValueHandler implements HandlerMethodRetu
 		WebAsyncUtils.getAsyncManager(webRequest).startDeferredResultProcessing(result, mavContainer);
 	}
 
+	/**
+	 * ListenableFuture 适配为 DeferredResult
+	 *
+	 * @param future
+	 * @return
+	 */
 	private DeferredResult<Object> adaptListenableFuture(ListenableFuture<?> future) {
 		DeferredResult<Object> result = new DeferredResult<>();
 		future.addCallback(new ListenableFutureCallback<Object>() {
@@ -82,6 +87,7 @@ public class DeferredResultMethodReturnValueHandler implements HandlerMethodRetu
 			public void onSuccess(@Nullable Object value) {
 				result.setResult(value);
 			}
+
 			@Override
 			public void onFailure(Throwable ex) {
 				result.setErrorResult(ex);
@@ -90,6 +96,12 @@ public class DeferredResultMethodReturnValueHandler implements HandlerMethodRetu
 		return result;
 	}
 
+	/**
+	 * CompletionStage 适配为 DeferredResult
+	 *
+	 * @param future
+	 * @return
+	 */
 	private DeferredResult<Object> adaptCompletionStage(CompletionStage<?> future) {
 		DeferredResult<Object> result = new DeferredResult<>();
 		future.handle((BiFunction<Object, Throwable, Object>) (value, ex) -> {
@@ -98,8 +110,7 @@ public class DeferredResultMethodReturnValueHandler implements HandlerMethodRetu
 					ex = ex.getCause();
 				}
 				result.setErrorResult(ex);
-			}
-			else {
+			} else {
 				result.setResult(value);
 			}
 			return null;
