@@ -91,7 +91,9 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 
 
 	/**
-	 * 支持的 HTTP 方法，如 [GET,POST]
+	 * 支持的 HTTP 方法，如 [GET,POST]，不支持请求时可抛出异常
+	 *
+	 * @see #checkRequest(HttpServletRequest)
 	 * <p>
 	 * Set of supported HTTP methods.
 	 */
@@ -99,13 +101,16 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 	private Set<String> supportedMethods;
 
 	/**
-	 * 支持的 HTTP 方法，多个使用逗号分隔，如 GET,POST
+	 * 支持的 HTTP 方法，多个使用逗号分隔，如 GET,POST，
+	 * 如果未指定 supportMethods，则使用除 TRACE 的方法，可能比 supportMethods 多出 OPTIONS 方法
 	 */
 	@Nullable
 	private String allowHeader;
 
 	/**
-	 * 是否需要保证 Session 对应已创建
+	 * 是否需要保证请求达到时对应的 Session 对象已创建，如果未创建可在检查请求时抛出异常
+	 *
+	 * @see #checkRequest(HttpServletRequest)
 	 */
 	private boolean requireSession = false;
 

@@ -61,8 +61,14 @@ public class ModelAndViewContainer {
 	@Nullable
 	private ModelMap redirectModel;
 
+	/**
+	 * 视图是否表示重定向
+	 */
 	private boolean redirectModelScenario = false;
 
+	/**
+	 * HTTP 响应状态码
+	 */
 	@Nullable
 	private HttpStatus status;
 

@@ -65,6 +65,9 @@ public class ResponseBodyEmitterReturnValueHandler implements HandlerMethodRetur
 
 	private final List<HttpMessageConverter<?>> messageConverters;
 
+	/**
+	 * 包含支持 String 写入 text/plain 类型的响应体的 HttpMessageConverter 列表
+	 */
 	private final List<HttpMessageConverter<?>> sseMessageConverters;
 
 	private final ReactiveTypeHandler reactiveHandler;

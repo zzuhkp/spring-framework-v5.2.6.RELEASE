@@ -27,7 +27,7 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
- * 解析类型为 Model 的参数
+ * 解析类型为 Model 的参数，将 Model 中的参数设置到 ModelAndViewContainer 中的 Model 中
  * <p>
  * Resolves {@link Model} arguments and handles {@link Model} return values.
  *

@@ -90,6 +90,9 @@ public abstract class HttpServletBean extends HttpServlet implements Environment
 	@Nullable
 	private ConfigurableEnvironment environment;
 
+	/**
+	 * 必须存在的配置
+	 */
 	private final Set<String> requiredProperties = new HashSet<>(4);
 
 

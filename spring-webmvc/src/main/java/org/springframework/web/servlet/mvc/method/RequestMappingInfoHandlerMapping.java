@@ -142,11 +142,12 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 
 		request.setAttribute(BEST_MATCHING_PATTERN_ATTRIBUTE, bestPattern);
 
+		// 矩阵变量设置，便于后续读取 @see MatrixVariableMapMethodArgumentResolver,MatrixVariableMethodArgumentResolver
 		if (isMatrixVariableContentAvailable()) {
 			Map<String, MultiValueMap<String, String>> matrixVars = extractMatrixVariables(request, uriVariables);
 			request.setAttribute(HandlerMapping.MATRIX_VARIABLES_ATTRIBUTE, matrixVars);
 		}
-
+		// 路径变量设置，便于后续读取 @see PathVariableMapMethodArgumentResolver,PathVariableMethodArgumentResolver
 		Map<String, String> decodedUriVariables = getUrlPathHelper().decodePathVariables(request, uriVariables);
 		request.setAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, decodedUriVariables);
 
@@ -161,7 +162,7 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 	}
 
 	/**
-	 * 抽取矩阵变量
+	 * 从路径变量中抽取矩阵变量
 	 *
 	 * @param request
 	 * @param uriVariables
@@ -175,21 +176,25 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 
 			int equalsIndex = uriVarValue.indexOf('=');
 			if (equalsIndex == -1) {
+				// 值中不存在等号，不是矩阵变量
 				return;
 			}
 
 			int semicolonIndex = uriVarValue.indexOf(';');
 			if (semicolonIndex != -1 && semicolonIndex != 0) {
+				// 存在连续的矩阵变量，先抽取第一个矩阵变量
 				uriVariables.put(uriVarKey, uriVarValue.substring(0, semicolonIndex));
 			}
 
 			String matrixVariables;
 			if (semicolonIndex == -1 || semicolonIndex == 0 || equalsIndex < semicolonIndex) {
+				// 第一个字符是分号，或者等号在分号前面，直接从路径变量值中抽取
 				matrixVariables = uriVarValue;
 			} else {
+				// 否则抽取路径变量值分号后面的部分
 				matrixVariables = uriVarValue.substring(semicolonIndex + 1);
 			}
-
+			// 抽取路径变量
 			MultiValueMap<String, String> vars = WebUtils.parseMatrixVariables(matrixVariables);
 			result.put(uriVarKey, getUrlPathHelper().decodeMatrixVariables(request, vars));
 		});

@@ -43,12 +43,14 @@ public abstract class CorsUtils {
 	public static boolean isCorsRequest(HttpServletRequest request) {
 		String origin = request.getHeader(HttpHeaders.ORIGIN);
 		if (origin == null) {
+			// Origin 不存在，非 CORS 请求
 			return false;
 		}
 		UriComponents originUrl = UriComponentsBuilder.fromOriginHeader(origin).build();
 		String scheme = request.getScheme();
 		String host = request.getServerName();
 		int port = request.getServerPort();
+		// Origin 和请求不匹配，表示跨域请求
 		return !(ObjectUtils.nullSafeEquals(scheme, originUrl.getScheme()) &&
 				ObjectUtils.nullSafeEquals(host, originUrl.getHost()) &&
 				getPort(scheme, port) == getPort(originUrl.getScheme(), originUrl.getPort()));

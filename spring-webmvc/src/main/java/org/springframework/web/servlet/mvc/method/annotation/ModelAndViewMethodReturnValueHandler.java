@@ -27,7 +27,7 @@ import org.springframework.web.servlet.SmartView;
 import org.springframework.web.servlet.View;
 
 /**
- * ModelAndView 返回类型处理
+ * ModelAndView 返回类型处理，将 ModelAndView 中的信息设置到 ModelAndViewContainer
  * <p>
  * Handles return values of type {@link ModelAndView} copying view and model
  * information to the {@link ModelAndViewContainer}.
@@ -106,6 +106,8 @@ public class ModelAndViewMethodReturnValueHandler implements HandlerMethodReturn
 	}
 
 	/**
+	 * 视图名称是否表示重定向视图
+	 * <p>
 	 * Whether the given view name is a redirect view reference.
 	 * The default implementation checks the configured redirect patterns and
 	 * also if the view name starts with the "redirect:" prefix.

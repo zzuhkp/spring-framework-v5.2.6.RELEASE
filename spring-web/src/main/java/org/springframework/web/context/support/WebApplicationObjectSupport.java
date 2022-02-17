@@ -29,7 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.WebUtils;
 
 /**
- * Web 环境获取 ApplicationContext 的父类
+ * Web 环境获取 WebApplicationContext 的父类，还能获取 ServletContext
  * <p>
  * Convenient superclass for application objects running in a {@link WebApplicationContext}.
  * Provides {@code getWebApplicationContext()}, {@code getServletContext()}, and
@@ -52,6 +52,7 @@ public abstract class WebApplicationObjectSupport extends ApplicationObjectSuppo
 	@Override
 	public final void setServletContext(ServletContext servletContext) {
 		if (servletContext != this.servletContext) {
+			// 和当前不一致再设置 ServletContext ，避免 initApplicationContext 方法调用，导致重复初始化
 			this.servletContext = servletContext;
 			initServletContext(servletContext);
 		}
@@ -80,6 +81,7 @@ public abstract class WebApplicationObjectSupport extends ApplicationObjectSuppo
 	protected void initApplicationContext(ApplicationContext context) {
 		super.initApplicationContext(context);
 		if (this.servletContext == null && context instanceof WebApplicationContext) {
+			// 当前 ServletContext 不存在时设置，避免 setServletContext 方法调用，导致重复初始化
 			this.servletContext = ((WebApplicationContext) context).getServletContext();
 			if (this.servletContext != null) {
 				initServletContext(this.servletContext);

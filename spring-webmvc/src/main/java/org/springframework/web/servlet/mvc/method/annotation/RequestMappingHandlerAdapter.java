@@ -116,31 +116,49 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		implements BeanFactoryAware, InitializingBean {
 
 	/**
+	 * @InitBinder 注解方法筛选
+	 * <p>
 	 * MethodFilter that matches {@link InitBinder @InitBinder} methods.
 	 */
 	public static final MethodFilter INIT_BINDER_METHODS = method ->
 			AnnotatedElementUtils.hasAnnotation(method, InitBinder.class);
 
 	/**
+	 * @ModelAttribute 注解方法筛选
+	 * <p>
 	 * MethodFilter that matches {@link ModelAttribute @ModelAttribute} methods.
 	 */
 	public static final MethodFilter MODEL_ATTRIBUTE_METHODS = method ->
 			(!AnnotatedElementUtils.hasAnnotation(method, RequestMapping.class) &&
 					AnnotatedElementUtils.hasAnnotation(method, ModelAttribute.class));
 
-
+	/**
+	 * 自定义参数解析
+	 */
 	@Nullable
 	private List<HandlerMethodArgumentResolver> customArgumentResolvers;
 
+	/**
+	 * 参数解析
+	 */
 	@Nullable
 	private HandlerMethodArgumentResolverComposite argumentResolvers;
 
+	/**
+	 * @InitBinder 方法参数解析
+	 */
 	@Nullable
 	private HandlerMethodArgumentResolverComposite initBinderArgumentResolvers;
 
+	/**
+	 * 自定义返回值处理
+	 */
 	@Nullable
 	private List<HandlerMethodReturnValueHandler> customReturnValueHandlers;
 
+	/**
+	 * 返回值处理
+	 */
 	@Nullable
 	private HandlerMethodReturnValueHandlerComposite returnValueHandlers;
 
@@ -149,6 +167,9 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 	private ContentNegotiationManager contentNegotiationManager = new ContentNegotiationManager();
 
+	/**
+	 * 消息转换
+	 */
 	private List<HttpMessageConverter<?>> messageConverters;
 
 	/**
@@ -176,8 +197,14 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 	private boolean synchronizeOnSession = false;
 
+	/**
+	 * Session 属性存储
+	 */
 	private SessionAttributeStore sessionAttributeStore = new DefaultSessionAttributeStore();
 
+	/**
+	 * 参数名查找
+	 */
 	private ParameterNameDiscoverer parameterNameDiscoverer = new DefaultParameterNameDiscoverer();
 
 	@Nullable
@@ -1004,7 +1031,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			if (controllerAdviceBean.isApplicableToBeanType(handlerType)) {
 				Object bean = controllerAdviceBean.resolveBean();
 				for (Method method : methodSet) {
-					// 先把适用当前 handler 的 controller advcie bean 中标注了 @InitBinder 方法添加到列表中
+					// 先把适用当前 handler 的 controller advice bean 中标注了 @InitBinder 方法添加到列表中
 					initBinderMethods.add(createInitBinderMethod(bean, method));
 				}
 			}

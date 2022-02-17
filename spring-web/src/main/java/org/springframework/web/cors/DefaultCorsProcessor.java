@@ -63,6 +63,7 @@ public class DefaultCorsProcessor implements CorsProcessor {
 	public boolean processRequest(@Nullable CorsConfiguration config, HttpServletRequest request,
 								  HttpServletResponse response) throws IOException {
 
+		// 表示不同的请求返回不同的内容
 		Collection<String> varyHeaders = response.getHeaders(HttpHeaders.VARY);
 		if (!varyHeaders.contains(HttpHeaders.ORIGIN)) {
 			response.addHeader(HttpHeaders.VARY, HttpHeaders.ORIGIN);
@@ -75,10 +76,12 @@ public class DefaultCorsProcessor implements CorsProcessor {
 		}
 
 		if (!CorsUtils.isCorsRequest(request)) {
+			// 仅处理跨域请求
 			return true;
 		}
 
 		if (response.getHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN) != null) {
+			// 响应头已存在允许的源，不再处理，例如使用 Filter 处理了 CORS
 			logger.trace("Skip: response already contains \"Access-Control-Allow-Origin\"");
 			return true;
 		}
@@ -86,13 +89,14 @@ public class DefaultCorsProcessor implements CorsProcessor {
 		boolean preFlightRequest = CorsUtils.isPreFlightRequest(request);
 		if (config == null) {
 			if (preFlightRequest) {
+				// 没有 CORS 配置的预处理请求，不再处理，也是就说默认情况不允许跨域
 				rejectRequest(new ServletServerHttpResponse(response));
 				return false;
 			} else {
 				return true;
 			}
 		}
-
+		// 真正执行跨域处理
 		return handleInternal(new ServletServerHttpRequest(request), new ServletServerHttpResponse(response), config, preFlightRequest);
 	}
 
@@ -122,6 +126,7 @@ public class DefaultCorsProcessor implements CorsProcessor {
 		HttpHeaders responseHeaders = response.getHeaders();
 
 		if (allowOrigin == null) {
+			// ORIGIN 不允许
 			logger.debug("Reject: '" + requestOrigin + "' origin is not allowed");
 			rejectRequest(response);
 			return false;
@@ -130,6 +135,7 @@ public class DefaultCorsProcessor implements CorsProcessor {
 		HttpMethod requestMethod = getMethodToUse(request, preFlightRequest);
 		List<HttpMethod> allowMethods = checkMethods(config, requestMethod);
 		if (allowMethods == null) {
+			// 请求方法不允许
 			logger.debug("Reject: HTTP '" + requestMethod + "' is not allowed");
 			rejectRequest(response);
 			return false;
@@ -138,30 +144,37 @@ public class DefaultCorsProcessor implements CorsProcessor {
 		List<String> requestHeaders = getHeadersToUse(request, preFlightRequest);
 		List<String> allowHeaders = checkHeaders(config, requestHeaders);
 		if (preFlightRequest && allowHeaders == null) {
+			// 预处理请求，请求头不允许
 			logger.debug("Reject: headers '" + requestHeaders + "' are not allowed");
 			rejectRequest(response);
 			return false;
 		}
 
+		// 添加 ORIGIN 响应头
 		responseHeaders.setAccessControlAllowOrigin(allowOrigin);
 
 		if (preFlightRequest) {
+			// 预处理请求添加 METHOD
 			responseHeaders.setAccessControlAllowMethods(allowMethods);
 		}
 
 		if (preFlightRequest && !allowHeaders.isEmpty()) {
+			// 预处理请求添加 HEAD
 			responseHeaders.setAccessControlAllowHeaders(allowHeaders);
 		}
 
 		if (!CollectionUtils.isEmpty(config.getExposedHeaders())) {
+			// 添加 EXPOSED HEADERS
 			responseHeaders.setAccessControlExposeHeaders(config.getExposedHeaders());
 		}
 
 		if (Boolean.TRUE.equals(config.getAllowCredentials())) {
+			// 允许携带用户身份
 			responseHeaders.setAccessControlAllowCredentials(true);
 		}
 
 		if (preFlightRequest && config.getMaxAge() != null) {
+			// 预处理请求添加 MAX AGE
 			responseHeaders.setAccessControlMaxAge(config.getMaxAge());
 		}
 

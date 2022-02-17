@@ -82,6 +82,9 @@ public class CorsConfiguration {
 	@Nullable
 	private List<String> exposedHeaders;
 
+	/**
+	 * 是否允许携带身份信息
+	 */
 	@Nullable
 	private Boolean allowCredentials;
 
@@ -444,7 +447,8 @@ public class CorsConfiguration {
 	 * Check the origin of the request against the configured allowed origins.
 	 *
 	 * @param requestOrigin the origin to check
-	 * @return the origin to use for the response, or {@code null} which
+	 * @return 响应中返回的 ORIGIN
+	 * the origin to use for the response, or {@code null} which
 	 * means the request origin is not allowed
 	 */
 	@Nullable
@@ -458,6 +462,7 @@ public class CorsConfiguration {
 
 		if (this.allowedOrigins.contains(ALL)) {
 			if (this.allowCredentials != Boolean.TRUE) {
+				// allowCredentials 为 false 才允许 ORIGIN 为 *
 				return ALL;
 			} else {
 				return requestOrigin;
@@ -527,6 +532,7 @@ public class CorsConfiguration {
 				} else {
 					for (String allowedHeader : this.allowedHeaders) {
 						if (requestHeader.equalsIgnoreCase(allowedHeader)) {
+							// 找到匹配的请求头
 							result.add(requestHeader);
 							break;
 						}

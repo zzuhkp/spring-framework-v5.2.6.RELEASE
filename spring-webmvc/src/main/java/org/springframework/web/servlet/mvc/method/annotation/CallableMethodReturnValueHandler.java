@@ -50,6 +50,7 @@ public class CallableMethodReturnValueHandler implements HandlerMethodReturnValu
 		}
 
 		Callable<?> callable = (Callable<?>) returnValue;
+		// 开启异步处理
 		WebAsyncUtils.getAsyncManager(webRequest).startCallableProcessing(callable, mavContainer);
 	}
 

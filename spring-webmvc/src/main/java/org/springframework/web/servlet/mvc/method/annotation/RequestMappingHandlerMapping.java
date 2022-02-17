@@ -431,7 +431,7 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 			for (Parameter parameter : method.getParameters()) {
 				MergedAnnotation<RequestBody> annot = MergedAnnotations.from(parameter).get(RequestBody.class);
 				if (annot.isPresent()) {
-					// 方法参数上存在 @RequestBody 注解则设置请求体必须存在
+					// 方法参数上存在 @RequestBody 注解则设置请求体是否存在
 					condition.setBodyRequired(annot.getBoolean("required"));
 					break;
 				}
@@ -462,15 +462,18 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 			return null;
 		}
 
+		// 根据 @CrossOrigin 配置 CORS
 		CorsConfiguration config = new CorsConfiguration();
 		updateCorsConfig(config, typeAnnotation);
 		updateCorsConfig(config, methodAnnotation);
 
 		if (CollectionUtils.isEmpty(config.getAllowedMethods())) {
 			for (RequestMethod allowedMethod : mappingInfo.getMethodsCondition().getMethods()) {
+				// 默认支持处理器方法能接受的请求方法
 				config.addAllowedMethod(allowedMethod.name());
 			}
 		}
+		// 为空的配置设为默认配置
 		return config.applyPermitDefaultValues();
 	}
 

@@ -43,6 +43,13 @@ public class RequestMappingInfoHandlerMethodMappingNamingStrategy
 	public static final String SEPARATOR = "#";
 
 
+	/**
+	 * handler simple name # method simple name
+	 *
+	 * @param handlerMethod the handler method
+	 * @param mapping       the mapping
+	 * @return
+	 */
 	@Override
 	public String getName(HandlerMethod handlerMethod, RequestMappingInfo mapping) {
 		if (mapping.getName() != null) {

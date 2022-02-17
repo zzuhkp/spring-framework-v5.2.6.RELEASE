@@ -1094,7 +1094,6 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 						actualName = propertyName.substring(0, keyStart);
 					}
 					String key = propertyName.substring(keyStart + PROPERTY_KEY_PREFIX.length(), keyEnd);
-					//TODO 存在bug? 如 a["]
 					if (key.length() > 1 && (key.startsWith("'") && key.endsWith("'")) ||
 							(key.startsWith("\"") && key.endsWith("\""))) {
 						key = key.substring(1, key.length() - 1);
@@ -1122,7 +1121,7 @@ public abstract class AbstractNestablePropertyAccessor extends AbstractPropertyA
 	 * @return
 	 */
 	private int getPropertyNameKeyEnd(String propertyName, int startIndex) {
-		//没有关闭的前缀，如propertyName值为a[[1]
+		//没有关闭的前缀数量，如propertyName值为a[[1]
 		int unclosedPrefixes = 0;
 		int length = propertyName.length();
 		for (int i = startIndex; i < length; i++) {

@@ -56,7 +56,9 @@ public final class PatternsRequestCondition extends AbstractRequestCondition<Pat
 	private final PathMatcher pathMatcher;
 
 	/**
-	 * 是否在请求路径后添加扩展模式再匹配
+	 * 是否在请求路径后添加扩展路径再匹配
+	 *
+	 * @see #fileExtensions
 	 */
 	private final boolean useSuffixPatternMatch;
 
@@ -226,6 +228,7 @@ public final class PatternsRequestCondition extends AbstractRequestCondition<Pat
 		if (!this.patterns.isEmpty() && !other.patterns.isEmpty()) {
 			for (String pattern1 : this.patterns) {
 				for (String pattern2 : other.patterns) {
+					// 路径拼接
 					result.add(this.pathMatcher.combine(pattern1, pattern2));
 				}
 			}
@@ -260,10 +263,12 @@ public final class PatternsRequestCondition extends AbstractRequestCondition<Pat
 	@Nullable
 	public PatternsRequestCondition getMatchingCondition(HttpServletRequest request) {
 		if (this.patterns.isEmpty()) {
+			// 路径为空，匹配所有请求
 			return this;
 		}
 		String lookupPath = this.pathHelper.getLookupPathForRequest(request, HandlerMapping.LOOKUP_PATH);
 		List<String> matches = getMatchingPatterns(lookupPath);
+		// 使用匹配当前请求的路径实例化 PatternsRequestCondition
 		return !matches.isEmpty() ? new PatternsRequestCondition(new LinkedHashSet<>(matches), this) : null;
 	}
 
@@ -291,6 +296,7 @@ public final class PatternsRequestCondition extends AbstractRequestCondition<Pat
 			return Collections.emptyList();
 		}
 		if (matches.size() > 1) {
+			// 如果有多个路径都匹配则排序
 			matches.sort(this.pathMatcher.getPatternComparator(lookupPath));
 		}
 		return matches;
@@ -306,6 +312,7 @@ public final class PatternsRequestCondition extends AbstractRequestCondition<Pat
 	@Nullable
 	private String getMatchingPattern(String pattern, String lookupPath) {
 		if (pattern.equals(lookupPath)) {
+			// 优先精准匹配
 			return pattern;
 		}
 		if (this.useSuffixPatternMatch) {

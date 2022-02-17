@@ -344,7 +344,7 @@ public abstract class WebApplicationContextUtils {
 			return currentRequestAttributes().getRequest();
 		}
 
-		@Override
+		@Overrid
 		public String toString() {
 			return "Current HttpServletRequest";
 		}

@@ -16,13 +16,15 @@
 
 package org.springframework.core.io;
 
+import org.springframework.lang.Nullable;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.springframework.lang.Nullable;
-
 /**
+ * 仅包含描述信息的 Resource
+ * <p>
  * Simple {@link Resource} implementation that holds a resource description
  * but does not point to an actually readable resource.
  *
@@ -39,6 +41,7 @@ public class DescriptiveResource extends AbstractResource {
 
 	/**
 	 * Create a new DescriptiveResource.
+	 *
 	 * @param description the resource description
 	 */
 	public DescriptiveResource(@Nullable String description) {

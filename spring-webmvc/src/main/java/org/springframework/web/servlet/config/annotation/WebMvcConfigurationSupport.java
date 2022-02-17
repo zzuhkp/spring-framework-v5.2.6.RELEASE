@@ -1188,6 +1188,8 @@ public class WebMvcConfigurationSupport implements ApplicationContextAware, Serv
 	}
 
 	/**
+	 * 添加跨域配置
+	 * <p>
 	 * Override this method to configure cross origin requests processing.
 	 *
 	 * @see CorsRegistry

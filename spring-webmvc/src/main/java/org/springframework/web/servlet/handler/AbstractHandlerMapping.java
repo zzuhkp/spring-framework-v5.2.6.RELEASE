@@ -138,7 +138,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 
 	/**
 	 * 设置是否使用完整的路径
-	 *
+	 * <p>
 	 * Shortcut to same property on underlying {@link #setUrlPathHelper UrlPathHelper}.
 	 *
 	 * @see org.springframework.web.util.UrlPathHelper#setAlwaysUseFullPath(boolean)
@@ -152,7 +152,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 
 	/**
 	 * 设置是否对 URL 进行解码
-	 *
+	 * <p>
 	 * Shortcut to same property on underlying {@link #setUrlPathHelper UrlPathHelper}.
 	 *
 	 * @see org.springframework.web.util.UrlPathHelper#setUrlDecode(boolean)
@@ -465,6 +465,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 			CorsConfiguration config = (this.corsConfigurationSource != null ? this.corsConfigurationSource.getCorsConfiguration(request) : null);
 			CorsConfiguration handlerConfig = getCorsConfiguration(handler, request);
 			config = (config != null ? config.combine(handlerConfig) : handlerConfig);
+			// 预请求重置处理器链
 			executionChain = getCorsHandlerExecutionChain(request, executionChain, config);
 		}
 
@@ -589,9 +590,11 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 																 HandlerExecutionChain chain, @Nullable CorsConfiguration config) {
 
 		if (CorsUtils.isPreFlightRequest(request)) {
+			// 预请求替换处理器
 			HandlerInterceptor[] interceptors = chain.getInterceptors();
 			chain = new HandlerExecutionChain(new PreFlightHandler(config), interceptors);
 		} else {
+			// 非预请求添加拦截器
 			chain.addInterceptor(0, new CorsInterceptor(config));
 		}
 		return chain;
@@ -639,6 +642,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 			// Consistent with CorsFilter, ignore ASYNC dispatches
 			WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
 			if (asyncManager.hasConcurrentResult()) {
+				// 不处理异步处理派发的请求
 				return true;
 			}
 

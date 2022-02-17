@@ -98,7 +98,7 @@ public class PropertyEditorRegistrySupport implements PropertyEditorRegistry {
 	private ConversionService conversionService;
 
 	/**
-	 * 是否激活默认的PropertyEditor
+	 * 是否已经激活默认的 PropertyEditor
 	 */
 	private boolean defaultEditorsActive = false;
 

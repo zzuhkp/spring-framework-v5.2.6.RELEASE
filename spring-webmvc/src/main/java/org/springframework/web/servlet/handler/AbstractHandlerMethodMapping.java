@@ -107,6 +107,9 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	@Nullable
 	private HandlerMethodMappingNamingStrategy<T> namingStrategy;
 
+	/**
+	 * 映射注册中心
+	 */
 	private final MappingRegistry mappingRegistry = new MappingRegistry();
 
 
@@ -591,6 +594,8 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 
 
 	/**
+	 * T: RequestMappingInfo
+	 * <p>
 	 * A registry that maintains all mappings to handler methods, exposing methods
 	 * to perform lookups and providing concurrent access.
 	 * <p>Package-private for testing purposes.
@@ -608,7 +613,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		private final Map<T, HandlerMethod> mappingLookup = new LinkedHashMap<>();
 
 		/**
-		 * 路径 -> mapping 列表
+		 * 不包含 * 的路径 -> mapping 列表
 		 */
 		private final MultiValueMap<String, T> urlLookup = new LinkedMultiValueMap<>();
 
@@ -617,6 +622,9 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		 */
 		private final Map<String, List<HandlerMethod>> nameLookup = new ConcurrentHashMap<>();
 
+		/**
+		 * 处理器方法 -> 使用的 CORS 配置
+		 */
 		private final Map<HandlerMethod, CorsConfiguration> corsLookup = new ConcurrentHashMap<>();
 
 		private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
@@ -673,7 +681,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		}
 
 		/**
-		 * 注册
+		 * 注册处理器方法
 		 *
 		 * @param mapping
 		 * @param handler
@@ -725,6 +733,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 			// Assert that the supplied mapping is unique.
 			HandlerMethod existingHandlerMethod = this.mappingLookup.get(mapping);
 			if (existingHandlerMethod != null && !existingHandlerMethod.equals(handlerMethod)) {
+				// 相同映射条件仅能对应一个处理器方法
 				throw new IllegalStateException(
 						"Ambiguous mapping. Cannot map '" + handlerMethod.getBean() + "' method \n" +
 								handlerMethod + "\nto " + mapping + ": There is already '" +
@@ -831,7 +840,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 
 
 	/**
-	 * 注册中心的信息
+	 * 注册中心的信息，取消注册使用
 	 *
 	 * @param <T>
 	 */
@@ -884,8 +893,14 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	 */
 	private class Match {
 
+		/**
+		 * 匹配后的映射关系，和原有映射关系可能不是一个
+		 */
 		private final T mapping;
 
+		/**
+		 * 匹配的处理器方法
+		 */
 		private final HandlerMethod handlerMethod;
 
 		public Match(T mapping, HandlerMethod handlerMethod) {

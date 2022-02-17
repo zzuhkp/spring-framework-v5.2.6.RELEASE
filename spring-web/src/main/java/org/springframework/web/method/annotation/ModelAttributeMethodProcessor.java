@@ -473,6 +473,8 @@ public class ModelAttributeMethodProcessor implements HandlerMethodArgumentResol
 	}
 
 	/**
+	 * 将返回值添加到 Model 的参数中
+	 *
 	 * Add non-null return values to the {@link ModelAndViewContainer}.
 	 */
 	@Override

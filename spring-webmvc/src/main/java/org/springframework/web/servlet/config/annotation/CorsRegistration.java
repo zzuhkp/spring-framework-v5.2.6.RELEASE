@@ -35,8 +35,14 @@ import org.springframework.web.cors.CorsConfiguration;
  */
 public class CorsRegistration {
 
+	/**
+	 * 路径
+	 */
 	private final String pathPattern;
 
+	/**
+	 * 配置
+	 */
 	private final CorsConfiguration config;
 
 

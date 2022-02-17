@@ -108,7 +108,7 @@ public final class ModelFactory {
 	 */
 	public void initModel(NativeWebRequest request, ModelAndViewContainer container, HandlerMethod handlerMethod)
 			throws Exception {
-		// @SessionAttribute 中的已知的参数合并到 model
+		// @SessionAttributes 中的已知的参数合并到 model
 		Map<String, ?> sessionAttributes = this.sessionAttributesHandler.retrieveAttributes(request);
 		container.mergeAttributes(sessionAttributes);
 		// @ModelAttribute 标注的方法返回值合并到 model

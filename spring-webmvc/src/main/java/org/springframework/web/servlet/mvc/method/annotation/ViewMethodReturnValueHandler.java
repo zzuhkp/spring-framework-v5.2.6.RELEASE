@@ -26,7 +26,7 @@ import org.springframework.web.servlet.SmartView;
 import org.springframework.web.servlet.View;
 
 /**
- * View 返回值类型处理
+ * View 返回值类型处理，将 View 设置到 ModelAndViewContainer
  *
  * Handles return values that are of type {@link View}.
  *

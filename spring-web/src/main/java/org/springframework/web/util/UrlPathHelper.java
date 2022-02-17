@@ -64,7 +64,7 @@ public class UrlPathHelper {
 	static volatile Boolean websphereComplianceFlag;
 
 	/**
-	 * 是否使用完整的路径，为 true 则查找到的路径是不包含上下文路径的剩余部分，否则查找到的路径是 servlet url-pattern 模糊匹配的部分
+	 * 是否使用完整的路径，为 true 则查找到的路径是除了上下文路径的剩余部分，否则查找到的路径是 servlet url-pattern 模糊匹配的部分
 	 */
 	private boolean alwaysUseFullPath = false;
 
@@ -247,10 +247,13 @@ public class UrlPathHelper {
 		// servlet url-pattern 模糊匹配的部分
 		String path;
 
+		// 如果容器对 servletPath 进行了清理，使用清理后的版本
 		// If the app container sanitized the servletPath, check against the sanitized version
 		if (servletPath.contains(sanitizedPathWithinApp)) {
+			// servlet url-mapping: '/index.html' ，url:'http://ip:port/' ,servletPath:'/index.html' ，sanitizedPathWithinApp:'/' ,path:null
 			path = getRemainingPath(sanitizedPathWithinApp, servletPath, false);
 		} else {
+			// servlet url-mapping: '/abc/*' ，url:'http://ip:port/context/abc/def' ,servletPath:'/abc' ，pathWithinApp:'/abc/def' ,path:/def
 			path = getRemainingPath(pathWithinApp, servletPath, false);
 		}
 
@@ -265,11 +268,13 @@ public class UrlPathHelper {
 				// e.g. with index page: URI="/", servletPath="/index.html"
 				return pathInfo;
 			}
+			// servlet url-mapping: '/index.html' ，url:'http://ip:port/' ,servletPath:'/index.html' ，sanitizedPathWithinApp:'/' ,path:null ,pathInfo:null
 			if (!this.urlDecode) {
 				// No path info... (not mapped by prefix, nor by extension, nor "/*")
 				// For the default servlet mapping (i.e. "/"), urlDecode=false can
 				// cause issues since getServletPath() returns a decoded path.
 				// If decoding pathWithinApp yields a match just use pathWithinApp.
+				// servletPath 是已解码的，如果没有对路径进行解码，解码后再次尝试匹配
 				path = getRemainingPath(decodeInternal(request, pathWithinApp), servletPath, false);
 				if (path != null) {
 					return pathWithinApp;
@@ -320,6 +325,7 @@ public class UrlPathHelper {
 			char c1 = requestUri.charAt(index1);
 			char c2 = mapping.charAt(index2);
 			if (c1 == ';') {
+				// 如果 URI 中存在分号，跳过分号之后的矩阵参数，将矩阵参数后的 / 所在位置作为上次匹配的位置
 				index1 = requestUri.indexOf('/', index1);
 				if (index1 == -1) {
 					return null;
@@ -332,12 +338,16 @@ public class UrlPathHelper {
 			return null;
 		}
 		if (index2 != mapping.length()) {
+			// 上下文路径不匹配
 			return null;
 		} else if (index1 == requestUri.length()) {
+			// 请求路径和上下文路径一致
 			return "";
 		} else if (requestUri.charAt(index1) == ';') {
+			// 去除紧跟上下文路径的 ; 及之后的矩阵参数，如 /context;a=1/hello，将 index1 重置为 a=1 后面的 / 索引位置
 			index1 = requestUri.indexOf('/', index1);
 		}
+		// 截取出上下文路径之后的部分
 		return (index1 != -1 ? requestUri.substring(index1) : "");
 	}
 
@@ -409,6 +419,8 @@ public class UrlPathHelper {
 
 	/**
 	 * 获取 ServletPath，即  servlet url-pattern 中完全匹配的部分
+	 *
+	 * 对于非兼容模式下的 WebSphere 容器，获取到的以 / 结尾的 servletPath，实际上尾部不包含 /
 	 * <p>
 	 * Return the servlet path for the given request, regarding an include request
 	 * URL if called within a RequestDispatcher include.
@@ -595,7 +607,10 @@ public class UrlPathHelper {
 	}
 
 	/**
-	 * 移除 URI 中间的分隔符，如 /index;/user 移除后变成 /index/user
+	 * 移除 URI 中间的分隔符及之后的矩阵参数
+	 * 如 /index;a=1/user 移除后变成 /index/user
+	 * /index;/user 移除后变成 /index/user
+	 * /index;a=1 移除后变成 /index
 	 *
 	 * @param requestUri
 	 * @return
@@ -612,7 +627,10 @@ public class UrlPathHelper {
 	}
 
 	/**
-	 * 移除 URI 路径中的 ;jsessionid=
+	 * 移除 URI 路径中的 jsessionid 矩阵参数 ;jsessionid=xxx;
+	 *
+	 * 如 /index;jsessionid=abc/user 移除后变成 /index/user
+	 * /index;jsessionid=abc 移除后变成 /index
 	 *
 	 * @param requestUri
 	 * @return
@@ -688,6 +706,7 @@ public class UrlPathHelper {
 			// Regular servlet container: behaves as expected in any case,
 			// so the trailing slash is the result of a "/" url-pattern mapping.
 			// Don't remove that slash.
+			// 非 WebSphere 容器不移除尾部 /
 			return false;
 		}
 		Boolean flagToUse = websphereComplianceFlag;

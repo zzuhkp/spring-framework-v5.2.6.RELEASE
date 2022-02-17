@@ -104,7 +104,7 @@ public class ResourceHttpRequestHandler extends WebContentGenerator
 	private static final String URL_RESOURCE_CHARSET_PREFIX = "[charset=";
 
 	/**
-	 * 资源位置列表
+	 * 资源所在位置列表
 	 */
 	private final List<String> locationValues = new ArrayList<>(4);
 
@@ -118,8 +118,14 @@ public class ResourceHttpRequestHandler extends WebContentGenerator
 	 */
 	private final Map<Resource, Charset> locationCharsets = new HashMap<>(4);
 
+	/**
+	 * URL 路径、资源相互解析
+	 */
 	private final List<ResourceResolver> resourceResolvers = new ArrayList<>(4);
 
+	/**
+	 * 资源转换
+	 */
 	private final List<ResourceTransformer> resourceTransformers = new ArrayList<>(4);
 
 	@Nullable
@@ -496,7 +502,7 @@ public class ResourceHttpRequestHandler extends WebContentGenerator
 
 	/**
 	 * 处理请求，查询到资源文件返回
-	 *
+	 * <p>
 	 * Processes a resource request.
 	 * <p>Checks for the existence of the requested resource in the configured list of locations.
 	 * If the resource does not exist, a {@code 404} response will be returned to the client.

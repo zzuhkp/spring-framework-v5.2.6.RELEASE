@@ -60,7 +60,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 	private Object rootHandler;
 
 	/**
-	 * 是否不考虑路径末尾的 /
+	 * 不考虑路径末尾的 /
 	 */
 	private boolean useTrailingSlashMatch = false;
 
@@ -215,6 +215,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 			handler = this.handlerMap.get(bestMatch);
 			if (handler == null) {
 				if (bestMatch.endsWith("/")) {
+					// 去除手动添加的 / 再获取
 					handler = this.handlerMap.get(bestMatch.substring(0, bestMatch.length() - 1));
 				}
 				if (handler == null) {
@@ -271,8 +272,11 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 	 * <p>The default implementation builds a {@link HandlerExecutionChain}
 	 * with a special interceptor that exposes the path attribute and uri template variables
 	 *
-	 * @param rawHandler           the raw handler to expose
-	 * @param pathWithinMapping    the path to expose before executing the handler
+	 * @param rawHandler           处理器
+	 *                             the raw handler to expose
+	 * @param bestMatchingPattern  处理器处理的路径模式
+	 * @param pathWithinMapping    路径模式中模糊匹配的部分
+	 *                             the path to expose before executing the handler
 	 * @param uriTemplateVariables the URI template variables, can be {@code null} if no variables found
 	 * @return the final handler object
 	 */

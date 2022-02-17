@@ -39,8 +39,14 @@ import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
  */
 public class ResourceHandlerRegistration {
 
+	/**
+	 * 请求路径
+	 */
 	private final String[] pathPatterns;
 
+	/**
+	 * 资源所在路径
+	 */
 	private final List<String> locationValues = new ArrayList<>();
 
 	@Nullable

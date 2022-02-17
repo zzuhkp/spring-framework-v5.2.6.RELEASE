@@ -71,7 +71,7 @@ public interface WebMvcConfigurer {
 
 	/**
 	 * 异步请求处理配置
-	 *
+	 * <p>
 	 * Configure asynchronous request handling options.
 	 */
 	default void configureAsyncSupport(AsyncSupportConfigurer configurer) {
@@ -111,6 +111,8 @@ public interface WebMvcConfigurer {
 	}
 
 	/**
+	 * 跨域配置
+	 * <p>
 	 * Configure cross origin requests processing.
 	 *
 	 * @since 4.2

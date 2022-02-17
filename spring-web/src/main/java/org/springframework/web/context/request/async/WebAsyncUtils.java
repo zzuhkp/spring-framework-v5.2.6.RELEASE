@@ -75,6 +75,7 @@ public abstract class WebAsyncUtils {
 		}
 		if (asyncManager == null) {
 			asyncManager = new WebAsyncManager();
+			// 将实例存储至 request 属性
 			webRequest.setAttribute(WEB_ASYNC_MANAGER_ATTRIBUTE, asyncManager, scope);
 		}
 		return asyncManager;

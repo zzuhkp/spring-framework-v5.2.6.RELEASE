@@ -77,7 +77,9 @@ import org.springframework.web.util.UrlPathHelper;
 public abstract class AbstractMessageConverterMethodProcessor extends AbstractMessageConverterMethodArgumentResolver
 		implements HandlerMethodReturnValueHandler {
 
-	/* Extensions associated with the built-in message converters */
+	/**
+	 * Extensions associated with the built-in message converters
+	 */
 	private static final Set<String> WHITELISTED_EXTENSIONS = new HashSet<>(Arrays.asList(
 			"txt", "text", "yml", "properties", "csv",
 			"json", "xml", "atom", "rss",
