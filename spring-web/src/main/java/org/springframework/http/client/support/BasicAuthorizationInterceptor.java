@@ -28,6 +28,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.Base64Utils;
 
 /**
+ * 添加 BASIC Authorization 请求头的 ClientHttpRequestInterceptor
+ *
  * {@link ClientHttpRequestInterceptor} to apply a BASIC authorization header.
  *
  * @author Phillip Webb
@@ -47,6 +49,7 @@ public class BasicAuthorizationInterceptor implements ClientHttpRequestIntercept
 	/**
 	 * Create a new interceptor which adds a BASIC authorization header
 	 * for the given username and password.
+	 *
 	 * @param username the username to use
 	 * @param password the password to use
 	 */

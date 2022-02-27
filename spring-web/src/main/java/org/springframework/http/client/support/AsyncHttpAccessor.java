@@ -18,15 +18,15 @@ package org.springframework.http.client.support;
 
 import java.io.IOException;
 import java.net.URI;
-
 import org.apache.commons.logging.Log;
-
 import org.springframework.http.HttpLogging;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * AsyncRestTemplate 基类
+ *
  * Base class for {@link org.springframework.web.client.AsyncRestTemplate}
  * and other HTTP accessing gateway helpers, defining common properties
  * such as the {@link org.springframework.http.client.AsyncClientHttpRequestFactory}
@@ -36,14 +36,16 @@ import org.springframework.util.Assert;
  * {@link org.springframework.web.client.AsyncRestTemplate}.
  *
  * @author Arjen Poutsma
- * @since 4.0
  * @see org.springframework.web.client.AsyncRestTemplate
+ * @since 4.0
  * @deprecated as of Spring 5.0, with no direct replacement
  */
 @Deprecated
 public class AsyncHttpAccessor {
 
-	/** Logger available to subclasses. */
+	/**
+	 * Logger available to subclasses.
+	 */
 	protected final Log logger = HttpLogging.forLogName(getClass());
 
 	@Nullable
@@ -73,7 +75,8 @@ public class AsyncHttpAccessor {
 	/**
 	 * Create a new {@link org.springframework.http.client.AsyncClientHttpRequest} via this template's
 	 * {@link org.springframework.http.client.AsyncClientHttpRequestFactory}.
-	 * @param url the URL to connect to
+	 *
+	 * @param url    the URL to connect to
 	 * @param method the HTTP method to execute (GET, POST, etc.)
 	 * @return the created request
 	 * @throws IOException in case of I/O errors

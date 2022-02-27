@@ -21,6 +21,8 @@ import java.io.IOException;
 import org.springframework.http.HttpRequest;
 
 /**
+ * HTTP 请求拦截器
+ *
  * Intercepts client-side HTTP requests. Implementations of this interface can be
  * {@linkplain org.springframework.web.client.RestTemplate#setInterceptors registered}
  * with the {@link org.springframework.web.client.RestTemplate RestTemplate},
@@ -55,8 +57,9 @@ public interface ClientHttpRequestInterceptor {
 	 * </ul>
 	 * <li>Optionally wrap the response to filter HTTP attributes.</li>
 	 * </ol>
-	 * @param request the request, containing method, URI, and headers
-	 * @param body the body of the request
+	 *
+	 * @param request   the request, containing method, URI, and headers
+	 * @param body      the body of the request
 	 * @param execution the request execution
 	 * @return the response
 	 * @throws IOException in case of I/O errors

@@ -261,6 +261,8 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 
 
 	/**
+	 * 执行视图解析
+	 *
 	 * Actually resolve the given exception that got thrown during handler execution,
 	 * returning a {@link ModelAndView} that represents a specific error page if appropriate.
 	 * <p>May be overridden in subclasses, in order to apply specific exception checks.

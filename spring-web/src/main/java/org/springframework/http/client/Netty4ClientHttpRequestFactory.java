@@ -44,6 +44,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 基于 Netty 4 的 ClientHttpRequestFactory
+ *
  * {@link org.springframework.http.client.ClientHttpRequestFactory} implementation
  * that uses <a href="https://netty.io/">Netty 4</a> to create requests.
  *

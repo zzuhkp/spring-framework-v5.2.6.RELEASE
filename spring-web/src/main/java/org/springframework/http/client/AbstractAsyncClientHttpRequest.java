@@ -24,6 +24,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.concurrent.ListenableFuture;
 
 /**
+ * 避免请求头和请求体多次写入的 AsyncClientHttpRequest
+ *
  * Abstract base for {@link AsyncClientHttpRequest} that makes sure that headers and body
  * are not written multiple times.
  *

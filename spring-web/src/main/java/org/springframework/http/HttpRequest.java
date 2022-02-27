@@ -21,7 +21,7 @@ import java.net.URI;
 import org.springframework.lang.Nullable;
 
 /**
- * HTTP 请求消息表示，除了获取请求头和请求体，还可以获取请求方法和请求路径
+ * HTTP 请求消息表示，除了获取请求头，还可以获取请求方法和请求路径
  * <p>
  * Represents an HTTP request message, consisting of
  * {@linkplain #getMethod() method} and {@linkplain #getURI() uri}.

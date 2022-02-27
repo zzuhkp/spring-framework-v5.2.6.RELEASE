@@ -23,6 +23,8 @@ import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpStatus;
 
 /**
+ *客户端 HTTP 响应
+ *
  * Represents a client-side HTTP response.
  *
  * <p>Obtained via an invocation of {@link ClientHttpRequest#execute()}.

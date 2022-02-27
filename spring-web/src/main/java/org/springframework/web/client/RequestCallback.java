@@ -22,6 +22,8 @@ import java.lang.reflect.Type;
 import org.springframework.http.client.ClientHttpRequest;
 
 /**
+ * 请求回调
+ *
  * Callback interface for code that operates on a {@link ClientHttpRequest}.
  * Allows manipulating the request headers, and write to the request body.
  *

@@ -29,6 +29,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 基于 Netty 4 的 ClientHttpResponse
+ *
  * {@link ClientHttpResponse} implementation based on Netty 4.
  *
  * @author Arjen Poutsma

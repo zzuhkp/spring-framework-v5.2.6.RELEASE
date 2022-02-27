@@ -19,6 +19,8 @@ package org.springframework.web.client;
 import java.io.IOException;
 
 /**
+ * 异步请求回调
+ *
  * Callback interface for code that operates on an
  * {@link org.springframework.http.client.AsyncClientHttpRequest}. Allows to
  * manipulate the request headers, and write to the request body.

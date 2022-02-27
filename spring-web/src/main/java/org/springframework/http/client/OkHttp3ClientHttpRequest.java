@@ -26,6 +26,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
 /**
+ * 基于 OkHttp 3 的  ClientHttpRequest
+ *
  * {@link ClientHttpRequest} implementation based on OkHttp 3.x.
  *
  * <p>Created via the {@link OkHttp3ClientHttpRequestFactory}.

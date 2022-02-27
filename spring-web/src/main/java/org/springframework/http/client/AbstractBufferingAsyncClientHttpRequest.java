@@ -24,6 +24,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.util.concurrent.ListenableFuture;
 
 /**
+ * 缓存请求体到字节数组的 AsyncClientHttpRequest
+ *
  * Base implementation of {@link AsyncClientHttpRequest} that buffers output
  * in a byte array before sending it over the wire.
  *
@@ -55,7 +57,8 @@ abstract class AbstractBufferingAsyncClientHttpRequest extends AbstractAsyncClie
 
 	/**
 	 * Abstract template method that writes the given headers and content to the HTTP request.
-	 * @param headers the HTTP headers
+	 *
+	 * @param headers        the HTTP headers
 	 * @param bufferedOutput the body content
 	 * @return the response object for the executed request
 	 */

@@ -24,12 +24,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.lang.Nullable;
 
 /**
+ * 支持 AsyncClientHttpRequestInterceptor 的 AsyncClientHttpRequestFactory
+ *
  * Wrapper for a {@link AsyncClientHttpRequestFactory} that has support for
  * {@link AsyncClientHttpRequestInterceptor AsyncClientHttpRequestInterceptors}.
  *
  * @author Jakub Narloch
- * @since 4.3
  * @see InterceptingAsyncClientHttpRequest
+ * @since 4.3
  * @deprecated as of Spring 5.0, with no direct replacement
  */
 @Deprecated
@@ -43,7 +45,8 @@ public class InterceptingAsyncClientHttpRequestFactory implements AsyncClientHtt
 	/**
 	 * Create new instance of {@link InterceptingAsyncClientHttpRequestFactory}
 	 * with delegated request factory and list of interceptors.
-	 * @param delegate the request factory to delegate to
+	 *
+	 * @param delegate     the request factory to delegate to
 	 * @param interceptors the list of interceptors to use
 	 */
 	public InterceptingAsyncClientHttpRequestFactory(AsyncClientHttpRequestFactory delegate,

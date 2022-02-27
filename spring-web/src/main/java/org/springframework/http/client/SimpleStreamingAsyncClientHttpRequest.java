@@ -30,6 +30,8 @@ import org.springframework.util.StreamUtils;
 import org.springframework.util.concurrent.ListenableFuture;
 
 /**
+ * 基于 JDK 实现的 AsyncClientHttpRequest
+ *
  * {@link org.springframework.http.client.ClientHttpRequest} implementation
  * that uses standard Java facilities to execute streaming requests. Created
  * via the {@link org.springframework.http.client.SimpleClientHttpRequestFactory}.

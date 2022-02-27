@@ -34,6 +34,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
+ * 基于 OkHttp 3 的 ClientHttpRequestFactory
+ *
  * {@link ClientHttpRequestFactory} implementation that uses
  * <a href="https://square.github.io/okhttp/">OkHttp</a> 3.x to create requests.
  *

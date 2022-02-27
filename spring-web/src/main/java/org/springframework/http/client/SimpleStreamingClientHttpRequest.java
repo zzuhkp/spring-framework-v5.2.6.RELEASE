@@ -28,6 +28,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StreamUtils;
 
 /**
+ * 基于 JDK 的 ClientHttpRequest {
+ *
  * {@link ClientHttpRequest} implementation that uses standard JDK facilities to
  * execute streaming requests. Created via the {@link SimpleClientHttpRequestFactory}.
  *

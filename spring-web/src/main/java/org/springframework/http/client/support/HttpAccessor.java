@@ -33,6 +33,8 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.Assert;
 
 /**
+ * RestTemplate 基类
+ *
  * Base class for {@link org.springframework.web.client.RestTemplate}
  * and other HTTP accessing gateway helpers, defining common properties
  * such as the {@link ClientHttpRequestFactory} to operate on.

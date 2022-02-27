@@ -29,6 +29,8 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.concurrent.ListenableFuture;
 
 /**
+ * 基于 JDK 的 AsyncClientHttpRequest
+ *
  * {@link org.springframework.http.client.ClientHttpRequest} implementation that uses
  * standard JDK facilities to execute buffered requests. Created via the
  * {@link org.springframework.http.client.SimpleClientHttpRequestFactory}.

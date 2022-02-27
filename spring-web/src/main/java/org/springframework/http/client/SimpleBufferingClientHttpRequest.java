@@ -27,13 +27,15 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * 基于 JDK 的 ClientHttpRequest
+ *
  * {@link ClientHttpRequest} implementation that uses standard JDK facilities to
  * execute buffered requests. Created via the {@link SimpleClientHttpRequestFactory}.
  *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
- * @since 3.0
  * @see SimpleClientHttpRequestFactory#createRequest(java.net.URI, HttpMethod)
+ * @since 3.0
  */
 final class SimpleBufferingClientHttpRequest extends AbstractBufferingClientHttpRequest {
 
@@ -57,8 +59,7 @@ final class SimpleBufferingClientHttpRequest extends AbstractBufferingClientHttp
 	public URI getURI() {
 		try {
 			return this.connection.getURL().toURI();
-		}
-		catch (URISyntaxException ex) {
+		} catch (URISyntaxException ex) {
 			throw new IllegalStateException("Could not get HttpURLConnection URI: " + ex.getMessage(), ex);
 		}
 	}
@@ -76,8 +77,7 @@ final class SimpleBufferingClientHttpRequest extends AbstractBufferingClientHttp
 		this.connection.connect();
 		if (this.connection.getDoOutput()) {
 			FileCopyUtils.copy(bufferedOutput, this.connection.getOutputStream());
-		}
-		else {
+		} else {
 			// Immediately trigger the request in a no-output scenario as well
 			this.connection.getResponseCode();
 		}
@@ -87,8 +87,9 @@ final class SimpleBufferingClientHttpRequest extends AbstractBufferingClientHttp
 
 	/**
 	 * Add the given headers to the given HTTP connection.
+	 *
 	 * @param connection the connection to add the headers to
-	 * @param headers the headers to add
+	 * @param headers    the headers to add
 	 */
 	static void addHeaders(HttpURLConnection connection, HttpHeaders headers) {
 		String method = connection.getRequestMethod();
@@ -103,8 +104,7 @@ final class SimpleBufferingClientHttpRequest extends AbstractBufferingClientHttp
 			if (HttpHeaders.COOKIE.equalsIgnoreCase(headerName)) {  // RFC 6265
 				String headerValue = StringUtils.collectionToDelimitedString(headerValues, "; ");
 				connection.setRequestProperty(headerName, headerValue);
-			}
-			else {
+			} else {
 				for (String headerValue : headerValues) {
 					String actualHeaderValue = headerValue != null ? headerValue : "";
 					connection.addRequestProperty(headerName, actualHeaderValue);

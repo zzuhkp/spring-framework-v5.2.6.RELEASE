@@ -23,6 +23,8 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.lang.Nullable;
 
 /**
+ * 响应抽取
+ *
  * Generic callback interface used by {@link RestTemplate}'s retrieval methods
  * Implementations of this interface perform the actual work of extracting data
  * from a {@link ClientHttpResponse}, but don't need to worry about exception
@@ -32,16 +34,17 @@ import org.springframework.lang.Nullable;
  * application code. There is one available factory method, see
  * {@link RestTemplate#responseEntityExtractor(Type)}.
  *
- * @author Arjen Poutsma
- * @since 3.0
  * @param <T> the data type
+ * @author Arjen Poutsma
  * @see RestTemplate#execute
+ * @since 3.0
  */
 @FunctionalInterface
 public interface ResponseExtractor<T> {
 
 	/**
 	 * Extract data from the given {@code ClientHttpResponse} and return it.
+	 *
 	 * @param response the HTTP response
 	 * @return the extracted data
 	 * @throws IOException in case of I/O errors

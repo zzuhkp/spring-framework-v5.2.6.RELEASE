@@ -24,13 +24,15 @@ import org.springframework.http.HttpMethod;
 import org.springframework.lang.Nullable;
 
 /**
+ * 支持 ClientHttpRequestInterceptor 的 ClientHttpRequestFactory
+ *
  * {@link ClientHttpRequestFactory} wrapper with support for
  * {@link ClientHttpRequestInterceptor ClientHttpRequestInterceptors}.
  *
  * @author Arjen Poutsma
- * @since 3.1
  * @see ClientHttpRequestFactory
  * @see ClientHttpRequestInterceptor
+ * @since 3.1
  */
 public class InterceptingClientHttpRequestFactory extends AbstractClientHttpRequestFactoryWrapper {
 
@@ -39,8 +41,9 @@ public class InterceptingClientHttpRequestFactory extends AbstractClientHttpRequ
 
 	/**
 	 * Create a new instance of the {@code InterceptingClientHttpRequestFactory} with the given parameters.
+	 *
 	 * @param requestFactory the request factory to wrap
-	 * @param interceptors the interceptors that are to be applied (can be {@code null})
+	 * @param interceptors   the interceptors that are to be applied (can be {@code null})
 	 */
 	public InterceptingClientHttpRequestFactory(ClientHttpRequestFactory requestFactory,
 			@Nullable List<ClientHttpRequestInterceptor> interceptors) {

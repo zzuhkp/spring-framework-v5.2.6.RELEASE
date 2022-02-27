@@ -29,6 +29,8 @@ import org.springframework.util.StreamUtils;
 import org.springframework.util.concurrent.ListenableFuture;
 
 /**
+ * 支持  AsyncClientHttpRequestInterceptor 的 AsyncClientHttpRequest
+ *
  * An {@link AsyncClientHttpRequest} wrapper that enriches it proceeds the actual
  * request execution with calling the registered interceptors.
  *
@@ -51,10 +53,11 @@ class InterceptingAsyncClientHttpRequest extends AbstractBufferingAsyncClientHtt
 
 	/**
 	 * Create new instance of {@link InterceptingAsyncClientHttpRequest}.
+	 *
 	 * @param requestFactory the async request factory
-	 * @param interceptors the list of interceptors
-	 * @param uri the request URI
-	 * @param httpMethod the HTTP method
+	 * @param interceptors   the list of interceptors
+	 * @param uri            the request URI
+	 * @param httpMethod     the HTTP method
 	 */
 	public InterceptingAsyncClientHttpRequest(AsyncClientHttpRequestFactory requestFactory,
 			List<AsyncClientHttpRequestInterceptor> interceptors, URI uri, HttpMethod httpMethod) {
@@ -104,8 +107,7 @@ class InterceptingAsyncClientHttpRequest extends AbstractBufferingAsyncClientHtt
 			if (this.iterator.hasNext()) {
 				AsyncClientHttpRequestInterceptor interceptor = this.iterator.next();
 				return interceptor.intercept(request, body, this);
-			}
-			else {
+			} else {
 				URI uri = request.getURI();
 				HttpMethod method = request.getMethod();
 				HttpHeaders headers = request.getHeaders();

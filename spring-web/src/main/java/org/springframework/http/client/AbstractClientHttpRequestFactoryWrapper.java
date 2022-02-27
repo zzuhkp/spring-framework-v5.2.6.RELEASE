@@ -23,6 +23,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.util.Assert;
 
 /**
+ * 包装另一个 ClientHttpRequestFactory 的 ClientHttpRequestFactory
+ *
  * Abstract base class for {@link ClientHttpRequestFactory} implementations
  * that decorate another request factory.
  *
@@ -36,6 +38,7 @@ public abstract class AbstractClientHttpRequestFactoryWrapper implements ClientH
 
 	/**
 	 * Create a {@code AbstractClientHttpRequestFactoryWrapper} wrapping the given request factory.
+	 *
 	 * @param requestFactory the request factory to be wrapped
 	 */
 	protected AbstractClientHttpRequestFactoryWrapper(ClientHttpRequestFactory requestFactory) {
@@ -58,8 +61,9 @@ public abstract class AbstractClientHttpRequestFactoryWrapper implements ClientH
 	 * Create a new {@link ClientHttpRequest} for the specified URI and HTTP method
 	 * by using the passed-on request factory.
 	 * <p>Called from {@link #createRequest(URI, HttpMethod)}.
-	 * @param uri the URI to create a request for
-	 * @param httpMethod the HTTP method to execute
+	 *
+	 * @param uri            the URI to create a request for
+	 * @param httpMethod     the HTTP method to execute
 	 * @param requestFactory the wrapped request factory
 	 * @return the created request
 	 * @throws IOException in case of I/O errors

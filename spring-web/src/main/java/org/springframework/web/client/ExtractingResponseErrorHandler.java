@@ -29,6 +29,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 
 /**
+ * 根据响应抽取异常的 ResponseErrorHandler
+ *
  * Implementation of {@link ResponseErrorHandler} that uses {@link HttpMessageConverter
  * HttpMessageConverters} to convert HTTP error responses to {@link RestClientException
  * RestClientExceptions}.

@@ -21,6 +21,8 @@ import java.io.IOException;
 import org.springframework.http.HttpStatus;
 
 /**
+ * 抽象的 ClientHttpResponse
+ *
  * Abstract base for {@link ClientHttpResponse}.
  *
  * @author Arjen Poutsma

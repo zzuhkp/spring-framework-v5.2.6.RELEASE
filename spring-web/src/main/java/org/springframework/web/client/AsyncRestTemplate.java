@@ -46,6 +46,8 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriTemplateHandler;
 
 /**
+ * 支持异步的 RestTemplate
+ *
  * <strong>Spring's central class for asynchronous client-side HTTP access.</strong>
  * Exposes similar methods as {@link RestTemplate}, but returns {@link ListenableFuture}
  * wrappers as opposed to concrete results.
@@ -62,8 +64,8 @@ import org.springframework.web.util.UriTemplateHandler;
  * <p>For more information, please refer to the {@link RestTemplate} API documentation.
  *
  * @author Arjen Poutsma
- * @since 4.0
  * @see RestTemplate
+ * @since 4.0
  * @deprecated as of Spring 5.0, in favor of {@link org.springframework.web.reactive.function.client.WebClient}
  */
 @Deprecated
@@ -112,8 +114,9 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 	/**
 	 * Creates a new instance of the {@code AsyncRestTemplate} using the given
 	 * asynchronous and synchronous request factories.
+	 *
 	 * @param asyncRequestFactory the asynchronous request factory
-	 * @param syncRequestFactory the synchronous request factory
+	 * @param syncRequestFactory  the synchronous request factory
 	 */
 	public AsyncRestTemplate(org.springframework.http.client.AsyncClientHttpRequestFactory asyncRequestFactory,
 			ClientHttpRequestFactory syncRequestFactory) {
@@ -124,8 +127,9 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 	/**
 	 * Create a new instance of the {@code AsyncRestTemplate} using the given
 	 * {@link org.springframework.http.client.AsyncClientHttpRequestFactory} and synchronous {@link RestTemplate}.
+	 *
 	 * @param requestFactory the asynchronous request factory to use
-	 * @param restTemplate the synchronous template to use
+	 * @param restTemplate   the synchronous template to use
 	 */
 	public AsyncRestTemplate(org.springframework.http.client.AsyncClientHttpRequestFactory requestFactory,
 			RestTemplate restTemplate) {
@@ -161,6 +165,7 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 	 * AsyncRestTemplate restTemplate = new AsyncRestTemplate();
 	 * restTemplate.setUriTemplateHandler(handler);
 	 * </pre>
+	 *
 	 * @param defaultUriVariables the default URI variable values
 	 * @since 4.3
 	 */
@@ -169,12 +174,10 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 		UriTemplateHandler handler = this.syncTemplate.getUriTemplateHandler();
 		if (handler instanceof DefaultUriBuilderFactory) {
 			((DefaultUriBuilderFactory) handler).setDefaultUriVariables(defaultUriVariables);
-		}
-		else if (handler instanceof org.springframework.web.util.AbstractUriTemplateHandler) {
+		} else if (handler instanceof org.springframework.web.util.AbstractUriTemplateHandler) {
 			((org.springframework.web.util.AbstractUriTemplateHandler) handler)
 					.setDefaultUriVariables(defaultUriVariables);
-		}
-		else {
+		} else {
 			throw new IllegalArgumentException(
 					"This property is not supported with the configured UriTemplateHandler.");
 		}
@@ -184,6 +187,7 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 	 * This property has the same purpose as the corresponding property on the
 	 * {@code RestTemplate}. For more details see
 	 * {@link RestTemplate#setUriTemplateHandler}.
+	 *
 	 * @param handler the URI template handler to use
 	 */
 	public void setUriTemplateHandler(UriTemplateHandler handler) {
@@ -217,11 +221,11 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 		return this.syncTemplate.getMessageConverters();
 	}
 
-
 	// GET
 
 	@Override
-	public <T> ListenableFuture<ResponseEntity<T>> getForEntity(String url, Class<T> responseType, Object... uriVariables)
+	public <T> ListenableFuture<ResponseEntity<T>> getForEntity(String url, Class<T> responseType,
+			Object... uriVariables)
 			throws RestClientException {
 
 		AsyncRequestCallback requestCallback = acceptHeaderRequestCallback(responseType);
@@ -247,7 +251,6 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 		return execute(url, HttpMethod.GET, requestCallback, responseExtractor);
 	}
 
-
 	// HEAD
 
 	@Override
@@ -271,7 +274,6 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 		ResponseExtractor<HttpHeaders> headersExtractor = headersExtractor();
 		return execute(url, HttpMethod.HEAD, null, headersExtractor);
 	}
-
 
 	// POST
 
@@ -342,7 +344,6 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 		return execute(url, HttpMethod.POST, requestCallback, responseExtractor);
 	}
 
-
 	// PUT
 
 	@Override
@@ -367,7 +368,6 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 		return execute(url, HttpMethod.PUT, requestCallback, null);
 	}
 
-
 	// DELETE
 
 	@Override
@@ -384,7 +384,6 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 	public ListenableFuture<?> delete(URI url) throws RestClientException {
 		return execute(url, HttpMethod.DELETE, null, null);
 	}
-
 
 	// OPTIONS
 
@@ -486,11 +485,11 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 		return execute(url, method, requestCallback, responseExtractor);
 	}
 
-
 	// general execution
 
 	@Override
-	public <T> ListenableFuture<T> execute(String url, HttpMethod method, @Nullable AsyncRequestCallback requestCallback,
+	public <T> ListenableFuture<T> execute(String url, HttpMethod method,
+			@Nullable AsyncRequestCallback requestCallback,
 			@Nullable ResponseExtractor<T> responseExtractor, Object... uriVariables) throws RestClientException {
 
 		URI expanded = getUriTemplateHandler().expand(url, uriVariables);
@@ -519,11 +518,12 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 	 * {@link org.springframework.http.client.ClientHttpRequest}
 	 * is processed using the {@link RequestCallback}; the response with
 	 * the {@link ResponseExtractor}.
-	 * @param url the fully-expanded URL to connect to
-	 * @param method the HTTP method to execute (GET, POST, etc.)
-	 * @param requestCallback object that prepares the request (can be {@code null})
+	 *
+	 * @param url               the fully-expanded URL to connect to
+	 * @param method            the HTTP method to execute (GET, POST, etc.)
+	 * @param requestCallback   object that prepares the request (can be {@code null})
 	 * @param responseExtractor object that extracts the return value from the response (can
-	 * be {@code null})
+	 *                          be {@code null})
 	 * @return an arbitrary object, as returned by the {@link ResponseExtractor}
 	 */
 	protected <T> ListenableFuture<T> doExecute(URI url, HttpMethod method,
@@ -539,8 +539,7 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 			}
 			ListenableFuture<ClientHttpResponse> responseFuture = request.executeAsync();
 			return new ResponseExtractorFuture<>(method, url, responseFuture, responseExtractor);
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			throw new ResourceAccessException("I/O error on " + method.name() +
 					" request for \"" + url + "\":" + ex.getMessage(), ex);
 		}
@@ -551,8 +550,7 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 			try {
 				logger.debug("Async " + method.name() + " request for \"" + url + "\" resulted in " +
 						response.getRawStatusCode() + " (" + response.getStatusText() + ")");
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 				// ignore
 			}
 		}
@@ -563,8 +561,7 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 			try {
 				logger.warn("Async " + method.name() + " request for \"" + url + "\" resulted in " +
 						response.getRawStatusCode() + " (" + response.getStatusText() + "); invoking error handler");
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 				// ignore
 			}
 		}
@@ -640,16 +637,13 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 			try {
 				if (!getErrorHandler().hasError(response)) {
 					logResponseStatus(this.method, this.url, response);
-				}
-				else {
+				} else {
 					handleResponseError(this.method, this.url, response);
 				}
 				return convertResponse(response);
-			}
-			catch (Throwable ex) {
+			} catch (Throwable ex) {
 				throw new ExecutionException(ex);
-			}
-			finally {
+			} finally {
 				response.close();
 			}
 		}
@@ -671,6 +665,7 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 		/**
 		 * Create a new {@code AsyncRequestCallbackAdapter} from the given
 		 * {@link RequestCallback}.
+		 *
 		 * @param requestCallback the callback to base this adapter on
 		 */
 		public AsyncRequestCallbackAdapter(RequestCallback requestCallback) {
@@ -686,23 +681,28 @@ public class AsyncRestTemplate extends org.springframework.http.client.support.I
 				public ClientHttpResponse execute() throws IOException {
 					throw new UnsupportedOperationException("execute not supported");
 				}
+
 				@Override
 				public OutputStream getBody() throws IOException {
 					return request.getBody();
 				}
+
 				@Override
 				@Nullable
 				public HttpMethod getMethod() {
 					return request.getMethod();
 				}
+
 				@Override
 				public String getMethodValue() {
 					return request.getMethodValue();
 				}
+
 				@Override
 				public URI getURI() {
 					return request.getURI();
 				}
+
 				@Override
 				public HttpHeaders getHeaders() {
 					return request.getHeaders();

@@ -22,6 +22,8 @@ import org.springframework.http.HttpRequest;
 import org.springframework.util.concurrent.ListenableFuture;
 
 /**
+ * 异步请求拦截
+ *
  * Intercepts client-side HTTP requests. Implementations of this interface can be
  * {@linkplain org.springframework.web.client.AsyncRestTemplate#setInterceptors registered}
  * with the {@link org.springframework.web.client.AsyncRestTemplate} as to modify
@@ -33,9 +35,9 @@ import org.springframework.util.concurrent.ListenableFuture;
  *
  * @author Jakub Narloch
  * @author Rossen Stoyanchev
- * @since 4.3
  * @see org.springframework.web.client.AsyncRestTemplate
  * @see org.springframework.http.client.support.InterceptingAsyncHttpAccessor
+ * @since 4.3
  * @deprecated as of Spring 5.0, in favor of
  * {@link org.springframework.web.reactive.function.client.ExchangeFilterFunction}
  */
@@ -61,8 +63,9 @@ public interface AsyncClientHttpRequestInterceptor {
 	 * {@link org.springframework.util.concurrent.ListenableFutureAdapter
 	 * ListenableFutureAdapter}.</li>
 	 * </ol>
-	 * @param request the request, containing method, URI, and headers
-	 * @param body the body of the request
+	 *
+	 * @param request   the request, containing method, URI, and headers
+	 * @param body      the body of the request
 	 * @param execution the request execution
 	 * @return the response future
 	 * @throws IOException in case of I/O errors
